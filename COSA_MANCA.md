@@ -1,21 +1,22 @@
 # Cosa manca (TODO)
 
-Stato al momento: app completa e usabile. Da fare in futuro:
+## Dettagli essenze (squilibri + affermazione "Mi impegno…")
+Infrastruttura pronta: dati in `tools/essenze_dettaglio.json`, resi come elenco squilibri
++ box affermazione. Rigenerare con `python tools/generate_data.py`.
+- [x] Vaso Concezione (7 essenze: Evening Star, Crab Apple, Mimulus, Devil's Claw, Bluebell, Grey Spider Flower, Scleranthus)
+- [ ] Vaso Governatore, Stomaco, Milza, Milza/Pancreas, Cuore, Intestino Tenue, Vescica,
+      Rene, Maestro del Cuore, TR/Tiroide, TR/Surrenali, Vescica Biliare, Fegato, Polmone, Intestino Crasso
+      (le pagine-essenza sono nei rispettivi capitoli del PDF "Atteggiamenti", ~2 essenze/pagina)
 
-## Contenuti
-- [ ] **Immagini Basket Weaver per 7 coordinate** (Maestro del Cuore, TR/Tiroide,
-      TR/Surrenali, Vescica Biliare, Fegato, Polmone, Intestino Crasso):
-      non presenti nel volume PDF fornito → serve il secondo volume del manuale.
-- [ ] **"Storia del problema"** e **"Storia del meridiano"**: testi discorsivi,
-      da trascrivere dai manuali (attualmente vuoti → mostrano "Da compilare").
-- [ ] **Affermazioni per singola essenza** ("Mi impegno a…", elenco squilibri per fiore):
-      dalle pagine-essenza del manuale Atteggiamenti.
-- [ ] Verificare/rifinire le essenze delle coordinate diverse da Vaso Concezione
-      (prese dalle tabelle appendice; il capitolo può elencarne di più, es. fiori di Bach).
+## Immagini Basket Weaver (7 coordinate mancanti)
+- [ ] Maestro del Cuore, TR/Tiroide, TR/Surrenali, Vescica Biliare, Fegato, Polmone, Intestino Crasso
+      → non presenti nel volume PDF fornito; serve il secondo volume del manuale.
+
+## Testi discorsivi
+- [ ] "Storia del problema" e "Storia del meridiano": se disponibili in altre fonti.
 
 ## Fatto
-- [x] 16 coordinate, ricerca, navigazione, responsive tablet
+- [x] 16 coordinate, ricerca, navigazione a sezioni (fix), responsive tablet, dark mode, favicon
 - [x] Immagini Basket Weaver per 9 coordinate (115 pagine)
 - [x] Tabella atteggiamenti (14 posizioni) per tutti i 16 meridiani
-- [x] Essenze per tutti i meridiani
-- [x] Dark mode + favicon + fix navigazione sezioni
+- [x] Essenze (nome + tipo) per tutti i 16 meridiani; dettagli completi per Vaso Concezione

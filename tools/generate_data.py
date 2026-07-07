@@ -40,6 +40,7 @@ ESS={
  "intestino-crasso-tensore-fascia-lata":[("Ratany","Fiore del Deserto"),("Canyon Grapevine","Fiore del Deserto"),("She Oak","Fiore Australiano - IC 5,10"),("Sturt Desert Pea","Fiore Australiano - IC 1,14"),("Sunshine Wattle","Fiore Australiano - IC 4,11")],
 }
 ATT=json.load(open("tools/atteggiamenti.json",encoding="utf-8")) if os.path.exists("tools/atteggiamenti.json") else {}
+DET=json.load(open("tools/essenze_dettaglio.json",encoding="utf-8")) if os.path.exists("tools/essenze_dettaglio.json") else {}
 def imgs(cid): return [f.replace("\\","/") for f in sorted(glob.glob(f"assets/pages/{cid}/p*.jpg"))]
 out=['/*',' * data.js - GENERATO da tools/generate_data.py. Non modificare a mano:',
      ' * aggiorna tools/atteggiamenti.json / ESS in generate_data.py e rilancia lo script.',' */','','const COORDINATE = [']
@@ -47,8 +48,15 @@ for (cid,mer,mus,col,cn) in COORDS:
     im=imgs(cid)
     corr='[{ titolo: "Riflessologia 1-7", tecnica: "Sfregare forte", descrizione: "" }, { titolo: "Riflessologia 8-14", tecnica: "Tapping forte", descrizione: "" }, { titolo: "Acutouch / Nutrire", tecnica: "Acutouch", descrizione: "" }]' if im else '[{ titolo: "Correzione base", tecnica: "", descrizione: "" }]'
     im_js="["+", ".join(json.dumps(p) for p in im)+"]" if im else "[]"
-    ess=ESS.get(cid,[("","")])
-    ess_js="[ "+", ".join("{ nome: %s, atteggiamento: %s }"%(json.dumps(n),json.dumps(a)) for n,a in ess)+" ]"
+    ess=ESS.get(cid,[("","")]); det=DET.get(cid,{})
+    parts=[]
+    for n,a in ess:
+        d=det.get(n,{})
+        extra=""
+        if d.get("squilibri"): extra+=", squilibri: "+json.dumps(d["squilibri"],ensure_ascii=False)
+        if d.get("impegno"): extra+=", impegno: "+json.dumps(d["impegno"],ensure_ascii=False)
+        parts.append("{ nome: %s, atteggiamento: %s%s }"%(json.dumps(n),json.dumps(a),extra))
+    ess_js="[ "+", ".join(parts)+" ]"
     att=ATT.get(cid); att_js=""
     if att: att_js="\n    atteggiamenti: [ "+", ".join("{ posizione: %d, meridiano: %s, stress: %s }"%(int(p),json.dumps(m),json.dumps(s)) for p,m,s in att)+" ],"
     out+=["  {",

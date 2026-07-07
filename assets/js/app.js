@@ -94,11 +94,15 @@
     const attHtml = attRows
       ? `<div class="att__wrap"><table class="att"><thead><tr><th>Pos.</th><th>Meridiano rif.</th><th>Stress: pensieri &amp; emozioni</th></tr></thead><tbody>${attRows}</tbody></table></div>`
       : "";
-    const essRows = (c.essenze || []).filter((x) => has(x.nome) || has(x.atteggiamento)).map((x) => `
+    const essRows = (c.essenze || []).filter((x) => has(x.nome) || has(x.atteggiamento)).map((x) => {
+      const sq = (x.squilibri || []).map((s) => `<li>${esc(s)}</li>`).join("");
+      return `
       <div class="ess">
-        <div class="ess__name">${esc(x.nome || "—")}</div>
-        <div class="ess__att">${esc(x.atteggiamento || "")}</div>
-      </div>`).join("");
+        <div class="ess__head"><span class="ess__name">${esc(x.nome || "—")}</span><span class="ess__type">${esc(x.atteggiamento || "")}</span></div>
+        ${sq ? `<ul class="ess__sq">${sq}</ul>` : ""}
+        ${has(x.impegno) ? `<div class="ess__imp">${esc(x.impegno)}</div>` : ""}
+      </div>`;
+    }).join("");
     const ess = (attHtml || essRows)
       ? `${attHtml}${essRows ? `<div class="ess__list">${essRows}</div>` : ""}`
       : `<p>${ph}</p>`;

@@ -119,3 +119,12 @@ html,body{ background:var(--bg); color:var(--ink);
   .anchors{ top:132px; }
   .detail__head h2{ font-size:1.55rem; }
 }
+
+/* Essenze — dettaglio (squilibri + impegno) */
+.ess{ display:block; }
+.ess__head{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; }
+.ess__type{ color:var(--muted); font-size:.85rem; font-weight:600; }
+.ess__sq{ margin:8px 0 0 20px; padding:0; }
+.ess__sq li{ margin:2px 0; }
+.ess__imp{ margin-top:8px; padding:10px 12px; border-left:3px solid var(--brand);
+  background:color-mix(in srgb, var(--brand) 8%, var(--card)); border-radius:0 8px 8px 0; font-style:italic; }
