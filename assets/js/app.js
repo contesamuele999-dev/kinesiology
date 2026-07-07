@@ -63,11 +63,20 @@
       ? `${corrList}${imgs ? `<div class="pages">${imgs}</div>` : ""}`
       : `<p>${ph}</p>`;
 
-    const ess = (c.essenze || []).filter((x) => has(x.nome) || has(x.atteggiamento)).map((x) => `
+    // Atteggiamenti (tabella pensieri & emozioni per posizione/meridiano)
+    const attRows = (c.atteggiamenti || []).map((a) => `
+      <tr><td class="att__pos">${esc(a.posizione)}</td><td>${esc(a.meridiano)}</td><td>${esc(a.stress)}</td></tr>`).join("");
+    const attHtml = attRows
+      ? `<div class="att__wrap"><table class="att"><thead><tr><th>Pos.</th><th>Meridiano rif.</th><th>Stress: pensieri &amp; emozioni</th></tr></thead><tbody>${attRows}</tbody></table></div>`
+      : "";
+    const essRows = (c.essenze || []).filter((x) => has(x.nome) || has(x.atteggiamento)).map((x) => `
       <div class="ess">
         <div class="ess__name">${esc(x.nome || "—")}</div>
         <div class="ess__att">${esc(x.atteggiamento || "")}</div>
-      </div>`).join("") || `<p>${ph}</p>`;
+      </div>`).join("");
+    const ess = (attHtml || essRows)
+      ? `${attHtml}${essRows ? `<div class="ess__list">${essRows}</div>` : ""}`
+      : `<p>${ph}</p>`;
 
     const secs = [
       { id: "correzioni", label: "Correzioni", html: corr },
