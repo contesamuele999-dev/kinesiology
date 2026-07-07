@@ -45,3 +45,11 @@ Le immagini della coordinata POC (vc-sovraspinato) sono già incluse nel repo.
   dalle tabelle "per Meridiano" e "per ordine alfabetico".
 - ⬜ Prosa da trascrivere (via vision) dal manuale "Atteggiamenti": affermazioni,
   emozioni/forme-pensiero, e i testi "storia del problema / del meridiano".
+
+## 7. Trascrizione atteggiamenti — COMPLETATA
+Tabelle "Stress: Pensieri & Emozioni" (14 posizioni per meridiano) trascritte via vision per
+**tutti i 16** coordinate. Dati in `tools/atteggiamenti.json`. Pagine tabella nel PDF Atteggiamenti:
+VC=38, VG=30, Stomaco=46, Milza=54, Cuore=64, Int.Tenue=72, Vescica=80, Rene=88, Maestro=96,
+TR/Surrenali=104, TR/Tiroide=106, Vescica Biliare=114, Fegato=122, Polmone=130, Int.Crasso=138.
+Milza/Pancreas condivide la tabella Milza. Rigenerare data.js: `python tools/generate_data.py`.
+Restano opzionali: testi discorsivi "storia del problema/del meridiano" e le affermazioni per essenza.

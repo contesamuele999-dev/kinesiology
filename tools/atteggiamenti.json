@@ -1,0 +1,1154 @@
+{
+ "vc-sovraspinato": [
+  [
+   1,
+   "Vaso Concezione",
+   "IrF: Sovraccarico / IoF: Insufficiente"
+  ],
+  [
+   2,
+   "Maestro del Cuore",
+   "IrF: Egoistico / IoF: Inadeguato"
+  ],
+  [
+   3,
+   "Milza",
+   "IrF: Falsamente sicuro / IoF: Insicuro"
+  ],
+  [
+   4,
+   "Polmone",
+   "IrF: Impulsivamente deciso / IoF: Indeciso"
+  ],
+  [
+   5,
+   "Rene",
+   "IrF: Inespressivo / IoF: Effusivo"
+  ],
+  [
+   6,
+   "Fegato",
+   "IrF: Vendicativo / IoF: Senza Rimorso"
+  ],
+  [
+   7,
+   "Cuore",
+   "IrF: Dispettoso / IoF: Disattento"
+  ],
+  [
+   8,
+   "Intestino Tenue",
+   "IrI: Diffidente / IoI: Tradito"
+  ],
+  [
+   9,
+   "Vescica Biliare",
+   "IrI: Apatico / IoI: Furioso"
+  ],
+  [
+   10,
+   "Vescica",
+   "IpI: Timido / IoI: Violento"
+  ],
+  [
+   11,
+   "Intestino Crasso",
+   "IpI: Tormentato / IoI: Smemorato"
+  ],
+  [
+   12,
+   "Stomaco",
+   "IrI: Euforico / IoI: Agitato"
+  ],
+  [
+   13,
+   "Triplice Riscaldatore",
+   "IrI: Procastinante / IoI: Agitato"
+  ],
+  [
+   14,
+   "Vaso Governatore",
+   "IrI: Cruento / IoI: Sadico"
+  ]
+ ],
+ "vg-grande-rotondo": [
+  [
+   1,
+   "Vaso Governatore",
+   "IrF: Troppo Competitivo / IoF: Sconsolato"
+  ],
+  [
+   2,
+   "Triplice Riscaldatore",
+   "IrF: Riservato / IoF: Vuoto"
+  ],
+  [
+   3,
+   "Stomaco",
+   "IrF: Loquace / IoF: Muto"
+  ],
+  [
+   4,
+   "Intestino Crasso",
+   "IrF: Approfittatore / IoF: Abbandonato"
+  ],
+  [
+   5,
+   "Vescica",
+   "IrF: Belligerante / IoF: Futile"
+  ],
+  [
+   6,
+   "Vescica Biliare",
+   "IrF: Egoista / IoF: Indifeso"
+  ],
+  [
+   7,
+   "Intestino Tenue",
+   "IrF: Manipolativo / IoF: Solitario"
+  ],
+  [
+   8,
+   "Cuore",
+   "IrI: Non Amato / IoI: Altezzoso"
+  ],
+  [
+   9,
+   "Fegato",
+   "IrI: Senza Forza / IoI: Arrogante"
+  ],
+  [
+   10,
+   "Rene",
+   "IrI: Acido / IoI: Amaro"
+  ],
+  [
+   11,
+   "Polmone",
+   "IrI: Invidioso / IoI: Avido"
+  ],
+  [
+   12,
+   "Milza",
+   "IrI: Inutile / IoI: Disperato"
+  ],
+  [
+   13,
+   "Maestro del Cuore",
+   "IrI: Sconfitto / IoI: Messo all'angolo"
+  ],
+  [
+   14,
+   "Vaso Concezione",
+   "IrI: Incapace / IoI: Agitato"
+  ]
+ ],
+ "stomaco-gran-pettorale-clavicolare": [
+  [
+   1,
+   "Stomaco",
+   "IrF: Impaziente / IoF: Apatico"
+  ],
+  [
+   2,
+   "Intestino Crasso",
+   "IrF: Ribelle / IoF: Remissivo"
+  ],
+  [
+   3,
+   "Vescica",
+   "IrF: Rifiutato / IoF: Credulone"
+  ],
+  [
+   4,
+   "Vescica Biliare",
+   "IrF: Scontento / IoF: Passivo"
+  ],
+  [
+   5,
+   "Intestino Tenue",
+   "IrF: Ansioso / IoF: Apatico"
+  ],
+  [
+   6,
+   "Triplice Riscaldatore",
+   "IrF: Brontolone / IoF: Condiscendente"
+  ],
+  [
+   7,
+   "Vaso Governatore",
+   "IrF: Inattendibile / IoF: Calpestato"
+  ],
+  [
+   8,
+   "Vaso Concezione",
+   "IrI: Rifiuto di lasciare zone confortevoli / IoI: Disagio"
+  ],
+  [
+   9,
+   "Maestro del Cuore",
+   "IrI: Nonchalante / IoI: Preoccupato"
+  ],
+  [
+   10,
+   "Cuore",
+   "IrI: Indiscriminante / IoI: Che Non Accetta"
+  ],
+  [
+   11,
+   "Fegato",
+   "IrI: Che Apprezza Troppo / IoI: Avere Risentimento"
+  ],
+  [
+   12,
+   "Rene",
+   "IrI: Escluso / IoI: Spaventato"
+  ],
+  [
+   13,
+   "Polmone",
+   "IrI: Indifferente / IoI: Sconvolto"
+  ],
+  [
+   14,
+   "Milza",
+   "IrI: Indeterminato / IoI: Disgustato"
+  ]
+ ],
+ "milza-trapezio-medio": [
+  [
+   1,
+   "Milza",
+   "IrF: Presuntuoso / IoF: Inutile"
+  ],
+  [
+   2,
+   "Polmone",
+   "IrF: Tradito / IoF: Imbroglione"
+  ],
+  [
+   3,
+   "Rene",
+   "IrF: Calpestato / IoF: Inutile"
+  ],
+  [
+   4,
+   "Fegato",
+   "IrF: Esagerato / IoF: Insignificante"
+  ],
+  [
+   5,
+   "Cuore",
+   "IrF: Avventato / IoF: Placido"
+  ],
+  [
+   6,
+   "Maestro del Cuore",
+   "IrF: Furioso / IoF: Codardo"
+  ],
+  [
+   7,
+   "Vaso Concezione",
+   "IrF: Presuntuoso / IoF: Senza Valore"
+  ],
+  [
+   8,
+   "Vaso Governatore",
+   "IrI: Manipolato / IoI: Crudele"
+  ],
+  [
+   9,
+   "Triplice Riscaldatore",
+   "IrI: Scontento / IoI: Che Incolpa"
+  ],
+  [
+   10,
+   "Intestino Crasso",
+   "IrI: Svantaggiato / IoI: Troppo Felice"
+  ],
+  [
+   11,
+   "Vescica Biliare",
+   "IrI: Distratto / IoI: Permaloso"
+  ],
+  [
+   12,
+   "Vescica",
+   "IrI: Disattento / IoI: Irascibile"
+  ],
+  [
+   13,
+   "Intestino Tenue",
+   "IrI: Stupido / IoI: Belligerante"
+  ],
+  [
+   14,
+   "Stomaco",
+   "IrI: Buffone / IoI: Deluso"
+  ]
+ ],
+ "cuore-sottoscapolare": [
+  [
+   1,
+   "Cuore",
+   "IrF: Egoistico / IoF: Insicuro"
+  ],
+  [
+   2,
+   "Maestro del Cuore",
+   "IrF: Infatuato / IoF: Col Cuore Infranto"
+  ],
+  [
+   3,
+   "Milza",
+   "IrF: Vendicativo / IoF: Passivo"
+  ],
+  [
+   4,
+   "Polmone",
+   "IrF: Che-sa-tutto / IoF: Smemorato"
+  ],
+  [
+   5,
+   "Rene",
+   "IrF: Disgustato / IoF: Apatico"
+  ],
+  [
+   6,
+   "Fegato",
+   "IrF: Amaro / IoF: Disperato"
+  ],
+  [
+   7,
+   "Vaso Concezione",
+   "IrF: Martirizzato / IoF: Tradito"
+  ],
+  [
+   8,
+   "Vaso Governatore",
+   "IrI: Che Non Perdona / IoI: Credulone"
+  ],
+  [
+   9,
+   "Vescica Biliare",
+   "IrI: Facilmente Influenzato / IoI: Di Vedute Strette"
+  ],
+  [
+   10,
+   "Vescica",
+   "IrI: Inespressivo / IoI: Effusivo"
+  ],
+  [
+   11,
+   "Intestino Crasso",
+   "IrI: Avido / IoI: Geloso"
+  ],
+  [
+   12,
+   "Stomaco",
+   "IrI: Nauseante / IoI: Preoccupato"
+  ],
+  [
+   13,
+   "Triplice Riscaldatore",
+   "IrI: Ignorante / IoI: Arrogante"
+  ],
+  [
+   14,
+   "Intestino Tenue",
+   "IrI: Colpevole / IoI: Manipolatore"
+  ]
+ ],
+ "intestino-tenue-quadricipite": [
+  [
+   1,
+   "Intestino Tenue",
+   "IrF: Spinto / IoF: Con le Spalle al Muro"
+  ],
+  [
+   2,
+   "Triplice Riscaldatore",
+   "IrF: Egoistico / IoF: Umiliato"
+  ],
+  [
+   3,
+   "Stomaco",
+   "IrF: Obbligato / IoF: Colpevole"
+  ],
+  [
+   4,
+   "Intestino Crasso",
+   "IrF: Troppo Sicuro di Se' / IoF: Dubbioso"
+  ],
+  [
+   5,
+   "Vescica",
+   "IrF: Guidato / IoF: Stanco"
+  ],
+  [
+   6,
+   "Vescica Biliare",
+   "IrF: Presuntuoso / IoF: Calpestato"
+  ],
+  [
+   7,
+   "Vaso Governatore",
+   "IrF: Limitato / IoF: Farsi Mettere i Piedi in Testa"
+  ],
+  [
+   8,
+   "Vaso Concezione",
+   "IrI: Bisognoso / IoI: Avido"
+  ],
+  [
+   9,
+   "Fegato",
+   "IrI: Irresponsabile / IoI: Senza Aiuto"
+  ],
+  [
+   10,
+   "Rene",
+   "IrI: Manipolato / IoI: Opportunista"
+  ],
+  [
+   11,
+   "Polmone",
+   "IrI: Criticato / IoI: Paranoico"
+  ],
+  [
+   12,
+   "Milza",
+   "IrI: Senza Valore / IoI: Insignificante"
+  ],
+  [
+   13,
+   "Maestro del Cuore",
+   "IrI: Dubbioso / IoI: Arrogante"
+  ],
+  [
+   14,
+   "Cuore",
+   "IrI: Procastinante / IoI: Obbligato"
+  ]
+ ],
+ "vescica-tibiale-anteriore": [
+  [
+   1,
+   "Vescica",
+   "IrF: Futile / IoF: Frustrato"
+  ],
+  [
+   2,
+   "Vescica Biliare",
+   "IrF: Esausto / IoF: Sognatore ad Occhi Aperti"
+  ],
+  [
+   3,
+   "Intestino Tenue",
+   "IrF: Faticoso / IoF: Inutile"
+  ],
+  [
+   4,
+   "Triplice Riscaldatore",
+   "IrF: Frivolo / IoF: Abbandonato"
+  ],
+  [
+   5,
+   "Stomaco",
+   "IrF: Oppresso / IoF: Esausto"
+  ],
+  [
+   6,
+   "Intestino Crasso",
+   "IrF: Afflitto / IoF: Perduto"
+  ],
+  [
+   7,
+   "Vaso Governatore",
+   "IrF: Arrogante / IoF: Solitario"
+  ],
+  [
+   8,
+   "Vaso Concezione",
+   "IrI: Usato / IoI: Aggressivo"
+  ],
+  [
+   9,
+   "Polmone",
+   "IrI: Scettico / IoI: Accusato"
+  ],
+  [
+   10,
+   "Milza",
+   "IrI: Soffocato / IoI: Senza Scopo"
+  ],
+  [
+   11,
+   "Maestro del Cuore",
+   "IrI: Compiaciuto / IoI: Desideroso"
+  ],
+  [
+   12,
+   "Cuore",
+   "IrI: Geloso / IoI: Competitivo"
+  ],
+  [
+   13,
+   "Fegato",
+   "IrI: Sciocco / IoI: Svuotato"
+  ],
+  [
+   14,
+   "Rene",
+   "IrI: Soppresso / IoI: Non Apprezzato"
+  ]
+ ],
+ "rene-psoas": [
+  [
+   1,
+   "Rene",
+   "IrF: Terrore / IoF: Paura"
+  ],
+  [
+   2,
+   "Fegato",
+   "IrF: Confuso / IoF: Incompreso"
+  ],
+  [
+   3,
+   "Cuore",
+   "IrF: Forte / IoF: Arrendersi"
+  ],
+  [
+   4,
+   "Maestro del Cuore",
+   "IrF: Accusatore / IoF: Incolpatore"
+  ],
+  [
+   5,
+   "Milza",
+   "IrF: Disonesto / IoF: Ingiustificato"
+  ],
+  [
+   6,
+   "Polmone",
+   "IrF: Intollerante / IoF: Che si Calma Facilmente"
+  ],
+  [
+   7,
+   "Vaso Concezione",
+   "IrF: Rivoluzionario / IoF: Passivo"
+  ],
+  [
+   8,
+   "Vaso Governatore",
+   "IrI: Trattenuto da Altri / IoI: Auto Represso"
+  ],
+  [
+   9,
+   "Intestino Crasso",
+   "IrI: Timido / IoI: Vergognoso"
+  ],
+  [
+   10,
+   "Stomaco",
+   "IrI: Intimidito / IoI: Intraprendente"
+  ],
+  [
+   11,
+   "Triplice Riscaldatore",
+   "IrI: Troppo Accomodante / IoI: Caparbio"
+  ],
+  [
+   12,
+   "Intestino Tenue",
+   "IrI: Credulone / IoI: Che non Crede"
+  ],
+  [
+   13,
+   "Vescica Biliare",
+   "IrI: Che Segue la Massa / IoI: Che va' contro il proprio intuito"
+  ],
+  [
+   14,
+   "Vescica",
+   "IrI: Stoico / IoI: Reattivo"
+  ]
+ ],
+ "maestro-cuore-medio-gluteo": [
+  [
+   1,
+   "Maestro del Cuore",
+   "IrF: Testardo / IoF: Legato"
+  ],
+  [
+   2,
+   "Milza",
+   "IrF: Senza Respiro / IoF: Non Sincero"
+  ],
+  [
+   3,
+   "Polmone",
+   "IrF: Senza Scelta / IoF: Senza Scopo"
+  ],
+  [
+   4,
+   "Rene",
+   "IrF: Schiacciato / IoF: Calpestato"
+  ],
+  [
+   5,
+   "Fegato",
+   "IrF: Sorpreso / IoF: Nel Buio"
+  ],
+  [
+   6,
+   "Cuore",
+   "IrF: Bisbetico / IoF: Usato"
+  ],
+  [
+   7,
+   "Vaso Concezione",
+   "IrF: Morto di Fame / IoF: Melanconico"
+  ],
+  [
+   8,
+   "Vaso Governatore",
+   "IrI: Incapace / IoI: Non Approvato"
+  ],
+  [
+   9,
+   "Intestino Tenue",
+   "IrI: Vendetta Agrodolce / IoI: Futilita'"
+  ],
+  [
+   10,
+   "Vescica Biliare",
+   "IrI: Libero senza legami sentimentali / IoI: Incomprensibile"
+  ],
+  [
+   11,
+   "Vescica",
+   "IrI: Messo da Parte / IoI: Irrisolto"
+  ],
+  [
+   12,
+   "Intestino Crasso",
+   "IrI: Scoraggiato / IoI: Esasperato"
+  ],
+  [
+   13,
+   "Stomaco",
+   "IrI: Ostile / IoI: Odioso"
+  ],
+  [
+   14,
+   "Triplice Riscaldatore",
+   "IrI: Indifferente / IoI: Profondamente Depresso"
+  ]
+ ],
+ "tr-surrenali-sartorio": [
+  [
+   1,
+   "Triplice Riscaldatore",
+   "IrF: Compiaciuto / IoF: Abbandonato"
+  ],
+  [
+   2,
+   "Stomaco",
+   "IrF: Incomprensibile / IoF: Triste"
+  ],
+  [
+   3,
+   "Intestino Crasso",
+   "IrF: Restare Attaccato a / IoF: Incompreso"
+  ],
+  [
+   4,
+   "Vescica",
+   "IrF: Incapace / IoF: Spiacevole"
+  ],
+  [
+   5,
+   "Vescica Biliare",
+   "IrF: Ribelle / IoF: Stupido"
+  ],
+  [
+   6,
+   "Intestino Tenue",
+   "IrF: Arrabbiato / IoF: Perso"
+  ],
+  [
+   7,
+   "Vaso Governatore",
+   "IrF: Strapazzato / IoF: Che Giudica"
+  ],
+  [
+   8,
+   "Vaso Concezione",
+   "IrI: Schizzinoso / IoI: Repulsivo"
+  ],
+  [
+   9,
+   "Cuore",
+   "IrI: Falsamente Sicuro / IoI: Troppo Espressivo"
+  ],
+  [
+   10,
+   "Fegato",
+   "IrI: Non Supportato / IoI: Troppo Coinvolto"
+  ],
+  [
+   11,
+   "Rene",
+   "OI: Senza Empatia / UI: Vendicativo"
+  ],
+  [
+   12,
+   "Polmone",
+   "OI: Incompetente / UI: Sovraccaricato"
+  ],
+  [
+   13,
+   "Milza",
+   "OI: Sospettato / UI: Ingannato"
+  ],
+  [
+   14,
+   "Maestro del Cuore",
+   "OI: Incurante / UI: Paranoico"
+  ]
+ ],
+ "vescica-biliare-deltoide-anteriore": [
+  [
+   1,
+   "Vescica Biliare",
+   "IrF: Egoista / IoF: Poca Fiducia in Me Stesso"
+  ],
+  [
+   2,
+   "Intestino Tenue",
+   "IrF: Risentimento / IoF: Facilmente Manipolato"
+  ],
+  [
+   3,
+   "Triplice Riscaldatore",
+   "IrF: Disprezzato / IoF: Non Curante"
+  ],
+  [
+   4,
+   "Stomaco",
+   "IrF: Arrogante / IoF: Frivolo"
+  ],
+  [
+   5,
+   "Intestino Crasso",
+   "IrF: Immacolato / IoF: Sdolcinato"
+  ],
+  [
+   6,
+   "Vescica",
+   "IrF: Consumato / IoF: Vuoto"
+  ],
+  [
+   7,
+   "Vaso Governatore",
+   "IrF: Estroverso/Inespressivo / IoF: Introverso/Effusivo"
+  ],
+  [
+   8,
+   "Vaso Concezione",
+   "IrI: Senza Spina Dorsale / IoI: Meschino"
+  ],
+  [
+   9,
+   "Rene",
+   "IrI: Timido / IoI: Arrogante"
+  ],
+  [
+   10,
+   "Polmone",
+   "IrI: Obbligato / IoI: Spinto"
+  ],
+  [
+   11,
+   "Milza",
+   "IrI: Nervoso / IoI: Intollerante"
+  ],
+  [
+   12,
+   "Maestro del Cuore",
+   "IrI: Punito / IoI: Meschino"
+  ],
+  [
+   13,
+   "Cuore",
+   "IrI: Sradicato / IoI: Irrispettoso"
+  ],
+  [
+   14,
+   "Fegato",
+   "IrI: Fallimento / IoI: Troppo Sicuro"
+  ]
+ ],
+ "tr-tiroide-piccolo-rotondo": [
+  [
+   1,
+   "Triplice Riscaldatore",
+   "IrF: Glaciale / IoF: Senza Pensieri"
+  ],
+  [
+   2,
+   "Stomaco",
+   "IrF: Inorridito / IoF: Inquieto"
+  ],
+  [
+   3,
+   "Intestino Crasso",
+   "IrF: Saltare a conclusioni / IoF: Indeciso"
+  ],
+  [
+   4,
+   "Vescica",
+   "IrF: Ostinato / IoF: Insignificante"
+  ],
+  [
+   5,
+   "Vescica Biliare",
+   "IrF: Fuori di Testa / IoF: Disgustato"
+  ],
+  [
+   6,
+   "Intestino Tenue",
+   "IrF: Troppo Impaziente / IoF: Svuotato"
+  ],
+  [
+   7,
+   "Vaso Governatore",
+   "IrF: Disonorato / IoF: Addolorato"
+  ],
+  [
+   8,
+   "Vaso Concezione",
+   "IrI: Invidioso / IoI: Spietato"
+  ],
+  [
+   9,
+   "Cuore",
+   "IrI: Stupido / IoI: Troppo Reattivo"
+  ],
+  [
+   10,
+   "Fegato",
+   "IrI: Pieno di Risentimento / IoI: Che Non Perdona"
+  ],
+  [
+   11,
+   "Rene",
+   "IrI: Insicuro / IoI: Indisciplinato"
+  ],
+  [
+   12,
+   "Polmone",
+   "IrI: Inprigionato / IoI: Goloso"
+  ],
+  [
+   13,
+   "Milza",
+   "IrI: Insoddisfatto / IoI: Esausto"
+  ],
+  [
+   14,
+   "Maestro del Cuore",
+   "IrI: Non Affezionato / IoI: Possessivo"
+  ]
+ ],
+ "fegato-romboide": [
+  [
+   1,
+   "Fegato",
+   "IrF: Non Adattabile / IoF: Non Importante"
+  ],
+  [
+   2,
+   "Cuore",
+   "IrF: Morbido / IoF: Abbandonato"
+  ],
+  [
+   3,
+   "Maestro del Cuore",
+   "IrF: Distruttivo / IoF: Infastidito"
+  ],
+  [
+   4,
+   "Milza",
+   "IrF: Attaccato / IoF: Irrequieto"
+  ],
+  [
+   5,
+   "Polmone",
+   "IrF: Spietato / IoF: Pessimista"
+  ],
+  [
+   6,
+   "Rene",
+   "IrF: Furioso / IoF: Incompleto"
+  ],
+  [
+   7,
+   "Vaso Concezione",
+   "IrF: Temerario / IoF: Non Benvenuto"
+  ],
+  [
+   8,
+   "Vaso Governatore",
+   "IrI: Vulnerabile / IoI: Contrariato"
+  ],
+  [
+   9,
+   "Vescica",
+   "IrI: Sconfitto / IoI: Furibondo"
+  ],
+  [
+   10,
+   "Intestino Crasso",
+   "IrI: Non Protetto / IoI: Vendicativo"
+  ],
+  [
+   11,
+   "Stomaco",
+   "IrI: Turbolento / IoI: Attaccato (da altri/o)"
+  ],
+  [
+   12,
+   "Triplice Riscaldatore",
+   "IrI: Inaccessibile / IoI: Privato"
+  ],
+  [
+   13,
+   "Intestino Tenue",
+   "IrI: Non Recettivo / IoI: Minacciato"
+  ],
+  [
+   14,
+   "Vescica Biliare",
+   "IrI: Inaffidabile / IoI: Rigido"
+  ]
+ ],
+ "polmone-deltoide-medio": [
+  [
+   1,
+   "Polmone",
+   "IrF: Esilarante / IoF: Troppo Modesto"
+  ],
+  [
+   2,
+   "Rene",
+   "IrF: Desiderio Intenso / IoF: Non Sistemato (nella vita)"
+  ],
+  [
+   3,
+   "Fegato",
+   "IrF: Soffocato / IoF: Ostacolato"
+  ],
+  [
+   4,
+   "Cuore",
+   "IrF: Senza Fede / IoF: Travagliato"
+  ],
+  [
+   5,
+   "Maestro del Cuore",
+   "IrF: Audace / IoF: Cauto"
+  ],
+  [
+   6,
+   "Milza",
+   "IrF: Troppo Disciplinato / IoF: Senza Parole"
+  ],
+  [
+   7,
+   "Vaso Concezione",
+   "IrF: Dannoso / IoF: Indegno"
+  ],
+  [
+   8,
+   "Vaso Governatore",
+   "IrI: Interrogato / IoI: Morto"
+  ],
+  [
+   9,
+   "Stomaco",
+   "IrI: Santo (Meglio degli Altri) / IoI: Distruttivo"
+  ],
+  [
+   10,
+   "Triplice Riscaldatore",
+   "IrI: Claustrofobico / IoI: Intrappolato"
+  ],
+  [
+   11,
+   "Intestino Tenue",
+   "IrI: Intorpidito / IoI: Sarcastico"
+  ],
+  [
+   12,
+   "Vescica Biliare",
+   "IrI: Non Nutrito / IoI: Respinto"
+  ],
+  [
+   13,
+   "Vescica",
+   "IrI: Sfiducia / IoI: Spinto"
+  ],
+  [
+   14,
+   "Intestino Crasso",
+   "IrI: Stagnante / IoI: Arrogante"
+  ]
+ ],
+ "intestino-crasso-tensore-fascia-lata": [
+  [
+   1,
+   "Intestino Crasso",
+   "IrF: Impossibile / IoF: Non Cooperativo"
+  ],
+  [
+   2,
+   "Vescica",
+   "IrF: Dolorante / IoF: Mancanza d'Attenzione"
+  ],
+  [
+   3,
+   "Vescica Biliare",
+   "IrF: Euforico / IoF: Inadeguato"
+  ],
+  [
+   4,
+   "Intestino Tenue",
+   "IrF: Non Rispettoso / IoF: Sottomissibile"
+  ],
+  [
+   5,
+   "Triplice Riscaldatore",
+   "IrF: Sradicato / IoF: Scettico"
+  ],
+  [
+   6,
+   "Stomaco",
+   "IrF: Oneroso / IoF: Disinteressato"
+  ],
+  [
+   7,
+   "Vaso Governatore",
+   "IrF: Inutile / IoF: Stanco"
+  ],
+  [
+   8,
+   "Vaso Concezione",
+   "IrI: Annoiato / IoI: Vendicativo"
+  ],
+  [
+   9,
+   "Milza",
+   "IrI: Inespressivo / IoI: Senza Compassione"
+  ],
+  [
+   10,
+   "Maestro del Cuore",
+   "IrI: Solitario / IoI: Triste"
+  ],
+  [
+   11,
+   "Cuore",
+   "IrI: Offeso / IoI: Spavaldo"
+  ],
+  [
+   12,
+   "Fegato",
+   "IrI: Immotivato / IoI: Distrutto"
+  ],
+  [
+   13,
+   "Rene",
+   "IrI: Schizzinoso / IoI: Invidioso"
+  ],
+  [
+   14,
+   "Polmone",
+   "IrI: Disperato / IoI: Avido"
+  ]
+ ],
+ "milza-pancreas-gran-dorsale": [
+  [
+   1,
+   "Milza",
+   "IrF: Presuntuoso / IoF: Inutile"
+  ],
+  [
+   2,
+   "Polmone",
+   "IrF: Tradito / IoF: Imbroglione"
+  ],
+  [
+   3,
+   "Rene",
+   "IrF: Calpestato / IoF: Inutile"
+  ],
+  [
+   4,
+   "Fegato",
+   "IrF: Esagerato / IoF: Insignificante"
+  ],
+  [
+   5,
+   "Cuore",
+   "IrF: Avventato / IoF: Placido"
+  ],
+  [
+   6,
+   "Maestro del Cuore",
+   "IrF: Furioso / IoF: Codardo"
+  ],
+  [
+   7,
+   "Vaso Concezione",
+   "IrF: Presuntuoso / IoF: Senza Valore"
+  ],
+  [
+   8,
+   "Vaso Governatore",
+   "IrI: Manipolato / IoI: Crudele"
+  ],
+  [
+   9,
+   "Triplice Riscaldatore",
+   "IrI: Scontento / IoI: Che Incolpa"
+  ],
+  [
+   10,
+   "Intestino Crasso",
+   "IrI: Svantaggiato / IoI: Troppo Felice"
+  ],
+  [
+   11,
+   "Vescica Biliare",
+   "IrI: Distratto / IoI: Permaloso"
+  ],
+  [
+   12,
+   "Vescica",
+   "IrI: Disattento / IoI: Irascibile"
+  ],
+  [
+   13,
+   "Intestino Tenue",
+   "IrI: Stupido / IoI: Belligerante"
+  ],
+  [
+   14,
+   "Stomaco",
+   "IrI: Buffone / IoI: Deluso"
+  ]
+ ]
+}
