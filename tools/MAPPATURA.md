@@ -34,3 +34,14 @@ Deserto → Devil's Claw, Evening Star. (Le altre coordinate seguono lo stesso s
 ## 5. Come rigenerare le immagini
 `python tools/slice_pages.py "<manuale>.pdf" tools/page_map.json` (richiede poppler/pdftoppm).
 Le immagini della coordinata POC (vc-sovraspinato) sono già incluse nel repo.
+
+## 6. Stato del lotto (aggiornamento)
+- ✅ Immagini Basket Weaver generate per **9 coordinate** (le uniche presenti in questo volume):
+  Vaso Concezione, Vaso Governatore, Stomaco, Milza/Pancreas, Milza, Cuore,
+  Intestino Tenue, Vescica, Rene. Confini pagina in `tools/page_map.json`.
+  Le altre 7 coordinate (Maestro del Cuore, TR/Tiroide, TR/Surrenali, Vescica Biliare,
+  Fegato, Polmone, Intestino Crasso) non sono in questo PDF: servirebbe l'altro volume.
+- ✅ Essenze floreali (Australiane + Deserto) popolate per **tutti i 16** meridiani,
+  dalle tabelle "per Meridiano" e "per ordine alfabetico".
+- ⬜ Prosa da trascrivere (via vision) dal manuale "Atteggiamenti": affermazioni,
+  emozioni/forme-pensiero, e i testi "storia del problema / del meridiano".
