@@ -11,8 +11,8 @@
   const detailHead = el("detailHead"), anchors = el("anchors"), sections = el("sections");
 
   const esc = (s) => String(s == null ? "" : s)
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   const has = (s) => s && String(s).trim().length > 0;
   const ph = '<span class="placeholder">Da compilare dai manuali.</span>';
 
@@ -23,8 +23,8 @@
       !q || norm(c.meridiano).includes(q) || norm(c.muscolo).includes(q) || norm(c.coloreNome).includes(q)
     );
     grid.innerHTML = rows.map((c) => `
-      <button class="card" data-id="${c.id}">
-        <span class="card__color" style="background:${c.colore}"></span>
+      <button class="card" data-id="${esc(c.id)}">
+        <span class="card__color" style="background:${esc(c.colore)}"></span>
         <span class="card__body">
           <span class="card__meridian">${esc(c.meridiano)}</span>
           <span class="card__muscle">${esc(c.muscolo)}</span>
@@ -45,19 +45,23 @@
 
   function renderDetail(c) {
     detailHead.style.background = c.colore;
-    // testo bianco o scuro in base alla luminosità
     detailHead.style.color = isLight(c.colore) ? "#12202b" : "#fff";
     detailHead.innerHTML = `
       <h2>${esc(c.meridiano)}</h2>
       <div class="muscle">${esc(c.muscolo)}</div>
       <span class="chip">${esc(c.coloreNome)}</span>`;
 
-    const corr = (c.correzioni || []).map((x) => `
+    const corrList = (c.correzioni || []).map((x) => `
       <div class="corr">
         <div class="corr__title">${esc(x.titolo || "Correzione")}</div>
         ${has(x.tecnica) ? `<span class="corr__tech">${esc(x.tecnica)}</span>` : ""}
-        <div class="corr__desc">${has(x.descrizione) ? esc(x.descrizione) : ph}</div>
-      </div>`).join("") || `<p>${ph}</p>`;
+        ${has(x.descrizione) ? `<div class="corr__desc">${esc(x.descrizione)}</div>` : ""}
+      </div>`).join("");
+    const imgs = (c.immagini || []).map((src, i) => `
+      <img class="pageimg" src="${esc(src)}" alt="Pagina ${i + 1} del manuale" loading="lazy" data-full="${esc(src)}" />`).join("");
+    const corr = (corrList || imgs)
+      ? `${corrList}${imgs ? `<div class="pages">${imgs}</div>` : ""}`
+      : `<p>${ph}</p>`;
 
     const ess = (c.essenze || []).filter((x) => has(x.nome) || has(x.atteggiamento)).map((x) => `
       <div class="ess">
@@ -72,19 +76,16 @@
       { id: "essenze", label: "Atteggiamenti ed essenze", html: ess }
     ];
 
-    anchors.style.setProperty("--accent", c.colore);
     anchors.innerHTML = secs.map((s, i) =>
       `<a href="#sec-${s.id}" data-sec="${s.id}"${i === 0 ? ' class="active"' : ""}>${s.label}</a>`).join("");
     sections.innerHTML = secs.map((s) =>
-      `<section class="section" id="sec-${s.id}" style="--accent:${c.colore}">
+      `<section class="section" id="sec-${s.id}" style="--accent:${esc(c.colore)}">
          <h3>${s.label}</h3>${s.html}</section>`).join("");
 
-    document.querySelectorAll(".section").forEach((n) => n.style.setProperty("--accent", c.colore));
     window.scrollTo(0, 0);
     watchSections();
   }
 
-  // Evidenzia l'ancora della sezione visibile
   let observer;
   function watchSections() {
     if (observer) observer.disconnect();
@@ -124,6 +125,21 @@
   }
   backBtn.addEventListener("click", () => { location.hash = ""; });
   window.addEventListener("hashchange", route);
+
+  /* ---------- Lightbox immagini (zoom a tutto schermo) ---------- */
+  const lightbox = document.createElement("div");
+  lightbox.className = "lightbox";
+  lightbox.hidden = true;
+  lightbox.innerHTML = '<button class="lightbox__close" aria-label="Chiudi">×</button><img alt="Pagina ingrandita" />';
+  document.body.appendChild(lightbox);
+  const lbImg = lightbox.querySelector("img");
+  function closeLb() { lightbox.hidden = true; lbImg.src = ""; }
+  sections.addEventListener("click", (e) => {
+    const img = e.target.closest(".pageimg");
+    if (img) { lbImg.src = img.dataset.full; lightbox.hidden = false; }
+  });
+  lightbox.addEventListener("click", closeLb);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeLb(); });
 
   /* ---------- Avvio ---------- */
   renderList("");
