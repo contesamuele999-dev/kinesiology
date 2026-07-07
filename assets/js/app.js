@@ -1,4 +1,4 @@
-/* app.js — logica UI: elenco coordinate, ricerca, dettaglio con sezioni. Vanilla JS. */
+/* app.js — logica UI: elenco coordinate, ricerca, dettaglio con sezioni, tema. Vanilla JS. */
 (function () {
   "use strict";
   const data = window.COORDINATE || [];
@@ -7,7 +7,7 @@
   const listView = el("listView"), detailView = el("detailView");
   const grid = el("grid"), noResults = el("noResults");
   const searchInput = el("search"), searchWrap = el("searchWrap");
-  const backBtn = el("backBtn");
+  const backBtn = el("backBtn"), themeBtn = el("themeBtn");
   const detailHead = el("detailHead"), anchors = el("anchors"), sections = el("sections");
 
   const esc = (s) => String(s == null ? "" : s)
@@ -15,6 +15,23 @@
   const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   const has = (s) => s && String(s).trim().length > 0;
   const ph = '<span class="placeholder">Da compilare dai manuali.</span>';
+
+  /* ---------- Tema chiaro/scuro ---------- */
+  function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+  function safeSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+  function applyTheme(t){
+    document.body.classList.toggle("dark", t === "dark");
+    if (themeBtn) themeBtn.textContent = t === "dark" ? "☀️" : "🌙";
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", t === "dark" ? "#0f141a" : "#0f766e");
+  }
+  let theme = safeGet("kapp-theme");
+  if (!theme) theme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  applyTheme(theme);
+  if (themeBtn) themeBtn.addEventListener("click", () => {
+    theme = document.body.classList.contains("dark") ? "light" : "dark";
+    applyTheme(theme); safeSet("kapp-theme", theme);
+  });
 
   /* ---------- Elenco + ricerca ---------- */
   function renderList(filter) {
@@ -40,6 +57,15 @@
   });
   searchInput.addEventListener("input", () => renderList(searchInput.value));
 
+  /* ---------- Navigazione a sezioni (scroll, senza toccare l'hash) ---------- */
+  anchors.addEventListener("click", (e) => {
+    const a = e.target.closest("a");
+    if (!a) return;
+    e.preventDefault();
+    const target = document.getElementById("sec-" + a.dataset.sec);
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
   /* ---------- Dettaglio ---------- */
   function textBlock(v) { return has(v) ? `<p>${esc(v)}</p>` : `<p>${ph}</p>`; }
 
@@ -63,7 +89,6 @@
       ? `${corrList}${imgs ? `<div class="pages">${imgs}</div>` : ""}`
       : `<p>${ph}</p>`;
 
-    // Atteggiamenti (tabella pensieri & emozioni per posizione/meridiano)
     const attRows = (c.atteggiamenti || []).map((a) => `
       <tr><td class="att__pos">${esc(a.posizione)}</td><td>${esc(a.meridiano)}</td><td>${esc(a.stress)}</td></tr>`).join("");
     const attHtml = attRows
@@ -117,8 +142,9 @@
     return (0.299 * r + 0.587 * g + 0.114 * b) > 165;
   }
 
-  /* ---------- Router (hash) ---------- */
+  /* ---------- Router (hash #/id). Ignora gli hash di sezione (#sec-...) ---------- */
   function route() {
+    if (location.hash.indexOf("#sec-") === 0) return; // ancore di sezione: non resettare la vista
     const m = location.hash.match(/^#\/(.+)$/);
     if (m) {
       const c = data.find((x) => x.id === m[1]);
