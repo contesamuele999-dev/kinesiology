@@ -33,6 +33,17 @@
     applyTheme(theme); safeSet("kapp-theme", theme);
   });
 
+  /* ---------- Altezza header sticky (ancore + scroll-margin) ---------- */
+  const topbar = document.querySelector(".topbar");
+  function updateStick(){
+    const th = topbar ? topbar.offsetHeight : 60;
+    const ah = (anchors && !detailView.hidden) ? anchors.offsetHeight : 0;
+    const rs = document.documentElement.style;
+    rs.setProperty("--topbar-h", th + "px");
+    rs.setProperty("--stick-h", (th + ah + 14) + "px");
+  }
+  window.addEventListener("resize", updateStick);
+
   /* ---------- Elenco + ricerca ---------- */
   function renderList(filter) {
     const q = norm(filter);
@@ -125,6 +136,7 @@
 
     window.scrollTo(0, 0);
     watchSections();
+    updateStick();
   }
 
   let observer;
@@ -164,24 +176,71 @@
     }
     detailView.hidden = true; listView.hidden = false;
     backBtn.hidden = true; searchWrap.hidden = false;
+    updateStick();
   }
   backBtn.addEventListener("click", () => { location.hash = ""; });
   window.addEventListener("hashchange", route);
 
-  /* ---------- Lightbox immagini (zoom a tutto schermo) ---------- */
+  /* ---------- Lightbox immagini (zoom + navigazione tra pagine) ---------- */
   const lightbox = document.createElement("div");
   lightbox.className = "lightbox";
   lightbox.hidden = true;
-  lightbox.innerHTML = '<button class="lightbox__close" aria-label="Chiudi">×</button><img alt="Pagina ingrandita" />';
+  lightbox.innerHTML =
+    '<button class="lightbox__close" aria-label="Chiudi">×</button>' +
+    '<button class="lightbox__nav lightbox__prev" aria-label="Precedente">‹</button>' +
+    '<img alt="Pagina ingrandita" />' +
+    '<button class="lightbox__nav lightbox__next" aria-label="Successiva">›</button>' +
+    '<span class="lightbox__count"></span>';
   document.body.appendChild(lightbox);
   const lbImg = lightbox.querySelector("img");
+  const lbPrev = lightbox.querySelector(".lightbox__prev");
+  const lbNext = lightbox.querySelector(".lightbox__next");
+  const lbCount = lightbox.querySelector(".lightbox__count");
+  let lbList = [], lbIdx = 0, lbSwiped = false, lbX0 = null;
+
+  function lbShow(i) {
+    if (!lbList.length) return;
+    lbIdx = (i + lbList.length) % lbList.length;
+    lbImg.src = lbList[lbIdx];
+    const multi = lbList.length > 1;
+    lbPrev.hidden = lbNext.hidden = !multi;
+    lbCount.hidden = !multi;
+    if (multi) lbCount.textContent = (lbIdx + 1) + " / " + lbList.length;
+  }
+  function openLb(img) {
+    lbList = Array.from(sections.querySelectorAll(".pageimg")).map((n) => n.dataset.full);
+    lbIdx = lbList.indexOf(img.dataset.full);
+    if (lbIdx < 0) { lbList = [img.dataset.full]; lbIdx = 0; }
+    lbShow(lbIdx);
+    lightbox.hidden = false;
+  }
   function closeLb() { lightbox.hidden = true; lbImg.src = ""; }
+
   sections.addEventListener("click", (e) => {
     const img = e.target.closest(".pageimg");
-    if (img) { lbImg.src = img.dataset.full; lightbox.hidden = false; }
+    if (img) openLb(img);
   });
-  lightbox.addEventListener("click", closeLb);
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeLb(); });
+  lbPrev.addEventListener("click", (e) => { e.stopPropagation(); lbShow(lbIdx - 1); });
+  lbNext.addEventListener("click", (e) => { e.stopPropagation(); lbShow(lbIdx + 1); });
+  lbImg.addEventListener("click", (e) => e.stopPropagation());
+  lightbox.addEventListener("click", () => { if (lbSwiped) { lbSwiped = false; return; } closeLb(); });
+  document.addEventListener("keydown", (e) => {
+    if (lightbox.hidden) return;
+    if (e.key === "Escape") closeLb();
+    else if (e.key === "ArrowLeft") lbShow(lbIdx - 1);
+    else if (e.key === "ArrowRight") lbShow(lbIdx + 1);
+  });
+  lightbox.addEventListener("touchstart", (e) => { lbX0 = e.touches[0].clientX; lbSwiped = false; }, { passive: true });
+  lightbox.addEventListener("touchmove", (e) => {
+    if (lbX0 != null && Math.abs(e.touches[0].clientX - lbX0) > 40) lbSwiped = true;
+  }, { passive: true });
+  lightbox.addEventListener("touchend", (e) => {
+    if (lbX0 != null && lbSwiped) {
+      const dx = e.changedTouches[0].clientX - lbX0;
+      lbShow(lbIdx + (dx < 0 ? 1 : -1));
+    }
+    lbX0 = null;
+  }, { passive: true });
 
   /* ---------- Avvio ---------- */
   renderList("");
