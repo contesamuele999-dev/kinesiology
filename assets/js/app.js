@@ -85,8 +85,11 @@
       </div>`).join("");
     const imgs = (c.immagini || []).map((src, i) => `
       <img class="pageimg" src="${esc(src)}" alt="Pagina ${i + 1} del manuale" loading="lazy" data-full="${esc(src)}" />`).join("");
-    const corr = (corrList || imgs)
-      ? `${corrList}${imgs ? `<div class="pages">${imgs}</div>` : ""}`
+    const corr = corrList ? corrList : `<p>${ph}</p>`;
+    // Storia del problema (Basket Weaver): testo + pagine del manuale
+    const pagesHtml = imgs ? `<div class="pages">${imgs}</div>` : "";
+    const problema = (has(c.storiaProblema) || pagesHtml)
+      ? `${has(c.storiaProblema) ? `<p>${esc(c.storiaProblema)}</p>` : ""}${pagesHtml}`
       : `<p>${ph}</p>`;
 
     const attRows = (c.atteggiamenti || []).map((a) => `
@@ -109,7 +112,7 @@
 
     const secs = [
       { id: "correzioni", label: "Correzioni", html: corr },
-      { id: "problema", label: "Storia del problema", html: textBlock(c.storiaProblema) },
+      { id: "problema", label: "Storia del problema", html: problema },
       { id: "meridiano", label: "Storia del meridiano", html: textBlock(c.storiaMeridiano) },
       { id: "essenze", label: "Atteggiamenti ed essenze", html: ess }
     ];

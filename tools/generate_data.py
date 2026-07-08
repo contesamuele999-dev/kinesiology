@@ -41,6 +41,7 @@ ESS={
 }
 ATT=json.load(open("tools/atteggiamenti.json",encoding="utf-8")) if os.path.exists("tools/atteggiamenti.json") else {}
 DET=json.load(open("tools/essenze_dettaglio.json",encoding="utf-8")) if os.path.exists("tools/essenze_dettaglio.json") else {}
+ST=json.load(open("tools/storia.json",encoding="utf-8")) if os.path.exists("tools/storia.json") else {}
 def imgs(cid): return [f.replace("\\","/") for f in sorted(glob.glob(f"assets/pages/{cid}/p*.jpg"))]
 out=['/*',' * data.js - GENERATO da tools/generate_data.py. Non modificare a mano:',
      ' * aggiorna tools/atteggiamenti.json / ESS in generate_data.py e rilancia lo script.',' */','','const COORDINATE = [']
@@ -58,12 +59,13 @@ for (cid,mer,mus,col,cn) in COORDS:
         parts.append("{ nome: %s, atteggiamento: %s%s }"%(json.dumps(n),json.dumps(a),extra))
     ess_js="[ "+", ".join(parts)+" ]"
     att=ATT.get(cid); att_js=""
+    st=ST.get(cid,{})
     if att: att_js="\n    atteggiamenti: [ "+", ".join("{ posizione: %d, meridiano: %s, stress: %s }"%(int(p),json.dumps(m),json.dumps(s)) for p,m,s in att)+" ],"
     out+=["  {",
       f"    id: {json.dumps(cid)}, meridiano: {json.dumps(mer)}, muscolo: {json.dumps(mus)}, colore: {json.dumps(col)}, coloreNome: {json.dumps(cn)},",
       f"    correzioni: {corr},",
       f"    immagini: {im_js},{att_js}",
-      '    storiaProblema: "", storiaMeridiano: "",',
+      "    storiaProblema: %s, storiaMeridiano: %s,"%(json.dumps(st.get("problema",""),ensure_ascii=False), json.dumps(st.get("meridiano",""),ensure_ascii=False)),
       f"    essenze: {ess_js}","  },"]
 out+=["];","",'if (typeof window !== "undefined") window.COORDINATE = COORDINATE;']
 open("assets/js/data.js","w",encoding="utf-8").write("\n".join(out)+"\n")
