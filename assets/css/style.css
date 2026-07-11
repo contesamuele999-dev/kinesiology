@@ -157,3 +157,6 @@ html,body{ background:var(--bg); color:var(--ink);
 .aff li{ margin:6px 0; }
 .subh{ margin-top:16px; font-size:1rem; font-weight:800; color:var(--muted); }
 .mer-name{ font-weight:800; font-size:1.1rem; }
+
+/* Nota di movimento (raggio/esecuzione del monitoraggio) sotto il titolo */
+.detail__head .movnote{ margin-top:8px; font-size:.9rem; line-height:1.4; opacity:.9; max-width:60ch; }

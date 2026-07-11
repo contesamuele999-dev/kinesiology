@@ -136,6 +136,7 @@
     detailHead.innerHTML = `
       <h2>${esc(c.muscolo)}</h2>
       <div class="muscle">${esc(c.movimento) || "Movimento da definire"}</div>
+      ${has(c.movimentoNote) ? `<div class="movnote">${esc(c.movimentoNote)}</div>` : ""}
       <span class="chip">${esc(c.meridiano)}</span>
       <span class="chip">${esc(c.coloreNome)}</span>`;
 

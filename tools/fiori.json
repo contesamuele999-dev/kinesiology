@@ -1,0 +1,995 @@
+{
+ "Vaso Governatore": [
+  {
+   "nome": "Desert Willow",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Senso di essere spinto a fare qualcosa, nella fretta e nella confusione",
+    "Concentrarmi sulle mie debolezze e limitazioni",
+    "Non sentirmi nel flusso della vita",
+    "Preoccupazione per le cose che non sono \"proprio giuste\"",
+    "Inflessibilita e rigidità",
+    "Perfezionismo"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere fiducia nella vita permettendomi di fare parte del suo flusso, lasciarmi andare alla grandezza della realtà, e sentirmi a mio agio in qualsiasi situazione."
+  },
+  {
+   "nome": "Red Helmet Orchid",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Essere ribelle",
+    "Essere testa calda",
+    "Essere egoista"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a esprimere il mio vero io mostrando sensibilità, rispetto e considerazione per me stesso e per gli altri."
+  },
+  {
+   "nome": "Honeysuckle",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Profonda malinconia per essere lontano da casa",
+    "Desiderio di fuggire dal crescere vivendo nel passato"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare e affermare il presente abbracciando il processo di crescita. Avrò fiducia nella mia guida interiore e andrò avanti con sicurezza in tutte le aree della vita."
+  },
+  {
+   "nome": "Beech",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Incapacità ad accettare coloro che sono diversi da me",
+    "Fastidio per le abitudini, i gesti, le caratteristiche degli altri",
+    "Continuare a trovare difetti negli altri"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare le differenze degli altri, guardare le loro qualità e creare un ambiente di fiducia e benessere."
+  },
+  {
+   "nome": "Swamp Banksia",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Poca energia",
+    "Stanchezza",
+    "Scoraggiamento",
+    "Frustrazione"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad abbracciare la vita con energia, entusiasmo e amore."
+  },
+  {
+   "nome": "Willow",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Accusare gli altri per tutte le situazioni della vita",
+    "Riluttanza ad essere contento per la buona fortuna degli altri",
+    "Pessimismo"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere la responsabilità per le situazioni della mia vita, creare armonia nei miei pensieri ed azioni ed accettare con gioia la buona fortuna degli altri."
+  },
+  {
+   "nome": "Coral Bean",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Incapacità di riprendermi dalle situazioni pericolose",
+    "Mancanza di concentrazione",
+    "Indebolimento del mio istinto di sopravvivenza"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riallineare e rinnovare la mia forza d'animo, attenzione e concentrazione per essere in contatto con la mia saggezza interiore che mi da' ottimismo, sicurezza e capacità di mantenermi al sicuro."
+  }
+ ],
+ "Vaso Concezione": [
+  {
+   "nome": "Scleranthus",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Essere poco determinato",
+    "Indecisione",
+    "Umore variabile",
+    "Esitazione"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a prendere le mie decisioni dalla prospettiva dell'amore senza limiti; chiaramente e facilmente integrare ciò che sembra in opposizione, quando é appropriato; e agire con sicurezza interiore."
+  },
+  {
+   "nome": "Grey Spider Flower",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Terrore",
+    "Paura di attacchi psichici e soprannaturali"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a credere nella sicurezza dell'universo e ad agire con fiducia, tranquillita e coraggio."
+  },
+  {
+   "nome": "Bluebell",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Chiusura emotiva",
+    "Paura di perdere",
+    "Avidita",
+    "Rigidità"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad aprire il mio cuore, essere fiducioso nell'abbondanza dell'universo, ricevere con fiducia e condividere con gioia."
+  },
+  {
+   "nome": "Devil's Claw",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad essere responsabile di accettare ciò che sono, mostrare sicurezza in modo da ispirare e stimolare gli altri, concedermi con facilita agli altri, e restare consapevole della mia pura identità."
+  },
+  {
+   "nome": "Mimulus",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Paura cosciente di cose che possono essere percepite dalla mente e dai sensi"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare l'amore come forza per affrontare la vita con intuito, forza d'animo e buon senso."
+  },
+  {
+   "nome": "Crab Apple",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Disgusto per me stesso",
+    "Scoraggiamento",
+    "Vergogna per le mie debolezze mentali, emotive, fisiche o spirituali"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare il mio corpo ed i suoi cambiamenti. Comprendo che la purificazione é una tappa necessaria per avere più chiarezza e maggiore coscienza di me stesso."
+  },
+  {
+   "nome": "Evening Star",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Dipendenza da fonti esterne per affermarmi",
+    "Superficialità nelle relazioni con gli altri",
+    "Barriere Emotive",
+    "Mancanza di autoaffermazione e di autostima",
+    "Senso di inadeguatezza, come se non avessi niente da offrire"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad apprezzare ed affermare il mio vero essere con fiducia tanto da accettare intimità e intensità nelle mie relazioni, sviluppando fiducia in me stesso, e accettando il mio valore e la mia vera bellezza."
+  }
+ ],
+ "Stomaco": [
+  {
+   "nome": "Billy Goat Plum",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Incapacità di godere del sesso",
+    "Ribrezzo per il mio fisico",
+    "Repulsione sessuale"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a godere della mia sessualità, a provare piacere sessuale, ad accettare la mia mascolinità/femminilità e provare piacere nel vivere nel mio corpo."
+  },
+  {
+   "nome": "Chaparral",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Intensa desolazione interiore QO Tristezza",
+    "Sentirmi sempre solo e \"tagliato fuori\" QO Ansiosa amarezza",
+    "Interiorizzare le cose creando tensione nervosa",
+    "Chiusura nel mio mondo magico"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare l'amicizia degli altri per tutta la vita, pormi in connessione con la mia fonte interiore ed esprimere le mie emozioni e la mia energia creativa."
+  },
+  {
+   "nome": "Waratah",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Disperazione nera",
+    "Mancanza di speranza",
+    "Q) Incapacità di reagire ad una crisi"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad acquisire il coraggio di connettermi alla vita con tenacia, adattabilita e fiducia."
+  },
+  {
+   "nome": "Holly",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Malizia",
+    "Animosita",
+    "Bramare ie caratteristiche o la buona sorte di altri",
+    "OQ) Aspettarsi il peggio dagli altri"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a far si che i miei pensieri e sentimenti si basino sul potere più alto dell'amore."
+  },
+  {
+   "nome": "Cane Cholla Cactus",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Incapacità a comprendere o trovare la soluzione a un problema",
+    "Mantenere troppo rigido un atteggiamento o l'aspettativa riguardo a una situ",
+    "azione",
+    "Mancanza di atteggiamento difensivo o di pretesa nelle mie relazioni con gli altri"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ascoltare gli altri con comprensione e mentalita aperta e a prendere decisioni con fiducia."
+  },
+  {
+   "nome": "Walnut",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Essere influenzato da forti ed energiche cause esterne",
+    "Apertura ai pensieri ed emozioni non in linea con il portare a termine i miei",
+    "obiettivi",
+    "Incapacità di avanzare nella mia vita"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ascoltare la mia voce interiore e con fiducia seguire la mia propria ed unica direzione nella vita."
+  }
+ ],
+ "Milza": [
+  {
+   "nome": "Aloe Vera",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "La mia incapacità o il mio non yolermi arrendere al processo di guarigione",
+    "Resistenza a far uscire tutto ciò che ho \"represso\"",
+    "i Percepire una crisi di salute come ingiusta o pericolosa"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a coltivare pazienza | a proposito del mio processo di guarigione, permettere alle mie emozioni di salire in | superficie e far progressi nella vita con un completo supporto interiore."
+  },
+  {
+   "nome": "Arizona White Oak",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Paura di progredire nella vita",
+    "J Nostalgia",
+    "Depressione",
+    "Tristezza"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a conseguire forza e | stabilita per progredire nella vita con gioia."
+  },
+  {
+   "nome": "Star of Bethlehem",
+   "tipo": "Fiore di Bach",
+   "squilibri": [],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mantenere una pace interiore."
+  },
+  {
+   "nome": "Dagger Hakea",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Risentimento",
+    "Amarezza nei confronti dei miei amici più stretti, famiglia ed amanti"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a esprimere i miei sentimenti e a perdonare gli altri come mezzo per guarire me stesso."
+  },
+  {
+   "nome": "Hickory",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Qj Dare amore allo scopo di riceverlo",
+    "Frenare e cercare di controllare coloro che amo",
+    "Provare dispiacere per me stesso",
+    "Concentrarmi troppo su me stesso anziché sugli altri"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a esprimere i miei sentimenti e perdonare gli altri come mezzo per guarire me stesso."
+  },
+  {
+   "nome": "Black-eyed Susan",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Continua dispersione di energia",
+    "Sforzarmi costantemente",
+    "Impazienza",
+    "Stile di vita prendi-e-vai"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a rallentare e a godere dei momenti speciali di ogni giorno ed essere in sintonia con la mia guida interiore che é la , fonte della mia fiducia e della mia pace interiore."
+  },
+  {
+   "nome": "Agrimony",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Idea che bisogna guadagnarsi l'amore e l'essere accettati dagli altri",
+    "Abitudine di nascondere l'infelicita o l'ansieta agli altri",
+    "Angoscia mentale"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a condividere le mie emozioni e pensieri e coinvolgendo coloro che mi amano cosicché gli altri possano sapere chi sono veramente."
+  }
+ ],
+ "Cuore": [
+  {
+   "nome": "Vervain",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Usare la mia volontà personale e la mia ideologia per definire la natura della",
+    "realtà",
+    "Cercare di convertire gli altri al mio sistema di credenze",
+    "Processi mentali molto contorti",
+    "Continuo uso eccessivo e prolungato di energie"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad incoraggiare chiunque a realizzarsi, rilassarmi, e allineare la mia volontà alla volontà universale."
+  },
+  {
+   "nome": "Vine",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Arroganza autoritaria e tirannica nei confronti degli altri",
+    "Cercare di essere utile agli altri dirigendo le loro attività",
+    "Rigidità mentale"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare che Vetfettive potere e gentile ed amorevole ed é cosi saldo che semplicemente sostiene le capacità degli altri."
+  },
+  {
+   "nome": "Chestnut Bud",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Riluttanza a imparare dagli errori del passato",
+    "Tendenza a ripetere le abitudini del passato"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a vedere il significato dietro ai drammi della vita e ad imparare ciò di cui ho bisogno per progredire con occulatezza."
+  },
+  {
+   "nome": "Sturt Desert Rose",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Colpa",
+    "Poca autostima",
+    "Tendenza a farmi comandare dagli altri"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a essere sincero con me stesso seguendo la mia saggezza interiore."
+  },
+  {
+   "nome": "Agave",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Le mie paure che mi inibiscono, che ostacolano le mie qualità, le mie capacità, la",
+    "mia forza e la mia fiducia",
+    "Mancanza di crescita interiore",
+    "Sensazione di debolezza nella vita quotidiana"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare tutti i miei aspetti e a manifestare la mia forza interiore nella vita quotidiana."
+  },
+  {
+   "nome": "Prickly Pear Cactus",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Incapacità ad adattarmi",
+    "Desiderio di controllare il tempismo degli eventi e delle situazioni",
+    "Non essere attaccato a ciò che so essere giusto per me"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ascoltare la mia voce interiore a proposito di ciò che é giusto per me, accettare ciò che non posso cambiare e agire per cambiare quelle cose che posso."
+  },
+  {
+   "nome": "Bauhinia",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Resistenza a cambiare",
+    "Rigidità e riluttanza"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad agire con flessibilita ed entusiasmo."
+  }
+ ],
+ "Intestino Tenue": [
+  {
+   "nome": "Oak",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Lottare contro la mia vita e i suoi processi di crescita",
+    "Scoraggiamento nei confronti dei problemi"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad affrontare la vita con fiducia, forza, coraggio e stabilità."
+  },
+  {
+   "nome": "Old Man Banksia",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Indolenza",
+    "Stanchezza",
+    "Poca energia",
+    "Frustrazione",
+    "Sconforto",
+    "Eccesso"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mostrare tanta gentilezza e considerazione per me stesso quanto per gli altri e vivere la vita con energia, entusiasmo ed interesse."
+  },
+  {
+   "nome": "Hoptree",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "i Incapacita' a restare concentrato su ciò che e importante",
+    "Cj Tentare con troppa forza di controllare O Incapacità di evitare le distrazioni",
+    "Perdere di vista il mio vero scopo QO Profonda ansia interiore"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a entrare in contatto con un profondo livello di obiettivi, rimanere focalizzato su ciò che é più essenziale e rinunciare con gioia al mio desiderio personale per uno piti alto."
+  },
+  {
+   "nome": "Mustard",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Eccessiva concentrazione sugli squallori della vita",
+    "Instabilita",
+    "Incapacità di capire da dove nascono le mie emozioni"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a portare amore ad ogni esperienza, mantenere equilibrio nella mia vita e progredire con fiducia poiché ogni esperienza contiene delle opportunita per crescere."
+  },
+  {
+   "nome": "Rock Rose",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Estrema paura causata da incidenti, malattie 0 esperienze sconosciute"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare il coraggio e la capacità di dimenticare i miei problemi. Mi concentrero sull'aiutare le altre persone in situazioni d'emergenza."
+  },
+  {
+   "nome": "Mountain Devil",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Ot Odio",
+    "Rabbia",
+    "Sospetto",
+    "Tenere rancore"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere ed accettare le mie emozioni. Inoltre accetterd, perdonerd e amero me stesso e gli altri."
+  }
+ ],
+ "Vescica": [
+  {
+   "nome": "Pencil Cholla Cactus",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Incapacità di mantenere una contina attenzione in una direzione specifica",
+    "C) Energie squilibrate",
+    "Sentirmi soppraffatto dai dettagli",
+    "Paura di essere vulnerabile"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a concentrarmi in una direzione specifica quando é appropriate, e mantenere le mie energie in equilibrio."
+  },
+  {
+   "nome": "Ocotillo",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Ci Le mie emozioni inconsce o non espresse che scoppiano in modo incontrollato",
+    "Essere vittima delle mie emozioni",
+    "Ly Insicurezza"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare le mie emozioni con maggior giudizio ed esprimerle in modo più responsabile."
+  },
+  {
+   "nome": "Sweet Chestnut",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Incapacità di sopportare la mia intensa sofferenza mentale"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a credere in un potere superiore, accettare una capacità pit' grande e crescere in consapevolezza, andando aldila dei miei limiti e capacità personali."
+  },
+  {
+   "nome": "Water Violet",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Egoismo",
+    "Isolamento emotivo dagli altri"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a rivelare la mia essenza interiore nelle relazioni con gli altri, che é essenziale per la mia realizzazione."
+  },
+  {
+   "nome": "Gentian",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Oi Negativita",
+    "Pessimismo",
+    "La tendenza ad arrendermi quando sono sotto stress",
+    "La mia idea che gli ostacoli sono insormontabili"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad affrontare gli ostacoli con vigore, capire che i miei sforzi sono una forma di successo e concentrarmi sulla vita come se fosse una serie di possibilità."
+  },
+  {
+   "nome": "Mariposa Lily",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "i) Mancanza di nutrimento da parte della mia \"madre interiore\" che si mostra con un",
+    "senso di desolazione ed una mancanza di fiducia in me stesso"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a dar vita a me stesso, che si mostrera in gioia, una sensazione di libertà e nell'abilita di dare e ricevere amore."
+  },
+  {
+   "nome": "Tall Yellow Top",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Alienazione",
+    "Solitudine",
+    "Isolamento"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare me stesso e gli altri mentre nel mio ambiente mi sento a casa aprendomi al mio senso interiore di appartenenza."
+  }
+ ],
+ "Rene": [
+  {
+   "nome": "Dog Rose",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Insicurezza",
+    "Paura (0 Apprensione per gli altri",
+    "Oi Timidezza QO Timori ingiustificati"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a intraprendere fiduciosamente nuove sfide e ad esprimermi serenamente con gli altri, godendo della loro compagnia."
+  },
+  {
+   "nome": "Ephedra",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "d Incapacità di sfuggire alle situazioni dannose",
+    "Immobilita della mia volontà e delle mie innate risorse",
+    "i Mancanza di direzione ( Auto aceusa",
+    "Disfattismo C1 Sofferenza emotiva"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare la mia capacità di gestire gli stress della vita, a scegliere una direzione per la mia vita e a fare progressi con fiducia."
+  },
+  {
+   "nome": "Olive",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "O) Totale fatica fisica, mentale ed emotiva dovute ad uno stress prolungato"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a scegliere libertà e creativita attingendole dalle mie abbondanti risorse di energia."
+  },
+  {
+   "nome": "Wild Rose",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "i Totale abbandono agli aspetti della vita",
+    "Mancanza di motivazione a cambiare la mia vita e crescere"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a partecipare alla vita e ad interagire con gli altri ed esprimere me stesso accogliendo la forza creativa nella mia vita."
+  },
+  {
+   "nome": "Centaury",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Innata attitudine a farmi sfruttare e prevaricare dagli altri"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a seguire il mio personale corso della vita, a creare la mia avyentura personale, a costituire la mia vitalita fisica, e scegliere con saggezza quando servire gli altri."
+  },
+  {
+   "nome": "Five Corners",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Poca autostima, specialmente per ciò che riguarda il mio corpo o Disgusto per me",
+    "stesso",
+    "J Personalita schiacciata, \"trattenuta\"",
+    "Vestirmi di grigio o senza colori"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad amarmi, accettarmi e a celebrare la mia bellezza."
+  },
+  {
+   "nome": "Paw Paw",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Essere sopraffatto dalle circostanze",
+    "Incapacità di risolvere problemi",
+    "Essere oppresso dal dover prendere delle decisioni"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a restare calmo, autosufficiente ed avere chiarezza mentre prendo delle decisioni avendo accesso al mio IO superiore."
+  }
+ ],
+ "Maestro del Cuore": [
+  {
+   "nome": "Clematis",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Distrazione dalla realtà quotidiana",
+    "Apatia",
+    "Ritirarmi in un mondo di illusioni quando incontro delle difficoltà",
+    "Disinteresse nella vita"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a diyentare completamente consapevole e responsabile delle mie realtà , soprattutto nel presente, ed apprezzare lo scopo della mia vita."
+  },
+  {
+   "nome": "Hornbeam",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Fatica mentale, fisica e/o emotiva risultante dal disinteresse nella vita e dal mio",
+    "egocentrismo"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad apprezzare la mia forza e le mie capacità, portare avanti le mie intenzioni personali e utilizzare la mia volontà in maniera continuativa."
+  },
+  {
+   "nome": "Philotheca",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Incapacità ad accettare i riconoscimenti",
+    "Eccessiva generosità"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere le mie forze e con piacere ricevere amore e riconoscimento dagli altri."
+  },
+  {
+   "nome": "Cow Parsnip",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Insicurezza riguardo a chi sono io",
+    "Essere sommerso dai dettagli della vita",
+    "Oi Tensione",
+    "i Combattere il volere divino"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a stare in contatto con un profondo senso dell'IO, lasciare che sia l'universo a gestire i dettagli, e integrare il divertimento e il rilassamento nella mia vita."
+  },
+  {
+   "nome": "Strawberry Cactus",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Aspettarmi che le cose vadano male",
+    "Prendere la vita troppo seriamente senza alcun divertimento",
+    "Controllare emozioni difficili"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a scegliere di lasciar andare le mie emozioni in modo tale che arrivino al cuore, accettando che regni amore e felicità."
+  },
+  {
+   "nome": "Impatiens",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Nervosismo e tensione",
+    "Desiderio di mettere fretta a tutti e a tutti gli eventi",
+    "Essere facilmente irritato dalle mie limitazioni e da quelle degli altri"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mostrare apprezzamento per le capacità degli altri e capire che la vita progredisce seguendo il suo ritmo personale."
+  },
+  {
+   "nome": "Fairy Duster",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Eccitazione nervosa Z",
+    "Ipersensibilita alle stimolazioni, specialmente quelle mentali",
+    "Oscillazioni tra alta e bassa energia"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a maneggiare con facilita ed energia una maggiore intensità di stimolazione pur mantenendo i livelli emotivi, mentali ed eterici ancorati a terra e allineati."
+  }
+ ],
+ "Triplice Riscaldatore": [
+  {
+   "nome": "Cerato",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Cercare conferme attrayerso gli occhi degli altri",
+    "Agire seguendo ciò che gli altri yorrebbero che io facessi anziché il mio giudizio"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad apprezzarmi basandomi sulla mia direzione interiore e sul mio giudizio."
+  },
+  {
+   "nome": "Kangaroo Paw",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Inconsapevolezza",
+    "Goffaggine",
+    "Inettitudine",
+    "Insensibilita",
+    "QO) Mancanza di tatto"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a gioire della gente in modo affabile, sensibile e rilassato."
+  },
+  {
+   "nome": "Sundew",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Essere vago",
+    "Incoerenza",
+    "Indecisione",
+    "Mancanza di concentrazione",
+    "Sognare ad occhi aperti",
+    "Separare le situazioni emotive"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ancorarmi alla certezza dell'amore e rimanere focalizzato ed attento ai dettagli."
+  },
+  {
+   "nome": "Flame Tree",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Paura delle responsabilità",
+    "Opprimente paura di essere rifiutato"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad agire con sicurezza, fiducia in me stesso, forza ed impegno."
+  },
+  {
+   "nome": "Southern Cross",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Mentalità vittimista",
+    "Amarezza",
+    "Mancanza di coscienza",
+    "Lamentarmi",
+    "Martirizzarmi"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a volere forza personale e responsabilità. Continuerò a lavorare per creare circostanze positive e un'atmosfera di ottimismo nella mia vita."
+  },
+  {
+   "nome": "Gorse",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Abbattermi e scoraggiarmi"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad usare il potere curativo dell'amore per creare un nuovo sentimento di speranza e fiducia nella mia vita."
+  },
+  {
+   "nome": "Red Chestnut",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Apprensione riguardo il benessere degli altri e le proiezioni delle mie emozioni su",
+    "di loro stessi"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a restare in sintonia con gli altri con amore."
+  }
+ ],
+ "Vescica Biliare": [
+  {
+   "nome": "Rock Water",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Innaturale rinuncia di me stesso",
+    "Limitazioni",
+    "Sacrificarmi",
+    "Inflessibilita mentale"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad essere pit: buono con me Stesso e seguire la disciplina che ho in me e nella vita."
+  },
+  {
+   "nome": "Wild Potato",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "OFrustrazione",
+    "Ingombro fisico",
+    "Essere in soyrappeso"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere caro il mio corpo e progredire nella vita con libertà e vitalita."
+  },
+  {
+   "nome": "Wisteria",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Frigidita",
+    "Immagine da \"Macho\"",
+    "Isterismo sessuale"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad incoraggiare Vintimita nelle mie relazioni e a provare calore e sicurezza nella mia sessualità."
+  },
+  {
+   "nome": "Spineless Prickly Pear",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Mancanza di scopi e di forza",
+    "Dipendenza da fonti esterne per avere un senso di identità"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere che ogni cosa esiste in un dato momento per fornire uno strumento per l'esistenza. Io mi basto."
+  },
+  {
+   "nome": "Wolfberry",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Profonda tristezza proveniente dal passato",
+    "Trattenere o evitare il dolore",
+    "Senso di profondo cambiamento interiore che non riesco a capire"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a permettere al mio dolore e alla mia tristezza di portarmi ad un nuovo livello di coscienza e di permettere che avvengano profondi processi interiori senza aver bisogno di capirli."
+  },
+  {
+   "nome": "Aspen",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Paura, panico o brutti presentimenti da una fonte che non può essere identificata o misurata con i sensi"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere il coraggio e sufficiente fiducia per procedere nella vita in tutte le circostanze."
+  },
+  {
+   "nome": "Wild Oat",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Incapacità di realizzare gli scopi della mia vita, 0 di adeguarli al mio modo di",
+    "vivere",
+    "Mancanza di concentrazione",
+    "Scoraggiamento"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad integrare le mie energie in modo da intuire e poi realizzare gli intenti della mia vita."
+  }
+ ],
+ "Fegato": [
+  {
+   "nome": "Turkey Bush",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Blocco creativo",
+    "OC) Sfiducia verso le mie capacità creative"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a credere in me stesso e nella mia ispirata creativita ed espressione."
+  },
+  {
+   "nome": "Fishhook Cactus",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Paura di discutere o negoziare un problema per paura di perdere la faccia o di mettere",
+    "in pericolo la mia posizione",
+    "Diffidenza nei confronti degli altri per paura di perdere o interrompere qualcosa",
+    "Riluttanza a prendere rischi"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a realizzare che comunicazione, cooperazione e relazionarsi sono sicure e aiutano chiunque."
+  },
+  {
+   "nome": "Desert Marigold",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Dar via o reprimere il mio potere",
+    "Essere vittima delle circostanze",
+    "Riluttanza a prendermi delle responsabilità"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a scegliere di prendermi la responsabilità per la mia forza personale."
+  },
+  {
+   "nome": "Heather",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Ossessione verso i miei problemi e le mie esperienze",
+    "s UO Essere troppo concentrato a realizzare i miei bisogni personali"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a percepire la mia responsabilità come il fiore dell'anima e a layorare sui bisogni degli altri ed i miei personali partendo da una prospettiva di maggiore coscienza."
+  },
+  {
+   "nome": "Hackberry",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Resistenza al provare dolore",
+    "Giudicare che il mio dolore dovrebbe essere gia finito"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a provare ed esprimere il mio dolore in modo tale che possa risolversi."
+  },
+  {
+   "nome": "Elm",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Senso di insufficienza",
+    "Fatica di tentare di vivere secondo un'immagine ideale di me stesso",
+    "Depressione"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare me stesso così come sono ed incorporando il mio idealismo in una situazione più realistica."
+  },
+  {
+   "nome": "Melon Loco",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Eccessiva premurosita emotiva",
+    "Perdita di contatto tra le mie emozioni e il mio corpo fisico",
+    "Inibizione e confusione"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riallineare le mie emozioni con il mio corpo ed aumentare la mia sensibilità emotiva e responsabilità."
+  }
+ ],
+ "Polmone": [
+  {
+   "nome": "White Desert Primrose",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Atteggiamento di confusione e di dubbio verso me stesso",
+    "Difficoltà a discernere chiaramente come azioni o espressioni siano in armonia con",
+    "la mia natura interiore",
+    "Lasciarmi influenzare da ideali che io o altri hanno create ma che non",
+    "necessariamente si adattano alla mia natura interiore",
+    "Cercare fonti esterne come guida o come auto apprezzamento"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a capire chiaramente la forma e lo scopo della mia anima cosicché io possa scegliere forme di espressione che siano in armonia con la mia natura interiore."
+  },
+  {
+   "nome": "Larch",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Dubitare delle mie capacità",
+    "oO Depressione",
+    "Pessimismo circa le mie capacità di avere successo"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad imparare da ogni esperienza ed agire con sicurezza usando la mia direzione interiore."
+  },
+  {
+   "nome": "Queen of the Night",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Essere vittima della fragilita della vita",
+    "Stato di cecita e dissociazione causato dall'assorbimento di energie senza essere",
+    "ancorato",
+    "Impotenza ed inadeguatezza al cospetto di Dio",
+    "Distorsione o blocco del principio ricettivo femminile"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sperimentare la padronanza dell'introspezione, del capire, del sentire e della sensualita."
+  },
+  {
+   "nome": "Silver Princess",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Essere privo di scopo Q Abbattimento",
+    "Piattezza emotiva",
+    "Maneanza di direzione"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mettermi in sintonia con gli obiettivi della mia vita, agire con motivazione e direzione, ed esprimere completamente e liberamente il mie amore."
+  },
+  {
+   "nome": "Slender Rice Flower",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Orgoglio O Gelosia",
+    "Razzismo O Ristrettezza d'idee",
+    "Fare dei paragoni tra me e gli altri"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a cooperare con gli altri e riconoscere la yera umiltà come desiderio di vedere solo le cose migliori negli altri."
+  },
+  {
+   "nome": "Pine",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Auto accusarmi per i miei errori",
+    "I miei obblighi che mi opprimono",
+    "Irrealistico senso di responsabilità",
+    "Fatica e depressione"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a prendermi quelle responsabilità che sono nel miglior interesse mio e degli altri. Valuterò i miei risultati e i miei fallimenti in maniera realistica e con amore."
+  },
+  {
+   "nome": "Whitethorn",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Disordine e confusione nelle situazioni",
+    "Esagerare ed esaurirmi nel rendermi le cose difficili",
+    "Tensione nervosa",
+    "Soccombere a vecchi modelli, abitudini 0 situazioni che non sono pit: apropriate"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a vivere nel presente, sperimentare una pace interiore in modo che l'ottimismo e Ja dinamicita mi portino verso nuove direzioni."
+  }
+ ],
+ "Intestino Crasso": [
+  {
+   "nome": "Sturt Desert Pea",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Sofferenza",
+    "Profondo dolore",
+    "Tristezza"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad esprimere le mie emozioni e permettere che avyenga la mia guarigione attrayerso la forza dell'amore senza limiti."
+  },
+  {
+   "nome": "White Chestnut",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "I miei ricorrenti pensieri indesiderati",
+    "I miei ripetuti dialoghi mentali",
+    "Agitazione mentale e fatica"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a fermare la mia mente in modo tale che le mie capacità creative ed intuitive possano operare, ed io posso ottenere un vero riposo."
+  },
+  {
+   "nome": "Yellow Cowslip Orchid",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Atteggiamento di critica QO Giudicare",
+    "Tendenza burocratica",
+    "Scelte stupide"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad aprire la mia mente yerso le persone e le idee. Capird che otterro tanto quanto lasceré liberi gli altri, sostenendoli ad attingere alla loro guida interiore."
+  },
+  {
+   "nome": "Sunshine Wattle",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Essere bloccato nel passato",
+    "Avere aspettative per un futuro negativo",
+    "Essere senza speranza"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a voler vedere un futuro gioioso ed ottimistico per me. Accettero la bellezza e la gioia del presente."
+  },
+  {
+   "nome": "She Oak",
+   "tipo": "Fiore Australiano",
+   "squilibri": [
+    "Squilibrio ormonale",
+    "Incapacità di immaginazione"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere sicurezza nella mia capacità di immaginare."
+  },
+  {
+   "nome": "Ratany",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Conflitto nelle questioni di cuore",
+    "Essere contrastato tra due scelte",
+    "Incapacità di percepire o esprimere i desideri del mio cuore",
+    "Presunzione e martirio"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare la gioia ottenuta dal riconoscere, seguire ed esprimere la verità che ho nel mio cuore."
+  },
+  {
+   "nome": "Canyon Grapevine",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Mancanza di equilibrio nella mia vita",
+    "Incapacità di ayere limiti appropriati",
+    "Vedere le situazioni della vita come ostacoli"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare la capacità di comprendere la necessità di un equilibrio nelle mie responsabilità, relazioni e altre aree della mia vita che richiedono le mie energie. Guarderd alle situazioni della vita come a delle opportunita."
+  }
+ ]
+}

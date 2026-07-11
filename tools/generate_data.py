@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
-"""Genera assets/js/data.js da: metadati coordinate (qui sotto) + essenze (qui sotto)
-+ atteggiamenti (tools/atteggiamenti.json) + immagini (glob assets/pages/<id>/p*.jpg).
+"""Genera assets/js/data.js.
+Fonti:
+- COORDS/ESS (qui sotto): metadati coordinate + elenco fiori.
+- tools/monitoraggio.json: movimento + movimentoNote + neuroLinfatici + neurovascolari (Monitoraggio Muscolare).
+- tools/atteggiamenti.json: tabella 14 atteggiamenti (resa sotto Affermazioni).
+- tools/essenze_dettaglio.json: squilibri + impegno(=frasi) per fiore.
+- tools/storia.json: storiaMeridiano (sezione Meridiani).
+- tools/affermazioni.json (se presente): affermazioni per coordinata.
+- tools/modi.json (se presente): modi per coordinata.
 Uso: python tools/generate_data.py  (dalla cartella del progetto)."""
 import glob, json, os
 COORDS=[
@@ -39,53 +46,45 @@ ESS={
  "polmone-deltoide-medio":[("White Desert Primrose","Fiore del Deserto"),("Queen of the Night","Fiore del Deserto"),("Whitethorn","Fiore del Deserto"),("Silver Princess","Fiore Australiano - P 4,11"),("Slender Rice Flower","Fiore Australiano - P 5,10")],
  "intestino-crasso-tensore-fascia-lata":[("Ratany","Fiore del Deserto"),("Canyon Grapevine","Fiore del Deserto"),("She Oak","Fiore Australiano - IC 5,10"),("Sturt Desert Pea","Fiore Australiano - IC 1,14"),("Sunshine Wattle","Fiore Australiano - IC 4,11")],
 }
-# --- Nuovo schema muscolo↔movimento -------------------------------------
-# Movimento testato per ogni muscolo (da compilare: samuele fornisce l'elenco).
-MOV={}
-# I 4 blocchi collegati (oltre a meridiani e fiore). Default vuoti = placeholder.
-# neuroLinfatici / neurovascolari: liste di {zona, lato, note}
-# modi: lista di {nome, note}   |   affermazioni: lista di stringhe
-NL={}    # es: {"vc-sovraspinato":[{"zona":"...", "lato":"ant/post", "note":""}]}
-NV={}    # es: {"vc-sovraspinato":[{"zona":"...", "note":""}]}
-MODI={}  # es: {"vc-sovraspinato":[{"nome":"...", "note":""}]}
-AFF={}   # es: {"vc-sovraspinato":["Affermazione..."]}
-
-def js_list(items):
-    return "["+", ".join(json.dumps(x, ensure_ascii=False) for x in items)+"]"
-
-ATT=json.load(open("tools/atteggiamenti.json",encoding="utf-8")) if os.path.exists("tools/atteggiamenti.json") else {}
-DET=json.load(open("tools/essenze_dettaglio.json",encoding="utf-8")) if os.path.exists("tools/essenze_dettaglio.json") else {}
-ST=json.load(open("tools/storia.json",encoding="utf-8")) if os.path.exists("tools/storia.json") else {}
+def load(p): return json.load(open(p,encoding="utf-8")) if os.path.exists(p) else {}
+ATT=load("tools/atteggiamenti.json")
+DET=load("tools/essenze_dettaglio.json")
+ST=load("tools/storia.json")
+MON=load("tools/monitoraggio.json")
+AFF=load("tools/affermazioni.json")
+MODI=load("tools/modi.json")
+FIORI=load("tools/fiori.json")
+MER={"vc-sovraspinato":"Vaso Concezione","vg-grande-rotondo":"Vaso Governatore","stomaco-gran-pettorale-clavicolare":"Stomaco","milza-trapezio-medio":"Milza","milza-pancreas-gran-dorsale":"Milza","cuore-sottoscapolare":"Cuore","intestino-tenue-quadricipite":"Intestino Tenue","vescica-tibiale-anteriore":"Vescica","rene-psoas":"Rene","maestro-cuore-medio-gluteo":"Maestro del Cuore","tr-tiroide-piccolo-rotondo":"Triplice Riscaldatore","tr-surrenali-sartorio":"Triplice Riscaldatore","vescica-biliare-deltoide-anteriore":"Vescica Biliare","fegato-romboide":"Fegato","polmone-deltoide-medio":"Polmone","intestino-crasso-tensore-fascia-lata":"Intestino Crasso"}
+def js(x): return json.dumps(x, ensure_ascii=False)
+def js_list(items): return "["+", ".join(js(x) for x in items)+"]"
 def imgs(cid): return [f.replace("\\","/") for f in sorted(glob.glob(f"assets/pages/{cid}/p*.jpg"))]
-out=['/*',' * data.js - GENERATO da tools/generate_data.py. Non modificare a mano:',
-     ' * aggiorna tools/atteggiamenti.json / ESS in generate_data.py e rilancia lo script.',' */','','const COORDINATE = [']
+out=['/*',' * data.js - GENERATO da tools/generate_data.py. Non modificare a mano.',
+     ' * Aggiorna i tools/*.json (monitoraggio, atteggiamenti, essenze_dettaglio, storia,',
+     ' * affermazioni, modi) o ESS in generate_data.py e rilancia lo script.',' */','','const COORDINATE = [']
 for (cid,mer,mus,col,cn) in COORDS:
-    im=imgs(cid)
-    # --- Fiore (ex essenze): nome, tipo, squilibri, frasi (ex impegno) ---
-    ess=ESS.get(cid,[("","")]); det=DET.get(cid,{})
-    parts=[]
-    for n,a in ess:
-        d=det.get(n,{})
+    im=imgs(cid); mon=MON.get(cid,{})
+    # Fiore (dal manuale Atteggiamenti, per meridiano)
+    fl=FIORI.get(MER.get(cid,""),[]); parts=[]
+    for x in fl:
         extra=""
-        if d.get("squilibri"): extra+=", squilibri: "+json.dumps(d["squilibri"],ensure_ascii=False)
-        if d.get("impegno"): extra+=", frasi: "+json.dumps(d["impegno"],ensure_ascii=False)
-        parts.append("{ nome: %s, tipo: %s%s }"%(json.dumps(n),json.dumps(a),extra))
+        if x.get("squilibri"): extra+=", squilibri: "+js(x["squilibri"])
+        if x.get("frasi"): extra+=", frasi: "+js(x["frasi"])
+        parts.append("{ nome: %s, tipo: %s%s }"%(js(x["nome"]),js(x.get("tipo","")),extra))
     fiore_js="[ "+", ".join(parts)+" ]"
-    # --- Atteggiamenti (collegati, resi sotto Affermazioni) ---
+    aff=[f"{x['nome']}: {x['frasi']}" for x in fl if x.get("frasi")]
     att=ATT.get(cid); att_js=""
-    if att: att_js="\n    atteggiamenti: [ "+", ".join("{ posizione: %d, meridiano: %s, stress: %s }"%(int(p),json.dumps(m),json.dumps(s)) for p,m,s in att)+" ],"
+    if att: att_js="\n    atteggiamenti: [ "+", ".join("{ posizione: %d, meridiano: %s, stress: %s }"%(int(p),js(m),js(s)) for p,m,s in att)+" ],"
     st=ST.get(cid,{})
-    # --- Immagini manuale conservate (non renderizzate nelle 6 sezioni) ---
-    im_js="["+", ".join(json.dumps(p) for p in im)+"]" if im else "[]"
+    im_js="["+", ".join(js(p) for p in im)+"]" if im else "[]"
     out+=["  {",
-      f"    id: {json.dumps(cid)}, muscolo: {json.dumps(mus)}, movimento: {json.dumps(MOV.get(cid,''))}, meridiano: {json.dumps(mer)}, colore: {json.dumps(col)}, coloreNome: {json.dumps(cn)},",
-      f"    neuroLinfatici: {js_list(NL.get(cid,[]))},",
-      f"    neurovascolari: {js_list(NV.get(cid,[]))},",
+      f"    id: {js(cid)}, muscolo: {js(mus)}, movimento: {js(mon.get('movimento',''))}, movimentoNote: {js(mon.get('movimentoNote',''))}, meridiano: {js(mer)}, colore: {js(col)}, coloreNome: {js(cn)},",
+      f"    neuroLinfatici: {js_list(mon.get('neuroLinfatici',[]))},",
+      f"    neurovascolari: {js_list(mon.get('neurovascolari',[]))},",
       f"    modi: {js_list(MODI.get(cid,[]))},",
-      f"    affermazioni: {js_list(AFF.get(cid,[]))},{att_js}",
-      "    storiaMeridiano: %s,"%(json.dumps(st.get("meridiano",""),ensure_ascii=False)),
+      f"    affermazioni: {js_list(aff if aff else AFF.get(cid,[]))},{att_js}",
+      "    storiaMeridiano: %s,"%(js(st.get("meridiano",""))),
       f"    fiore: {fiore_js},",
       f"    immagini: {im_js}","  },"]
 out+=["];","",'if (typeof window !== "undefined") window.COORDINATE = COORDINATE;']
 open("assets/js/data.js","w",encoding="utf-8").write("\n".join(out)+"\n")
-print("data.js rigenerato:", len(COORDS), "coordinate.")
+print("data.js rigenerato:", len(COORDS), "coordinate. Monitoraggio:", len(MON))

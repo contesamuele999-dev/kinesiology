@@ -1,0 +1,146 @@
+{
+  "vc-sovraspinato": {
+    "movimento": "Spingere il braccio verso la linea mediana del corpo e la mano verso l'osso pubico",
+    "movimentoNote": "Raggio di movimento: partenza (pos. 1) braccio esteso anteriormente di circa 30°; fine (pos. 7) braccio completamente abbassato verso la linea mediana del corpo.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "Sotto il processo coracoideo (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "Posteriormente al processo trasverso dell'atlante (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "Fontanella anteriore"} ]
+  },
+  "vg-grande-rotondo": {
+    "movimento": "Spingere dolcemente il braccio anteriormente",
+    "movimentoNote": "Raggio: partenza (pos. 1) braccio flesso posteriormente e addotto di circa 20°; fine (pos. 7) braccio abdotto senza flessione né estensione (orizzontale se il cliente è sdraiato).",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "2° spazio intercostale, 6 cm dallo sterno (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "D3, 2 cm dal processo spinoso (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "2 cm sotto la fossa dell'osso parietale e nel punto di congiunzione fra sterno, clavicola e 1ª costola"} ]
+  },
+  "stomaco-gran-pettorale-clavicolare": {
+    "movimento": "Spingere lateralmente il braccio fino ad un'abduzione di 90°",
+    "movimentoNote": "Raggio: partenza (pos. 1) braccio esteso anteriormente a 90°; fine (pos. 7) braccio abdotto di 90°.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "Lungo tutto lo spazio intercostale tra la 5ª e 6ª costola, sulla sinistra (Chapman, TFH)"},
+      {"zona": "Posteriore", "note": "Tra D6 e D7, 2 cm dal processo spinoso, sulla sinistra (Chapman, TFH)"}
+    ],
+    "neurovascolari": [ {"zona": "Eminenze frontali bilateralmente"} ]
+  },
+  "milza-trapezio-medio": {
+    "movimento": "Tirare il braccio anteriormente fino ad una flessione anteriore di 90°",
+    "movimentoNote": "Raggio: partenza (pos. 1) braccio abdotto di 90°; fine (pos. 7) braccio esteso anteriormente di 90°.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "Nello spazio intercostale tra 6ª e 7ª costola a livello della cartilagine, sulla sinistra (Walther, ICAK)"},
+      {"zona": "Posteriore", "note": "Tra D7 e D8 a 2 cm dal processo spinoso (Walther, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "2 cm sopra la sutura lambdoidea"} ]
+  },
+  "milza-pancreas-gran-dorsale": {
+    "movimento": "Tirare il braccio lateralmente, abducendolo",
+    "movimentoNote": "Raggio: partenza (pos. 1) braccio addotto contro il corpo; fine (pos. 7) abdotto fino a che il braccio non inizia a ruotare lateralmente.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "Nello spazio intercostale tra 6ª e 7ª costola a livello della cartilagine, sulla sinistra (Applied Physiology)"},
+      {"zona": "Posteriore", "note": "Tra D7 e D8 a 2 cm dal processo spinoso (Walther, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "Poco sopra l'osso temporale, leggermente posteriore al meato uditivo esterno"} ]
+  },
+  "cuore-sottoscapolare": {
+    "movimento": "Spingere l'avambraccio anteriormente in modo da ruotare la parte alta del braccio",
+    "movimentoNote": "Raggio: partenza (pos. 1) avambraccio rivolto in direzione caudale; fine (pos. 7) avambraccio rivolto anteriormente, con la parte alta del braccio ruotata di 90° rispetto la posizione 1.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "2° spazio intercostale vicino allo sterno (Chapman)"},
+      {"zona": "Posteriore", "note": "Tra D2-D3 a 2 cm dal processo spinoso (Chapman)"}
+    ],
+    "neurovascolari": [ {"zona": "Fontanella anteriore"} ]
+  },
+  "intestino-tenue-quadricipite": {
+    "movimento": "Spingere la gamba posteriormente estendendo l'anca",
+    "movimentoNote": "Raggio: partenza (pos. 1) anca flessa a 90°; fine (pos. 7) anca estesa posteriormente di circa 20°-30° (quanto la persona riesce a muovere la gamba da sola).",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "Lungo l'arco costale tra 8ª e 11ª costa (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "Tra D8 e D11 a 2 cm dal processo spinoso (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "Aspetto posteriore dell'eminenza parietale"} ]
+  },
+  "vescica-tibiale-anteriore": {
+    "movimento": "Tirare il piede per portarlo in flessione plantare",
+    "movimentoNote": "Raggio: partenza (pos. 1) piede in totale flessione dorsale; fine (pos. 7) piede in completa flessione plantare (fin dove il cliente riesce a flettere).",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "1,5 cm più in alto della sinfisi pubica (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "Processo trasverso di L2 (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "Eminenze frontali bilateralmente"} ]
+  },
+  "rene-psoas": {
+    "movimento": "Muovere gradualmente la gamba lateralmente e posteriormente, usando il peso stesso della gamba",
+    "movimentoNote": "Raggio: partenza (pos. 1) gamba flessa di circa 45°; pos. 6 gamba in abduzione a livello del lettino; fine (pos. 7) gamba in abduzione di circa 45° e 20° di estensione. Attenzione a non allungare troppo lo psoas portando la gamba troppo in fuori e in basso.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "2 cm lateralmente e 2 cm sopra l'ombelico (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "Tra D12-L1, tra il processo spinoso e il processo trasverso (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "Non indicato come punto singolo: nel manuale i neurovascolari dello Psoas sono dati per posizione (Meridiano Rene con i meridiani di riferimento)"} ]
+  },
+  "maestro-cuore-medio-gluteo": {
+    "movimento": "Spingere la gamba in direzione mediale, adducendo l'anca",
+    "movimentoNote": "Raggio: partenza (pos. 1) anca in adduzione di circa 30°; fine (pos. 7) anca in abduzione fino a toccare la gamba sottostante.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "Sinfisi pubica superiore (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "Tra le spine iliache postero-superiori ed i processi spinosi di L5 (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "Aspetto posteriore dell'eminenza parietale"} ]
+  },
+  "tr-tiroide-piccolo-rotondo": {
+    "movimento": "Spingere il polso anteriormente e medialmente in modo da ruotare medialmente il braccio",
+    "movimentoNote": "Raggio: partenza (pos. 1) braccio ruotato lateralmente, avambraccio allo stesso livello del braccio e del tronco; fine (pos. 7) braccio ruotato medialmente, avambraccio che tocca il petto.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "Secondo spazio intercostale, vicino allo sterno (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "D3, 2 cm dal processo spinoso (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "2,5 cm sotto il pterion sulla tempia a livello della linea dei capelli; e nel punto di congiunzione della prima costola, della clavicola e dello sterno"} ]
+  },
+  "tr-surrenali-sartorio": {
+    "movimento": "Spingere il ginocchio medialmente e il piede come per estendere la gamba (adduzione, estensione e rotazione mediale dell'anca con estensione del ginocchio)",
+    "movimentoNote": "Raggio: partenza (pos. 1) anca in flessione, abduzione e rotazione laterale, ginocchio flesso a 90°; fine (pos. 7) anca estesa, ruotata medialmente, ginocchio quasi del tutto esteso.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "5 cm sopra l'ombelico a 2,5 cm dalla linea mediana (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "Tra D11 e D12, 2 cm dal processo spinoso (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "Sutura lambdoidea"} ]
+  },
+  "vescica-biliare-deltoide-anteriore": {
+    "movimento": "Spingere il braccio posteriormente per ottenere una flessione posteriore",
+    "movimentoNote": "Raggio: partenza (pos. 1) braccio in flessione anteriore di circa 45°; fine (pos. 7) braccio in flessione posteriore di circa 25-30°.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "3° spazio intercostale vicino allo sterno (Chapman, TFH)"},
+      {"zona": "Posteriore", "note": "Tra D3 e D4, 2 cm dal processo spinoso (Chapman, TFH)"}
+    ],
+    "neurovascolari": [ {"zona": "Fontanella anteriore"} ]
+  },
+  "fegato-romboide": {
+    "movimento": "Spingere il braccio lateralmente, abducendolo",
+    "movimentoNote": "Raggio: partenza (pos. 1) braccio addotto, che tocca il corpo; fine (pos. 7) braccio abdotto a 90°.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "Lungo tutto lo spazio intercostale tra 5ª e 6ª costola, sulla destra e vicino allo sterno sulla sinistra (Chapman, ICAK, Walther, TFH)"},
+      {"zona": "Posteriore", "note": "Tra D3 e D4, 2 cm dal processo spinoso (Chapman, ICAK, Walther, TFH)"}
+    ],
+    "neurovascolari": [ {"zona": "Eminenze frontali"} ]
+  },
+  "polmone-deltoide-medio": {
+    "movimento": "Spingere il braccio in direzione caudale, adducendolo",
+    "movimentoNote": "Raggio: partenza (pos. 1) braccio abdotto a 90°; fine (pos. 7) braccio addotto fino a toccare il corpo.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "3° spazio intercostale vicino allo sterno (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "Tra D3 e D4, 2 cm dal processo spinoso (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "Fontanella anteriore"} ]
+  },
+  "intestino-crasso-tensore-fascia-lata": {
+    "movimento": "Spingere la gamba medialmente verso l'altra gamba, adducendola ed estendendola",
+    "movimentoNote": "Raggio: partenza (pos. 1) gamba abdotta e flessa di 45°; fine (pos. 7) gamba addotta ed estesa, parallela all'altra.",
+    "neuroLinfatici": [
+      {"zona": "Anteriore", "note": "Parte antero-laterale della coscia, bilateralmente (Chapman, ICAK)"},
+      {"zona": "Posteriore", "note": "Area triangolare con gli apici a livello di L2 e della cresta iliaca (Chapman, ICAK)"}
+    ],
+    "neurovascolari": [ {"zona": "Aspetto posteriore dell'eminenza parietale"} ]
+  }
+}
