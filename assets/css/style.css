@@ -144,3 +144,16 @@ html,body{ background:var(--bg); color:var(--ink);
   font-size:.9rem; font-weight:700; }
 .lightbox__count[hidden]{ display:none !important; }
 @media (max-width:520px){ .lightbox__nav{ width:44px; height:60px; font-size:2rem; } }
+
+/* ---- Nuove sezioni: punti (neuro-linfatici/vascolari), modi, affermazioni, meridiani ---- */
+.detail__head .chip{ margin-right:8px; }
+.points{ margin:10px 0 0; padding:0; list-style:none; }
+.points li{ padding:8px 0; border-top:1px dashed var(--line); }
+.points li:first-child{ border-top:none; }
+.pt-title{ font-weight:700; }
+.pt-lato{ color:var(--muted); font-size:.85rem; font-weight:600; }
+.pt-note{ margin-top:3px; color:var(--muted); font-size:.92rem; }
+.aff{ margin:10px 0 0 20px; padding:0; }
+.aff li{ margin:6px 0; }
+.subh{ margin-top:16px; font-size:1rem; font-weight:800; color:var(--muted); }
+.mer-name{ font-weight:800; font-size:1.1rem; }

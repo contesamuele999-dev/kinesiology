@@ -1,4 +1,6 @@
-/* app.js — logica UI: elenco coordinate, ricerca, dettaglio con sezioni, tema. Vanilla JS. */
+/* app.js — logica UI: elenco coordinate (muscolo↔movimento), ricerca, dettaglio
+   a 6 sezioni collegate (neuro-linfatici, neurovascolari, modi, affermazioni,
+   meridiani, fiore), tema chiaro/scuro. Vanilla JS. */
 (function () {
   "use strict";
   const data = window.COORDINATE || [];
@@ -14,7 +16,7 @@
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   const has = (s) => s && String(s).trim().length > 0;
-  const ph = '<span class="placeholder">Da compilare dai manuali.</span>';
+  const PH = '<p><span class="placeholder">Da compilare dai manuali.</span></p>';
 
   /* ---------- Tema chiaro/scuro ---------- */
   function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
@@ -48,15 +50,16 @@
   function renderList(filter) {
     const q = norm(filter);
     const rows = data.filter((c) =>
-      !q || norm(c.meridiano).includes(q) || norm(c.muscolo).includes(q) || norm(c.coloreNome).includes(q)
+      !q || norm(c.muscolo).includes(q) || norm(c.movimento).includes(q)
+        || norm(c.meridiano).includes(q) || norm(c.coloreNome).includes(q)
     );
     grid.innerHTML = rows.map((c) => `
       <button class="card" data-id="${esc(c.id)}">
         <span class="card__color" style="background:${esc(c.colore)}"></span>
         <span class="card__body">
-          <span class="card__meridian">${esc(c.meridiano)}</span>
-          <span class="card__muscle">${esc(c.muscolo)}</span>
-          <span class="card__colorname">${esc(c.coloreNome)}</span>
+          <span class="card__meridian">${esc(c.muscolo)}</span>
+          <span class="card__muscle">${esc(c.movimento) || "Movimento da definire"}</span>
+          <span class="card__colorname">${esc(c.meridiano)} · ${esc(c.coloreNome)}</span>
         </span>
       </button>`).join("");
     noResults.hidden = rows.length > 0;
@@ -77,55 +80,72 @@
     if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
-  /* ---------- Dettaglio ---------- */
-  function textBlock(v) { return has(v) ? `<p>${esc(v)}</p>` : `<p>${ph}</p>`; }
+  /* ---------- Blocchi di rendering delle sezioni ---------- */
+  // Punti (neuro-linfatici / neurovascolari) e modi: {zona|nome, lato, note}
+  function pointsBlock(arr) {
+    const items = (arr || []).filter((x) => x && (has(x.zona) || has(x.nome) || has(x.note)));
+    if (!items.length) return PH;
+    return '<ul class="points">' + items.map((x) => {
+      const title = esc(x.zona || x.nome || "");
+      const lato = has(x.lato) ? ` <span class="pt-lato">(${esc(x.lato)})</span>` : "";
+      const note = has(x.note) ? `<div class="pt-note">${esc(x.note)}</div>` : "";
+      return `<li><span class="pt-title">${title}</span>${lato}${note}</li>`;
+    }).join("") + "</ul>";
+  }
 
+  // Affermazioni: elenco frasi + tabella atteggiamenti collegati
+  function affBlock(c) {
+    const aff = (c.affermazioni || []).filter(has);
+    const affHtml = aff.length
+      ? '<ul class="aff">' + aff.map((a) => `<li>${esc(a)}</li>`).join("") + "</ul>" : "";
+    const attRows = (c.atteggiamenti || []).map((a) =>
+      `<tr><td class="att__pos">${esc(a.posizione)}</td><td>${esc(a.meridiano)}</td><td>${esc(a.stress)}</td></tr>`).join("");
+    const attHtml = attRows
+      ? `<h4 class="subh">Atteggiamenti collegati</h4><div class="att__wrap"><table class="att"><thead><tr><th>Pos.</th><th>Meridiano rif.</th><th>Stress: pensieri &amp; emozioni</th></tr></thead><tbody>${attRows}</tbody></table></div>`
+      : "";
+    return (affHtml || attHtml) ? (affHtml + attHtml) : PH;
+  }
+
+  // Meridiani: nome + storia/attributi del meridiano
+  function meridianiBlock(c) {
+    const parts = [];
+    if (has(c.meridiano)) parts.push(`<p class="mer-name">${esc(c.meridiano)}</p>`);
+    if (has(c.storiaMeridiano)) parts.push(`<p>${esc(c.storiaMeridiano)}</p>`);
+    return parts.length ? parts.join("") : PH;
+  }
+
+  // Fiore: nome, tipo, squilibri, frasi
+  function fioreBlock(c) {
+    const rows = (c.fiore || []).filter((x) => has(x.nome) || has(x.tipo));
+    if (!rows.length) return PH;
+    return '<div class="ess__list">' + rows.map((x) => {
+      const sq = (x.squilibri || []).map((s) => `<li>${esc(s)}</li>`).join("");
+      return `
+      <div class="ess">
+        <div class="ess__head"><span class="ess__name">${esc(x.nome || "—")}</span><span class="ess__type">${esc(x.tipo || "")}</span></div>
+        ${sq ? `<ul class="ess__sq">${sq}</ul>` : ""}
+        ${has(x.frasi) ? `<div class="ess__imp">${esc(x.frasi)}</div>` : ""}
+      </div>`;
+    }).join("") + "</div>";
+  }
+
+  /* ---------- Dettaglio ---------- */
   function renderDetail(c) {
     detailHead.style.background = c.colore;
     detailHead.style.color = isLight(c.colore) ? "#12202b" : "#fff";
     detailHead.innerHTML = `
-      <h2>${esc(c.meridiano)}</h2>
-      <div class="muscle">${esc(c.muscolo)}</div>
+      <h2>${esc(c.muscolo)}</h2>
+      <div class="muscle">${esc(c.movimento) || "Movimento da definire"}</div>
+      <span class="chip">${esc(c.meridiano)}</span>
       <span class="chip">${esc(c.coloreNome)}</span>`;
 
-    const corrList = (c.correzioni || []).map((x) => `
-      <div class="corr">
-        <div class="corr__title">${esc(x.titolo || "Correzione")}</div>
-        ${has(x.tecnica) ? `<span class="corr__tech">${esc(x.tecnica)}</span>` : ""}
-        ${has(x.descrizione) ? `<div class="corr__desc">${esc(x.descrizione)}</div>` : ""}
-      </div>`).join("");
-    const imgs = (c.immagini || []).map((src, i) => `
-      <img class="pageimg" src="${esc(src)}" alt="Pagina ${i + 1} del manuale" loading="lazy" data-full="${esc(src)}" />`).join("");
-    const corr = corrList ? corrList : `<p>${ph}</p>`;
-    // Storia del problema (Basket Weaver): testo + pagine del manuale
-    const pagesHtml = imgs ? `<div class="pages">${imgs}</div>` : "";
-    const problema = (has(c.storiaProblema) || pagesHtml)
-      ? `${has(c.storiaProblema) ? `<p>${esc(c.storiaProblema)}</p>` : ""}${pagesHtml}`
-      : `<p>${ph}</p>`;
-
-    const attRows = (c.atteggiamenti || []).map((a) => `
-      <tr><td class="att__pos">${esc(a.posizione)}</td><td>${esc(a.meridiano)}</td><td>${esc(a.stress)}</td></tr>`).join("");
-    const attHtml = attRows
-      ? `<div class="att__wrap"><table class="att"><thead><tr><th>Pos.</th><th>Meridiano rif.</th><th>Stress: pensieri &amp; emozioni</th></tr></thead><tbody>${attRows}</tbody></table></div>`
-      : "";
-    const essRows = (c.essenze || []).filter((x) => has(x.nome) || has(x.atteggiamento)).map((x) => {
-      const sq = (x.squilibri || []).map((s) => `<li>${esc(s)}</li>`).join("");
-      return `
-      <div class="ess">
-        <div class="ess__head"><span class="ess__name">${esc(x.nome || "—")}</span><span class="ess__type">${esc(x.atteggiamento || "")}</span></div>
-        ${sq ? `<ul class="ess__sq">${sq}</ul>` : ""}
-        ${has(x.impegno) ? `<div class="ess__imp">${esc(x.impegno)}</div>` : ""}
-      </div>`;
-    }).join("");
-    const ess = (attHtml || essRows)
-      ? `${attHtml}${essRows ? `<div class="ess__list">${essRows}</div>` : ""}`
-      : `<p>${ph}</p>`;
-
     const secs = [
-      { id: "correzioni", label: "Correzioni", html: corr },
-      { id: "problema", label: "Storia del problema", html: problema },
-      { id: "meridiano", label: "Storia del meridiano", html: textBlock(c.storiaMeridiano) },
-      { id: "essenze", label: "Atteggiamenti ed essenze", html: ess }
+      { id: "neurolinfatici", label: "Punti neuro-linfatici", html: pointsBlock(c.neuroLinfatici) },
+      { id: "neurovascolari", label: "Punti neurovascolari", html: pointsBlock(c.neurovascolari) },
+      { id: "modi", label: "Modi", html: pointsBlock(c.modi) },
+      { id: "affermazioni", label: "Affermazioni", html: affBlock(c) },
+      { id: "meridiani", label: "Meridiani", html: meridianiBlock(c) },
+      { id: "fiore", label: "Fiore", html: fioreBlock(c) }
     ];
 
     anchors.innerHTML = secs.map((s, i) =>
@@ -163,7 +183,7 @@
 
   /* ---------- Router (hash #/id). Ignora gli hash di sezione (#sec-...) ---------- */
   function route() {
-    if (location.hash.indexOf("#sec-") === 0) return; // ancore di sezione: non resettare la vista
+    if (location.hash.indexOf("#sec-") === 0) return;
     const m = location.hash.match(/^#\/(.+)$/);
     if (m) {
       const c = data.find((x) => x.id === m[1]);
@@ -180,67 +200,6 @@
   }
   backBtn.addEventListener("click", () => { location.hash = ""; });
   window.addEventListener("hashchange", route);
-
-  /* ---------- Lightbox immagini (zoom + navigazione tra pagine) ---------- */
-  const lightbox = document.createElement("div");
-  lightbox.className = "lightbox";
-  lightbox.hidden = true;
-  lightbox.innerHTML =
-    '<button class="lightbox__close" aria-label="Chiudi">×</button>' +
-    '<button class="lightbox__nav lightbox__prev" aria-label="Precedente">‹</button>' +
-    '<img alt="Pagina ingrandita" />' +
-    '<button class="lightbox__nav lightbox__next" aria-label="Successiva">›</button>' +
-    '<span class="lightbox__count"></span>';
-  document.body.appendChild(lightbox);
-  const lbImg = lightbox.querySelector("img");
-  const lbPrev = lightbox.querySelector(".lightbox__prev");
-  const lbNext = lightbox.querySelector(".lightbox__next");
-  const lbCount = lightbox.querySelector(".lightbox__count");
-  let lbList = [], lbIdx = 0, lbSwiped = false, lbX0 = null;
-
-  function lbShow(i) {
-    if (!lbList.length) return;
-    lbIdx = (i + lbList.length) % lbList.length;
-    lbImg.src = lbList[lbIdx];
-    const multi = lbList.length > 1;
-    lbPrev.hidden = lbNext.hidden = !multi;
-    lbCount.hidden = !multi;
-    if (multi) lbCount.textContent = (lbIdx + 1) + " / " + lbList.length;
-  }
-  function openLb(img) {
-    lbList = Array.from(sections.querySelectorAll(".pageimg")).map((n) => n.dataset.full);
-    lbIdx = lbList.indexOf(img.dataset.full);
-    if (lbIdx < 0) { lbList = [img.dataset.full]; lbIdx = 0; }
-    lbShow(lbIdx);
-    lightbox.hidden = false;
-  }
-  function closeLb() { lightbox.hidden = true; lbImg.src = ""; }
-
-  sections.addEventListener("click", (e) => {
-    const img = e.target.closest(".pageimg");
-    if (img) openLb(img);
-  });
-  lbPrev.addEventListener("click", (e) => { e.stopPropagation(); lbShow(lbIdx - 1); });
-  lbNext.addEventListener("click", (e) => { e.stopPropagation(); lbShow(lbIdx + 1); });
-  lbImg.addEventListener("click", (e) => e.stopPropagation());
-  lightbox.addEventListener("click", () => { if (lbSwiped) { lbSwiped = false; return; } closeLb(); });
-  document.addEventListener("keydown", (e) => {
-    if (lightbox.hidden) return;
-    if (e.key === "Escape") closeLb();
-    else if (e.key === "ArrowLeft") lbShow(lbIdx - 1);
-    else if (e.key === "ArrowRight") lbShow(lbIdx + 1);
-  });
-  lightbox.addEventListener("touchstart", (e) => { lbX0 = e.touches[0].clientX; lbSwiped = false; }, { passive: true });
-  lightbox.addEventListener("touchmove", (e) => {
-    if (lbX0 != null && Math.abs(e.touches[0].clientX - lbX0) > 40) lbSwiped = true;
-  }, { passive: true });
-  lightbox.addEventListener("touchend", (e) => {
-    if (lbX0 != null && lbSwiped) {
-      const dx = e.changedTouches[0].clientX - lbX0;
-      lbShow(lbIdx + (dx < 0 ? 1 : -1));
-    }
-    lbX0 = null;
-  }, { passive: true });
 
   /* ---------- Avvio ---------- */
   renderList("");

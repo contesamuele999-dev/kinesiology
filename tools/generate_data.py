@@ -39,6 +39,20 @@ ESS={
  "polmone-deltoide-medio":[("White Desert Primrose","Fiore del Deserto"),("Queen of the Night","Fiore del Deserto"),("Whitethorn","Fiore del Deserto"),("Silver Princess","Fiore Australiano - P 4,11"),("Slender Rice Flower","Fiore Australiano - P 5,10")],
  "intestino-crasso-tensore-fascia-lata":[("Ratany","Fiore del Deserto"),("Canyon Grapevine","Fiore del Deserto"),("She Oak","Fiore Australiano - IC 5,10"),("Sturt Desert Pea","Fiore Australiano - IC 1,14"),("Sunshine Wattle","Fiore Australiano - IC 4,11")],
 }
+# --- Nuovo schema muscolo↔movimento -------------------------------------
+# Movimento testato per ogni muscolo (da compilare: samuele fornisce l'elenco).
+MOV={}
+# I 4 blocchi collegati (oltre a meridiani e fiore). Default vuoti = placeholder.
+# neuroLinfatici / neurovascolari: liste di {zona, lato, note}
+# modi: lista di {nome, note}   |   affermazioni: lista di stringhe
+NL={}    # es: {"vc-sovraspinato":[{"zona":"...", "lato":"ant/post", "note":""}]}
+NV={}    # es: {"vc-sovraspinato":[{"zona":"...", "note":""}]}
+MODI={}  # es: {"vc-sovraspinato":[{"nome":"...", "note":""}]}
+AFF={}   # es: {"vc-sovraspinato":["Affermazione..."]}
+
+def js_list(items):
+    return "["+", ".join(json.dumps(x, ensure_ascii=False) for x in items)+"]"
+
 ATT=json.load(open("tools/atteggiamenti.json",encoding="utf-8")) if os.path.exists("tools/atteggiamenti.json") else {}
 DET=json.load(open("tools/essenze_dettaglio.json",encoding="utf-8")) if os.path.exists("tools/essenze_dettaglio.json") else {}
 ST=json.load(open("tools/storia.json",encoding="utf-8")) if os.path.exists("tools/storia.json") else {}
@@ -47,26 +61,31 @@ out=['/*',' * data.js - GENERATO da tools/generate_data.py. Non modificare a man
      ' * aggiorna tools/atteggiamenti.json / ESS in generate_data.py e rilancia lo script.',' */','','const COORDINATE = [']
 for (cid,mer,mus,col,cn) in COORDS:
     im=imgs(cid)
-    corr='[{ titolo: "Riflessologia 1-7", tecnica: "Sfregare forte", descrizione: "" }, { titolo: "Riflessologia 8-14", tecnica: "Tapping forte", descrizione: "" }, { titolo: "Acutouch / Nutrire", tecnica: "Acutouch", descrizione: "" }]' if im else '[{ titolo: "Correzione base", tecnica: "", descrizione: "" }]'
-    im_js="["+", ".join(json.dumps(p) for p in im)+"]" if im else "[]"
+    # --- Fiore (ex essenze): nome, tipo, squilibri, frasi (ex impegno) ---
     ess=ESS.get(cid,[("","")]); det=DET.get(cid,{})
     parts=[]
     for n,a in ess:
         d=det.get(n,{})
         extra=""
         if d.get("squilibri"): extra+=", squilibri: "+json.dumps(d["squilibri"],ensure_ascii=False)
-        if d.get("impegno"): extra+=", impegno: "+json.dumps(d["impegno"],ensure_ascii=False)
-        parts.append("{ nome: %s, atteggiamento: %s%s }"%(json.dumps(n),json.dumps(a),extra))
-    ess_js="[ "+", ".join(parts)+" ]"
+        if d.get("impegno"): extra+=", frasi: "+json.dumps(d["impegno"],ensure_ascii=False)
+        parts.append("{ nome: %s, tipo: %s%s }"%(json.dumps(n),json.dumps(a),extra))
+    fiore_js="[ "+", ".join(parts)+" ]"
+    # --- Atteggiamenti (collegati, resi sotto Affermazioni) ---
     att=ATT.get(cid); att_js=""
-    st=ST.get(cid,{})
     if att: att_js="\n    atteggiamenti: [ "+", ".join("{ posizione: %d, meridiano: %s, stress: %s }"%(int(p),json.dumps(m),json.dumps(s)) for p,m,s in att)+" ],"
+    st=ST.get(cid,{})
+    # --- Immagini manuale conservate (non renderizzate nelle 6 sezioni) ---
+    im_js="["+", ".join(json.dumps(p) for p in im)+"]" if im else "[]"
     out+=["  {",
-      f"    id: {json.dumps(cid)}, meridiano: {json.dumps(mer)}, muscolo: {json.dumps(mus)}, colore: {json.dumps(col)}, coloreNome: {json.dumps(cn)},",
-      f"    correzioni: {corr},",
-      f"    immagini: {im_js},{att_js}",
-      "    storiaProblema: %s, storiaMeridiano: %s,"%(json.dumps(st.get("problema",""),ensure_ascii=False), json.dumps(st.get("meridiano",""),ensure_ascii=False)),
-      f"    essenze: {ess_js}","  },"]
+      f"    id: {json.dumps(cid)}, muscolo: {json.dumps(mus)}, movimento: {json.dumps(MOV.get(cid,''))}, meridiano: {json.dumps(mer)}, colore: {json.dumps(col)}, coloreNome: {json.dumps(cn)},",
+      f"    neuroLinfatici: {js_list(NL.get(cid,[]))},",
+      f"    neurovascolari: {js_list(NV.get(cid,[]))},",
+      f"    modi: {js_list(MODI.get(cid,[]))},",
+      f"    affermazioni: {js_list(AFF.get(cid,[]))},{att_js}",
+      "    storiaMeridiano: %s,"%(json.dumps(st.get("meridiano",""),ensure_ascii=False)),
+      f"    fiore: {fiore_js},",
+      f"    immagini: {im_js}","  },"]
 out+=["];","",'if (typeof window !== "undefined") window.COORDINATE = COORDINATE;']
 open("assets/js/data.js","w",encoding="utf-8").write("\n".join(out)+"\n")
-print("data.js rigenerato. Atteggiamenti per:", len(ATT), "meridiani")
+print("data.js rigenerato:", len(COORDS), "coordinate.")
