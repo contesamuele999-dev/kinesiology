@@ -222,10 +222,10 @@ body.installpop-open{ overflow:hidden; }
 .coordtab{ flex:1 1 0; display:flex; flex-direction:column; align-items:flex-start; gap:2px;
   text-align:left; cursor:pointer; padding:10px 14px; border-radius:12px;
   border:1px solid var(--line); background:var(--card); color:var(--ink);
-  border-left:6px solid var(--c,var(--brand)); }
+  border-left:6px solid var(--line); }
 .coordtab__mer{ font-weight:800; font-size:1.02rem; line-height:1.15; }
 .coordtab__mus{ font-size:.85rem; color:var(--muted); font-weight:600; }
-.coordtab.active{ background:color-mix(in srgb, var(--c) 16%, var(--card)); border-color:var(--c); }
+.coordtab.active{ background:color-mix(in srgb, var(--brand) 14%, var(--card)); border-color:var(--brand); }
 .coordtab.active .coordtab__mus{ color:var(--ink); }
 .mus-name{ font-weight:800; font-size:1.15rem; }
 

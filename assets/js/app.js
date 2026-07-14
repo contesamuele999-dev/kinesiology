@@ -226,7 +226,7 @@
   function renderActiveSections() {
     const c = pair[activeIdx];
     sections.innerHTML = sectionsFor(c).map((s) =>
-      `<section class="section" id="sec-${s.id}" style="--accent:${esc(c.colore)}">
+      `<section class="section" id="sec-${s.id}">
          <h3>${s.label}</h3>${s.html}</section>`).join("");
     updateStick();
   }
