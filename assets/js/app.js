@@ -175,25 +175,24 @@
     }).join("") + "</div>";
   }
 
-  // Immagini (Basket Weaver): griglia di miniature che aprono la lightbox
-  function imagesBlock(c) {
-    const imgs = (c.immagini || []).filter(has);
-    if (!imgs.length) return PH_IMG;
+  // Griglia di miniature (NL/NV/Basket Weaver) che aprono la lightbox.
+  function imgGrid(list, alt) {
+    const imgs = (list || []).filter(has);
+    if (!imgs.length) return "";
     return '<div class="pages">' + imgs.map((src, i) =>
-      `<img class="pageimg" src="${esc(src)}" loading="lazy" alt="Diagramma ${i + 1}"
-            data-mer="${esc(c.id)}" data-idx="${i}" />`).join("") + "</div>";
+      `<img class="pageimg" src="${esc(src)}" loading="lazy" alt="${esc(alt || "Immagine")} ${i + 1}" />`).join("") + "</div>";
   }
 
   function sectionsFor(c) {
     return [
       { id: "muscolo", label: "Muscolo & movimento", html: muscleBlock(c) },
-      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)", html: pointsBlock(c.neuroLinfatici) },
-      { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: pointsBlock(c.neurovascolari) },
+      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)", html: pointsBlock(c.neuroLinfatici) + imgGrid(c.immaginiNL, "Punti NL") },
+      { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: pointsBlock(c.neurovascolari) + imgGrid(c.immaginiNV, "Punti NV") },
       { id: "modi", label: "Modi", html: pointsBlock(c.modi) },
       { id: "affermazioni", label: "Affermazioni", html: affBlock(c) },
       { id: "meridiani", label: "Meridiano", html: meridianiBlock(c) },
       { id: "fiore", label: "Fiore", html: fioreBlock(c) },
-      { id: "immagini", label: "Immagini", html: imagesBlock(c) }
+      { id: "immagini", label: "Immagini (Basket Weaver)", html: imgGrid(c.immagini, "Diagramma") || PH_IMG }
     ];
   }
 
@@ -283,9 +282,10 @@
   sections.addEventListener("click", (e) => {
     const img = e.target.closest(".pageimg");
     if (!img) return;
-    const c = pair[activeIdx];
-    const list = (c.immagini || []).filter(has);
-    lbOpen(list, Number(img.dataset.idx) || 0);
+    const sec = img.closest(".section");
+    const thumbs = Array.from(sec.querySelectorAll(".pageimg"));
+    const list = thumbs.map((t) => t.getAttribute("src"));
+    lbOpen(list, thumbs.indexOf(img));
   });
   lbPrev.addEventListener("click", (e) => { e.stopPropagation(); lbShow(lbIdx - 1); });
   lbNext.addEventListener("click", (e) => { e.stopPropagation(); lbShow(lbIdx + 1); });

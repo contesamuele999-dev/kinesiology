@@ -8,6 +8,7 @@ Fonti:
 - tools/storia.json: storiaMeridiano (sezione Meridiani).
 - tools/affermazioni.json (se presente): affermazioni per coordinata.
 - tools/modi.json (se presente): modi per coordinata.
+- assets/nlnv/<id>/nl.jpg, nv.jpg: immagini punti NL/NV (dal Monitoraggio Muscolare).
 Uso: python tools/generate_data.py  (dalla cartella del progetto)."""
 import glob, json, os
 COORDS=[
@@ -58,6 +59,9 @@ MER={"vc-sovraspinato":"Vaso Concezione","vg-grande-rotondo":"Vaso Governatore",
 def js(x): return json.dumps(x, ensure_ascii=False)
 def js_list(items): return "["+", ".join(js(x) for x in items)+"]"
 def imgs(cid): return [f.replace("\\","/") for f in sorted(glob.glob(f"assets/pages/{cid}/p*.jpg"))]
+def nlnv(cid,kind):
+    p=f"assets/nlnv/{cid}/{kind}.jpg"
+    return [p] if os.path.exists(p) else []
 out=['/*',' * data.js - GENERATO da tools/generate_data.py. Non modificare a mano.',
      ' * Aggiorna i tools/*.json (monitoraggio, atteggiamenti, essenze_dettaglio, storia,',
      ' * affermazioni, modi) o ESS in generate_data.py e rilancia lo script.',' */','','const COORDINATE = [']
@@ -79,7 +83,9 @@ for (cid,mer,mus,col,cn) in COORDS:
     out+=["  {",
       f"    id: {js(cid)}, muscolo: {js(mus)}, movimento: {js(mon.get('movimento',''))}, movimentoNote: {js(mon.get('movimentoNote',''))}, meridiano: {js(mer)}, colore: {js(col)}, coloreNome: {js(cn)},",
       f"    neuroLinfatici: {js_list(mon.get('neuroLinfatici',[]))},",
+      f"    immaginiNL: {js(nlnv(cid,'nl'))},",
       f"    neurovascolari: {js_list(mon.get('neurovascolari',[]))},",
+      f"    immaginiNV: {js(nlnv(cid,'nv'))},",
       f"    modi: {js_list(MODI.get(cid,[]))},",
       f"    affermazioni: {js_list(aff if aff else AFF.get(cid,[]))},{att_js}",
       "    storiaMeridiano: %s,"%(js(st.get("meridiano",""))),
