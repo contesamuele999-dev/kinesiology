@@ -67,6 +67,12 @@ def nlnv(cid,kind):
         p=f"assets/nlnv/{cid}/{b}.jpg"
         if os.path.exists(p): out.append(p)
     return out
+def collect(cid,bases):
+    out=[]
+    for b in bases:
+        p=f"assets/nlnv/{cid}/{b}.jpg"
+        if os.path.exists(p): out.append(p)
+    return out
 out=['/*',' * data.js - GENERATO da tools/generate_data.py. Non modificare a mano.',
      ' * Aggiorna i tools/*.json (monitoraggio, atteggiamenti, essenze_dettaglio, storia,',
      ' * affermazioni, modi) o ESS in generate_data.py e rilancia lo script.',' */','','const COORDINATE = [']
@@ -87,6 +93,7 @@ for (cid,mer,mus,col,cn) in COORDS:
     im_js="["+", ".join(js(p) for p in im)+"]" if im else "[]"
     out+=["  {",
       f"    id: {js(cid)}, muscolo: {js(mus)}, movimento: {js(mon.get('movimento',''))}, movimentoNote: {js(mon.get('movimentoNote',''))}, meridiano: {js(mer)}, colore: {js(col)}, coloreNome: {js(cn)},",
+      f"    immaginiMonitoraggio: {js(collect(cid,['mon_musc','mon_org']))}, immaginiAmpiezza: {js(collect(cid,['amp_ago','amp_anta','amp_anta2']))},",
       f"    neuroLinfatici: {js_list(mon.get('neuroLinfatici',[]))},",
       f"    immaginiNL: {js(nlnv(cid,'nl'))},",
       f"    neurovascolari: {js_list(mon.get('neurovascolari',[]))},",

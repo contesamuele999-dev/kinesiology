@@ -177,6 +177,8 @@
 
   // Griglia di miniature (NL/NV/Basket Weaver) che aprono la lightbox.
   const NLNV_CAP = ["Scheda riassuntiva", "Dettaglio · Agonista", "Dettaglio · Antagonista"];
+  const MON_CAP = ["Test muscolo (facilitazione)", "Test organo correlato (inibizione)"];
+  const AMP_CAP = ["Agonista", "Antagonista", "Antagonista (2)"];
   function imgGrid(list, alt, captions) {
     const imgs = (list || []).filter(has);
     if (!imgs.length) return "";
@@ -188,7 +190,8 @@
 
   function sectionsFor(c) {
     return [
-      { id: "muscolo", label: "Muscolo & movimento", html: muscleBlock(c) },
+      { id: "muscolo", label: "Muscolo & movimento", html: muscleBlock(c) + imgGrid(c.immaginiMonitoraggio, "Monitoraggio", MON_CAP) },
+      { id: "ampiezza", label: "Ampiezza del movimento", html: imgGrid(c.immaginiAmpiezza, "Ampiezza del movimento", AMP_CAP) || PH_IMG },
       { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)", html: pointsBlock(c.neuroLinfatici) + imgGrid(c.immaginiNL, "Punti NL", NLNV_CAP) },
       { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: pointsBlock(c.neurovascolari) + imgGrid(c.immaginiNV, "Punti NV", NLNV_CAP) },
       { id: "modi", label: "Modi", html: pointsBlock(c.modi) },

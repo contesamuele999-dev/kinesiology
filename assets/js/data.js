@@ -7,6 +7,7 @@
 const COORDINATE = [
   {
     id: "vc-sovraspinato", muscolo: "Sovraspinato", movimento: "Spingere il braccio verso la linea mediana del corpo e la mano verso l'osso pubico", movimentoNote: "Raggio di movimento: partenza (pos. 1) braccio esteso anteriormente di circa 30°; fine (pos. 7) braccio completamente abbassato verso la linea mediana del corpo.", meridiano: "Vaso Concezione", colore: "#1a1a1a", coloreNome: "Nero",
+    immaginiMonitoraggio: ["assets/nlnv/vc-sovraspinato/mon_musc.jpg", "assets/nlnv/vc-sovraspinato/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/vc-sovraspinato/amp_ago.jpg", "assets/nlnv/vc-sovraspinato/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "Sotto il processo coracoideo (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "Posteriormente al processo trasverso dell'atlante (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/vc-sovraspinato/nl.jpg", "assets/nlnv/vc-sovraspinato/nl_ago.jpg", "assets/nlnv/vc-sovraspinato/nl_anta.jpg"],
     neurovascolari: [{"zona": "Fontanella anteriore"}],
@@ -20,6 +21,7 @@ const COORDINATE = [
   },
   {
     id: "vg-grande-rotondo", muscolo: "Grande Rotondo", movimento: "Spingere dolcemente il braccio anteriormente", movimentoNote: "Raggio: partenza (pos. 1) braccio flesso posteriormente e addotto di circa 20°; fine (pos. 7) braccio abdotto senza flessione né estensione (orizzontale se il cliente è sdraiato).", meridiano: "Vaso Governatore", colore: "#e9e9e9", coloreNome: "Bianco",
+    immaginiMonitoraggio: ["assets/nlnv/vg-grande-rotondo/mon_musc.jpg", "assets/nlnv/vg-grande-rotondo/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/vg-grande-rotondo/amp_ago.jpg", "assets/nlnv/vg-grande-rotondo/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "2° spazio intercostale, 6 cm dallo sterno (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "D3, 2 cm dal processo spinoso (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/vg-grande-rotondo/nl.jpg", "assets/nlnv/vg-grande-rotondo/nl_ago.jpg", "assets/nlnv/vg-grande-rotondo/nl_anta.jpg"],
     neurovascolari: [{"zona": "2 cm sotto la fossa dell'osso parietale e nel punto di congiunzione fra sterno, clavicola e 1ª costola"}],
@@ -33,6 +35,7 @@ const COORDINATE = [
   },
   {
     id: "stomaco-gran-pettorale-clavicolare", muscolo: "Gran Pettorale Clavicolare", movimento: "Spingere lateralmente il braccio fino ad un'abduzione di 90°", movimentoNote: "Raggio: partenza (pos. 1) braccio esteso anteriormente a 90°; fine (pos. 7) braccio abdotto di 90°.", meridiano: "Stomaco", colore: "#f4d03f", coloreNome: "Giallo Chiaro",
+    immaginiMonitoraggio: ["assets/nlnv/stomaco-gran-pettorale-clavicolare/mon_musc.jpg", "assets/nlnv/stomaco-gran-pettorale-clavicolare/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/stomaco-gran-pettorale-clavicolare/amp_ago.jpg", "assets/nlnv/stomaco-gran-pettorale-clavicolare/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "Lungo tutto lo spazio intercostale tra la 5ª e 6ª costola, sulla sinistra (Chapman, TFH)"}, {"zona": "Posteriore", "note": "Tra D6 e D7, 2 cm dal processo spinoso, sulla sinistra (Chapman, TFH)"}],
     immaginiNL: ["assets/nlnv/stomaco-gran-pettorale-clavicolare/nl.jpg", "assets/nlnv/stomaco-gran-pettorale-clavicolare/nl_ago.jpg", "assets/nlnv/stomaco-gran-pettorale-clavicolare/nl_anta.jpg"],
     neurovascolari: [{"zona": "Eminenze frontali bilateralmente"}],
@@ -46,6 +49,7 @@ const COORDINATE = [
   },
   {
     id: "milza-trapezio-medio", muscolo: "Trapezio Medio", movimento: "Tirare il braccio anteriormente fino ad una flessione anteriore di 90°", movimentoNote: "Raggio: partenza (pos. 1) braccio abdotto di 90°; fine (pos. 7) braccio esteso anteriormente di 90°.", meridiano: "Milza", colore: "#d4ac0d", coloreNome: "Giallo Scuro",
+    immaginiMonitoraggio: ["assets/nlnv/milza-trapezio-medio/mon_musc.jpg", "assets/nlnv/milza-trapezio-medio/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/milza-trapezio-medio/amp_ago.jpg", "assets/nlnv/milza-trapezio-medio/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "Nello spazio intercostale tra 6ª e 7ª costola a livello della cartilagine, sulla sinistra (Walther, ICAK)"}, {"zona": "Posteriore", "note": "Tra D7 e D8 a 2 cm dal processo spinoso (Walther, ICAK)"}],
     immaginiNL: ["assets/nlnv/milza-trapezio-medio/nl.jpg", "assets/nlnv/milza-trapezio-medio/nl_ago.jpg", "assets/nlnv/milza-trapezio-medio/nl_anta.jpg"],
     neurovascolari: [{"zona": "2 cm sopra la sutura lambdoidea"}],
@@ -59,6 +63,7 @@ const COORDINATE = [
   },
   {
     id: "milza-pancreas-gran-dorsale", muscolo: "Gran Dorsale", movimento: "Tirare il braccio lateralmente, abducendolo", movimentoNote: "Raggio: partenza (pos. 1) braccio addotto contro il corpo; fine (pos. 7) abdotto fino a che il braccio non inizia a ruotare lateralmente.", meridiano: "Milza/Pancreas", colore: "#c9a227", coloreNome: "Giallo Scuro",
+    immaginiMonitoraggio: ["assets/nlnv/milza-pancreas-gran-dorsale/mon_musc.jpg", "assets/nlnv/milza-pancreas-gran-dorsale/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/milza-pancreas-gran-dorsale/amp_ago.jpg", "assets/nlnv/milza-pancreas-gran-dorsale/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "Nello spazio intercostale tra 6ª e 7ª costola a livello della cartilagine, sulla sinistra (Applied Physiology)"}, {"zona": "Posteriore", "note": "Tra D7 e D8 a 2 cm dal processo spinoso (Walther, ICAK)"}],
     immaginiNL: ["assets/nlnv/milza-pancreas-gran-dorsale/nl.jpg", "assets/nlnv/milza-pancreas-gran-dorsale/nl_ago.jpg", "assets/nlnv/milza-pancreas-gran-dorsale/nl_anta.jpg"],
     neurovascolari: [{"zona": "Poco sopra l'osso temporale, leggermente posteriore al meato uditivo esterno"}],
@@ -72,6 +77,7 @@ const COORDINATE = [
   },
   {
     id: "cuore-sottoscapolare", muscolo: "Sottoscapolare", movimento: "Spingere l'avambraccio anteriormente in modo da ruotare la parte alta del braccio", movimentoNote: "Raggio: partenza (pos. 1) avambraccio rivolto in direzione caudale; fine (pos. 7) avambraccio rivolto anteriormente, con la parte alta del braccio ruotata di 90° rispetto la posizione 1.", meridiano: "Cuore", colore: "#922b21", coloreNome: "Rosso Scuro",
+    immaginiMonitoraggio: ["assets/nlnv/cuore-sottoscapolare/mon_musc.jpg", "assets/nlnv/cuore-sottoscapolare/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/cuore-sottoscapolare/amp_ago.jpg", "assets/nlnv/cuore-sottoscapolare/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "2° spazio intercostale vicino allo sterno (Chapman)"}, {"zona": "Posteriore", "note": "Tra D2-D3 a 2 cm dal processo spinoso (Chapman)"}],
     immaginiNL: ["assets/nlnv/cuore-sottoscapolare/nl.jpg", "assets/nlnv/cuore-sottoscapolare/nl_ago.jpg", "assets/nlnv/cuore-sottoscapolare/nl_anta.jpg"],
     neurovascolari: [{"zona": "Fontanella anteriore"}],
@@ -85,6 +91,7 @@ const COORDINATE = [
   },
   {
     id: "intestino-tenue-quadricipite", muscolo: "Quadricipite", movimento: "Spingere la gamba posteriormente estendendo l'anca", movimentoNote: "Raggio: partenza (pos. 1) anca flessa a 90°; fine (pos. 7) anca estesa posteriormente di circa 20°-30° (quanto la persona riesce a muovere la gamba da sola).", meridiano: "Intestino Tenue", colore: "#e74c3c", coloreNome: "Rosso Chiaro",
+    immaginiMonitoraggio: ["assets/nlnv/intestino-tenue-quadricipite/mon_musc.jpg", "assets/nlnv/intestino-tenue-quadricipite/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/intestino-tenue-quadricipite/amp_ago.jpg", "assets/nlnv/intestino-tenue-quadricipite/amp_anta.jpg", "assets/nlnv/intestino-tenue-quadricipite/amp_anta2.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "Lungo l'arco costale tra 8ª e 11ª costa (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "Tra D8 e D11 a 2 cm dal processo spinoso (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/intestino-tenue-quadricipite/nl.jpg", "assets/nlnv/intestino-tenue-quadricipite/nl_ago.jpg", "assets/nlnv/intestino-tenue-quadricipite/nl_anta.jpg"],
     neurovascolari: [{"zona": "Aspetto posteriore dell'eminenza parietale"}],
@@ -98,6 +105,7 @@ const COORDINATE = [
   },
   {
     id: "vescica-tibiale-anteriore", muscolo: "Tibiale Anteriore", movimento: "Tirare il piede per portarlo in flessione plantare", movimentoNote: "Raggio: partenza (pos. 1) piede in totale flessione dorsale; fine (pos. 7) piede in completa flessione plantare (fin dove il cliente riesce a flettere).", meridiano: "Vescica", colore: "#bb8fce", coloreNome: "Viola Chiaro",
+    immaginiMonitoraggio: ["assets/nlnv/vescica-tibiale-anteriore/mon_musc.jpg", "assets/nlnv/vescica-tibiale-anteriore/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/vescica-tibiale-anteriore/amp_ago.jpg", "assets/nlnv/vescica-tibiale-anteriore/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "1,5 cm più in alto della sinfisi pubica (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "Processo trasverso di L2 (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/vescica-tibiale-anteriore/nl.jpg", "assets/nlnv/vescica-tibiale-anteriore/nl_ago.jpg", "assets/nlnv/vescica-tibiale-anteriore/nl_anta.jpg"],
     neurovascolari: [{"zona": "Eminenze frontali bilateralmente"}],
@@ -111,6 +119,7 @@ const COORDINATE = [
   },
   {
     id: "rene-psoas", muscolo: "Psoas", movimento: "Muovere gradualmente la gamba lateralmente e posteriormente, usando il peso stesso della gamba", movimentoNote: "Raggio: partenza (pos. 1) gamba flessa di circa 45°; pos. 6 gamba in abduzione a livello del lettino; fine (pos. 7) gamba in abduzione di circa 45° e 20° di estensione. Attenzione a non allungare troppo lo psoas portando la gamba troppo in fuori e in basso.", meridiano: "Rene", colore: "#6c3483", coloreNome: "Viola Scuro",
+    immaginiMonitoraggio: ["assets/nlnv/rene-psoas/mon_musc.jpg", "assets/nlnv/rene-psoas/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/rene-psoas/amp_ago.jpg", "assets/nlnv/rene-psoas/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "2 cm lateralmente e 2 cm sopra l'ombelico (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "Tra D12-L1, tra il processo spinoso e il processo trasverso (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/rene-psoas/nl.jpg", "assets/nlnv/rene-psoas/nl_ago.jpg", "assets/nlnv/rene-psoas/nl_anta.jpg"],
     neurovascolari: [{"zona": "Non indicato come punto singolo: nel manuale i neurovascolari dello Psoas sono dati per posizione (Meridiano Rene con i meridiani di riferimento)"}],
@@ -124,6 +133,7 @@ const COORDINATE = [
   },
   {
     id: "maestro-cuore-medio-gluteo", muscolo: "Medio Gluteo", movimento: "Spingere la gamba in direzione mediale, adducendo l'anca", movimentoNote: "Raggio: partenza (pos. 1) anca in adduzione di circa 30°; fine (pos. 7) anca in abduzione fino a toccare la gamba sottostante.", meridiano: "Maestro del Cuore", colore: "#ca6f1e", coloreNome: "Arancione Scuro",
+    immaginiMonitoraggio: ["assets/nlnv/maestro-cuore-medio-gluteo/mon_musc.jpg", "assets/nlnv/maestro-cuore-medio-gluteo/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/maestro-cuore-medio-gluteo/amp_ago.jpg", "assets/nlnv/maestro-cuore-medio-gluteo/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "Sinfisi pubica superiore (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "Tra le spine iliache postero-superiori ed i processi spinosi di L5 (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/maestro-cuore-medio-gluteo/nl.jpg", "assets/nlnv/maestro-cuore-medio-gluteo/nl_ago.jpg", "assets/nlnv/maestro-cuore-medio-gluteo/nl_anta.jpg"],
     neurovascolari: [{"zona": "Aspetto posteriore dell'eminenza parietale"}],
@@ -137,6 +147,7 @@ const COORDINATE = [
   },
   {
     id: "tr-tiroide-piccolo-rotondo", muscolo: "Piccolo Rotondo", movimento: "Spingere il polso anteriormente e medialmente in modo da ruotare medialmente il braccio", movimentoNote: "Raggio: partenza (pos. 1) braccio ruotato lateralmente, avambraccio allo stesso livello del braccio e del tronco; fine (pos. 7) braccio ruotato medialmente, avambraccio che tocca il petto.", meridiano: "Triplice Riscaldatore/Tiroide", colore: "#f0932b", coloreNome: "Arancione Chiaro",
+    immaginiMonitoraggio: ["assets/nlnv/tr-tiroide-piccolo-rotondo/mon_musc.jpg", "assets/nlnv/tr-tiroide-piccolo-rotondo/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/tr-tiroide-piccolo-rotondo/amp_ago.jpg", "assets/nlnv/tr-tiroide-piccolo-rotondo/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "Secondo spazio intercostale, vicino allo sterno (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "D3, 2 cm dal processo spinoso (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/tr-tiroide-piccolo-rotondo/nl.jpg", "assets/nlnv/tr-tiroide-piccolo-rotondo/nl_ago.jpg", "assets/nlnv/tr-tiroide-piccolo-rotondo/nl_anta.jpg"],
     neurovascolari: [{"zona": "2,5 cm sotto il pterion sulla tempia a livello della linea dei capelli; e nel punto di congiunzione della prima costola, della clavicola e dello sterno"}],
@@ -150,6 +161,7 @@ const COORDINATE = [
   },
   {
     id: "tr-surrenali-sartorio", muscolo: "Sartorio", movimento: "Spingere il ginocchio medialmente e il piede come per estendere la gamba (adduzione, estensione e rotazione mediale dell'anca con estensione del ginocchio)", movimentoNote: "Raggio: partenza (pos. 1) anca in flessione, abduzione e rotazione laterale, ginocchio flesso a 90°; fine (pos. 7) anca estesa, ruotata medialmente, ginocchio quasi del tutto esteso.", meridiano: "Triplice Riscaldatore/Surrenali", colore: "#f39c47", coloreNome: "Arancione Chiaro",
+    immaginiMonitoraggio: ["assets/nlnv/tr-surrenali-sartorio/mon_musc.jpg", "assets/nlnv/tr-surrenali-sartorio/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/tr-surrenali-sartorio/amp_ago.jpg", "assets/nlnv/tr-surrenali-sartorio/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "5 cm sopra l'ombelico a 2,5 cm dalla linea mediana (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "Tra D11 e D12, 2 cm dal processo spinoso (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/tr-surrenali-sartorio/nl.jpg", "assets/nlnv/tr-surrenali-sartorio/nl_ago.jpg", "assets/nlnv/tr-surrenali-sartorio/nl_anta.jpg"],
     neurovascolari: [{"zona": "Sutura lambdoidea"}],
@@ -163,6 +175,7 @@ const COORDINATE = [
   },
   {
     id: "vescica-biliare-deltoide-anteriore", muscolo: "Deltoide Anteriore", movimento: "Spingere il braccio posteriormente per ottenere una flessione posteriore", movimentoNote: "Raggio: partenza (pos. 1) braccio in flessione anteriore di circa 45°; fine (pos. 7) braccio in flessione posteriore di circa 25-30°.", meridiano: "Vescica Biliare", colore: "#52be80", coloreNome: "Verde Chiaro",
+    immaginiMonitoraggio: ["assets/nlnv/vescica-biliare-deltoide-anteriore/mon_musc.jpg", "assets/nlnv/vescica-biliare-deltoide-anteriore/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/vescica-biliare-deltoide-anteriore/amp_ago.jpg", "assets/nlnv/vescica-biliare-deltoide-anteriore/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "3° spazio intercostale vicino allo sterno (Chapman, TFH)"}, {"zona": "Posteriore", "note": "Tra D3 e D4, 2 cm dal processo spinoso (Chapman, TFH)"}],
     immaginiNL: ["assets/nlnv/vescica-biliare-deltoide-anteriore/nl.jpg", "assets/nlnv/vescica-biliare-deltoide-anteriore/nl_ago.jpg", "assets/nlnv/vescica-biliare-deltoide-anteriore/nl_anta.jpg"],
     neurovascolari: [{"zona": "Fontanella anteriore"}],
@@ -176,6 +189,7 @@ const COORDINATE = [
   },
   {
     id: "fegato-romboide", muscolo: "Romboide", movimento: "Spingere il braccio lateralmente, abducendolo", movimentoNote: "Raggio: partenza (pos. 1) braccio addotto, che tocca il corpo; fine (pos. 7) braccio abdotto a 90°.", meridiano: "Fegato", colore: "#1e8449", coloreNome: "Verde Scuro",
+    immaginiMonitoraggio: ["assets/nlnv/fegato-romboide/mon_musc.jpg", "assets/nlnv/fegato-romboide/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/fegato-romboide/amp_ago.jpg", "assets/nlnv/fegato-romboide/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "Lungo tutto lo spazio intercostale tra 5ª e 6ª costola, sulla destra e vicino allo sterno sulla sinistra (Chapman, ICAK, Walther, TFH)"}, {"zona": "Posteriore", "note": "Tra D3 e D4, 2 cm dal processo spinoso (Chapman, ICAK, Walther, TFH)"}],
     immaginiNL: ["assets/nlnv/fegato-romboide/nl.jpg", "assets/nlnv/fegato-romboide/nl_ago.jpg", "assets/nlnv/fegato-romboide/nl_anta.jpg"],
     neurovascolari: [{"zona": "Eminenze frontali"}],
@@ -189,6 +203,7 @@ const COORDINATE = [
   },
   {
     id: "polmone-deltoide-medio", muscolo: "Deltoide Medio", movimento: "Spingere il braccio in direzione caudale, adducendolo", movimentoNote: "Raggio: partenza (pos. 1) braccio abdotto a 90°; fine (pos. 7) braccio addotto fino a toccare il corpo.", meridiano: "Polmone", colore: "#1f618d", coloreNome: "Blu Scuro",
+    immaginiMonitoraggio: ["assets/nlnv/polmone-deltoide-medio/mon_musc.jpg", "assets/nlnv/polmone-deltoide-medio/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/polmone-deltoide-medio/amp_ago.jpg", "assets/nlnv/polmone-deltoide-medio/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "3° spazio intercostale vicino allo sterno (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "Tra D3 e D4, 2 cm dal processo spinoso (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/polmone-deltoide-medio/nl.jpg", "assets/nlnv/polmone-deltoide-medio/nl_ago.jpg", "assets/nlnv/polmone-deltoide-medio/nl_anta.jpg"],
     neurovascolari: [{"zona": "Fontanella anteriore"}],
@@ -202,6 +217,7 @@ const COORDINATE = [
   },
   {
     id: "intestino-crasso-tensore-fascia-lata", muscolo: "Tensore Fascia Lata", movimento: "Spingere la gamba medialmente verso l'altra gamba, adducendola ed estendendola", movimentoNote: "Raggio: partenza (pos. 1) gamba abdotta e flessa di 45°; fine (pos. 7) gamba addotta ed estesa, parallela all'altra.", meridiano: "Intestino Crasso", colore: "#5dade2", coloreNome: "Blu Chiaro",
+    immaginiMonitoraggio: ["assets/nlnv/intestino-crasso-tensore-fascia-lata/mon_musc.jpg", "assets/nlnv/intestino-crasso-tensore-fascia-lata/mon_org.jpg"], immaginiAmpiezza: ["assets/nlnv/intestino-crasso-tensore-fascia-lata/amp_ago.jpg", "assets/nlnv/intestino-crasso-tensore-fascia-lata/amp_anta.jpg"],
     neuroLinfatici: [{"zona": "Anteriore", "note": "Parte antero-laterale della coscia, bilateralmente (Chapman, ICAK)"}, {"zona": "Posteriore", "note": "Area triangolare con gli apici a livello di L2 e della cresta iliaca (Chapman, ICAK)"}],
     immaginiNL: ["assets/nlnv/intestino-crasso-tensore-fascia-lata/nl.jpg", "assets/nlnv/intestino-crasso-tensore-fascia-lata/nl_ago.jpg", "assets/nlnv/intestino-crasso-tensore-fascia-lata/nl_anta.jpg"],
     neurovascolari: [{"zona": "Aspetto posteriore dell'eminenza parietale"}],
