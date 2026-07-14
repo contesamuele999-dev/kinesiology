@@ -160,3 +160,76 @@ html,body{ background:var(--bg); color:var(--ink);
 
 /* Nota di movimento (raggio/esecuzione del monitoraggio) sotto il titolo */
 .detail__head .movnote{ margin-top:8px; font-size:.9rem; line-height:1.4; opacity:.9; max-width:60ch; }
+
+/* ---------- Popup installazione PWA ---------- */
+.installpop{ position:fixed; inset:0; z-index:100; display:flex;
+  align-items:flex-end; justify-content:center;
+  background:rgba(10,18,26,.55); padding:16px;
+  animation:instFade .2s ease; }
+.installpop[hidden]{ display:none !important; }
+@keyframes instFade{ from{ opacity:0 } to{ opacity:1 } }
+.installpop__card{ position:relative; width:100%; max-width:420px;
+  background:var(--card); color:var(--ink); border:1px solid var(--line);
+  border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:22px 20px 18px; text-align:center;
+  animation:instRise .25s cubic-bezier(.2,.8,.2,1); }
+@keyframes instRise{ from{ transform:translateY(24px); opacity:.6 } to{ transform:none; opacity:1 } }
+.installpop__x{ position:absolute; top:8px; right:10px; border:0; background:none;
+  color:var(--muted); font-size:1.6rem; line-height:1; cursor:pointer; padding:4px 8px; }
+.installpop__icon{ border-radius:12px; box-shadow:var(--shadow); }
+.installpop__title{ margin:10px 0 6px; font-size:1.15rem; }
+.installpop__text{ margin:0 0 16px; color:var(--muted); font-size:.95rem; line-height:1.45; }
+.installpop__actions{ display:flex; flex-direction:column; gap:8px; align-items:center; }
+.installpop__btn{ width:100%; padding:12px 16px; border:0; border-radius:12px;
+  background:var(--brand); color:#fff; font-weight:800; font-size:1rem; cursor:pointer; }
+.installpop__btn:active{ transform:translateY(1px); }
+.installpop__link{ border:0; background:none; color:var(--muted);
+  font-size:.9rem; cursor:pointer; padding:4px; }
+body.installpop-open{ overflow:hidden; }
+@media(min-width:520px){ .installpop{ align-items:center; } }
+
+/* ---------- Modello a COPPIE: intestazione elenco ---------- */
+.listhead{ margin:2px 2px 16px; }
+.listhead__hint{ color:var(--muted); }
+.listhead__step{ font-size:.8rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--brand); margin-bottom:8px; }
+.listhead__pair{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:6px; }
+.pairchip{ display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:1.05rem;
+  padding:7px 14px; border-radius:999px; border:1px solid var(--line); background:var(--card);
+  box-shadow:var(--shadow); }
+.pairchip::before{ content:""; width:12px; height:12px; border-radius:50%; background:var(--c,var(--brand)); }
+.pairchip--q{ color:var(--muted); font-weight:700; border-style:dashed; background:transparent; box-shadow:none; }
+.pairchip--q::before{ display:none; }
+
+/* ---------- Vista coordinata (coppia) ---------- */
+.coord__head{ padding:22px 20px 14px; max-width:900px; margin:0 auto; }
+.coord__label{ font-size:.8rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--muted); }
+.coord__pair{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:8px; }
+.coord__mer{ display:inline-flex; align-items:center; gap:9px; font-size:1.4rem; font-weight:800;
+  letter-spacing:-.01em; }
+.coord__mer::before{ content:""; width:16px; height:16px; border-radius:50%; background:var(--c,var(--brand)); flex:0 0 16px; }
+.coord__x{ color:var(--muted); font-size:1.3rem; }
+.coord__change{ margin-top:14px; font-size:.95rem; font-weight:700; color:var(--brand);
+  background:color-mix(in srgb, var(--brand) 12%, var(--card)); border:1px solid var(--line);
+  border-radius:999px; padding:8px 16px; cursor:pointer; }
+.coord__change:hover{ border-color:var(--brand); }
+
+/* Schede/tab dei due meridiani */
+.coordtabs{ position:sticky; top:var(--topbar-h,60px); z-index:15; display:flex; gap:10px;
+  padding:10px 16px; background:var(--bg); border-bottom:1px solid var(--line);
+  max-width:900px; margin:0 auto; }
+.coordtab{ flex:1 1 0; display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+  text-align:left; cursor:pointer; padding:10px 14px; border-radius:12px;
+  border:1px solid var(--line); background:var(--card); color:var(--ink);
+  border-left:6px solid var(--c,var(--brand)); }
+.coordtab__mer{ font-weight:800; font-size:1.02rem; line-height:1.15; }
+.coordtab__mus{ font-size:.85rem; color:var(--muted); font-weight:600; }
+.coordtab.active{ background:color-mix(in srgb, var(--c) 16%, var(--card)); border-color:var(--c); }
+.coordtab.active .coordtab__mus{ color:var(--ink); }
+.mus-name{ font-weight:800; font-size:1.15rem; }
+
+@media (max-width:520px){
+  .coord__mer{ font-size:1.2rem; }
+  .coordtab__mer{ font-size:.95rem; }
+}

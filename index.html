@@ -6,35 +6,66 @@
   <meta name="theme-color" content="#0f766e" />
   <title>Fisiologia Applicata — Consultazione rapida</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Fisiologia" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
-  <!-- ============ VISTA ELENCO ============ -->
+  <!-- ============ TOP BAR ============ -->
   <header class="topbar">
     <div class="topbar__inner">
-      <button id="backBtn" class="backbtn" hidden aria-label="Torna all'elenco">‹ Coordinate</button>
+      <button id="backBtn" class="backbtn" hidden aria-label="Indietro">‹ Indietro</button>
       <h1 class="topbar__title">Fisiologia Applicata</h1>
       <span class="topbar__sub">consultazione rapida</span>
       <button id="themeBtn" class="themebtn" type="button" aria-label="Cambia tema">🌙</button>
     </div>
     <div class="search" id="searchWrap">
       <input id="search" type="search" inputmode="search" autocomplete="off"
-             placeholder="Cerca muscolo, movimento o meridiano…" aria-label="Cerca" />
+             placeholder="Cerca meridiano, muscolo o contenuto…" aria-label="Cerca" />
     </div>
   </header>
 
+  <!-- ============ VISTA ELENCO (meridiani / scelta 2° meridiano) ============ -->
   <main id="listView" class="listview">
-    <p class="hint">Scegli una coordinata per vedere tutto il correlato.</p>
+    <div id="listHead" class="listhead"></div>
     <div id="grid" class="grid"></div>
-    <p id="noResults" class="noresults" hidden>Nessuna coordinata trovata.</p>
+    <p id="noResults" class="noresults" hidden>Nessun meridiano trovato.</p>
   </main>
 
-  <!-- ============ VISTA DETTAGLIO ============ -->
-  <main id="detailView" class="detailview" hidden>
-    <div class="detail__head" id="detailHead"></div>
-    <nav class="anchors" id="anchors" aria-label="Sezioni"></nav>
+  <!-- ============ VISTA COORDINATA (coppia di meridiani) ============ -->
+  <main id="coordView" class="detailview" hidden>
+    <div class="coord__head" id="coordHead"></div>
+    <nav class="coordtabs" id="coordTabs" aria-label="Meridiani della coordinata"></nav>
     <div class="sections" id="sections"></div>
   </main>
+
+  <!-- ============ LIGHTBOX IMMAGINI ============ -->
+  <div id="lightbox" class="lightbox" hidden>
+    <button class="lightbox__close" id="lbClose" type="button" aria-label="Chiudi">×</button>
+    <button class="lightbox__nav lightbox__prev" id="lbPrev" type="button" aria-label="Precedente">‹</button>
+    <img id="lbImg" src="" alt="" />
+    <button class="lightbox__nav lightbox__next" id="lbNext" type="button" aria-label="Successiva">›</button>
+    <span class="lightbox__count" id="lbCount"></span>
+  </div>
+
+  <!-- ============ POPUP INSTALLAZIONE PWA ============ -->
+  <div id="installPop" class="installpop" hidden role="dialog" aria-modal="true" aria-labelledby="installTitle">
+    <div class="installpop__card">
+      <button id="installClose" class="installpop__x" type="button" aria-label="Chiudi">×</button>
+      <img class="installpop__icon" src="assets/icon-192.png" alt="" width="56" height="56" />
+      <h2 id="installTitle" class="installpop__title">Installa l'app</h2>
+      <p class="installpop__text" id="installText">
+        Aggiungi <strong>Fisiologia Applicata</strong> alla schermata Home per aprirla come un'app e consultarla anche offline.
+      </p>
+      <div class="installpop__actions">
+        <button id="installBtn" class="installpop__btn" type="button">Installa</button>
+        <button id="installLater" class="installpop__link" type="button">Più tardi</button>
+      </div>
+    </div>
+  </div>
 
   <script src="assets/js/data.js"></script>
   <script src="assets/js/app.js"></script>
