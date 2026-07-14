@@ -60,8 +60,13 @@ def js(x): return json.dumps(x, ensure_ascii=False)
 def js_list(items): return "["+", ".join(js(x) for x in items)+"]"
 def imgs(cid): return [f.replace("\\","/") for f in sorted(glob.glob(f"assets/pages/{cid}/p*.jpg"))]
 def nlnv(cid,kind):
-    p=f"assets/nlnv/{cid}/{kind}.jpg"
-    return [p] if os.path.exists(p) else []
+    # ordine: scheda riassuntiva, poi pagine dettagliate Agonista e Antagonista
+    bases={"nl":["nl","nl_ago","nl_anta"],"nv":["nv","nv_ago","nv_anta"]}[kind]
+    out=[]
+    for b in bases:
+        p=f"assets/nlnv/{cid}/{b}.jpg"
+        if os.path.exists(p): out.append(p)
+    return out
 out=['/*',' * data.js - GENERATO da tools/generate_data.py. Non modificare a mano.',
      ' * Aggiorna i tools/*.json (monitoraggio, atteggiamenti, essenze_dettaglio, storia,',
      ' * affermazioni, modi) o ESS in generate_data.py e rilancia lo script.',' */','','const COORDINATE = [']

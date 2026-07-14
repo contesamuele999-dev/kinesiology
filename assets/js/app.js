@@ -176,18 +176,21 @@
   }
 
   // Griglia di miniature (NL/NV/Basket Weaver) che aprono la lightbox.
-  function imgGrid(list, alt) {
+  const NLNV_CAP = ["Scheda riassuntiva", "Dettaglio · Agonista", "Dettaglio · Antagonista"];
+  function imgGrid(list, alt, captions) {
     const imgs = (list || []).filter(has);
     if (!imgs.length) return "";
-    return '<div class="pages">' + imgs.map((src, i) =>
-      `<img class="pageimg" src="${esc(src)}" loading="lazy" alt="${esc(alt || "Immagine")} ${i + 1}" />`).join("") + "</div>";
+    return '<div class="pages">' + imgs.map((src, i) => {
+      const cap = captions && captions[i] ? `<figcaption>${esc(captions[i])}</figcaption>` : "";
+      return `<figure class="pagefig"><img class="pageimg" src="${esc(src)}" loading="lazy" alt="${esc(alt || "Immagine")} ${i + 1}" />${cap}</figure>`;
+    }).join("") + "</div>";
   }
 
   function sectionsFor(c) {
     return [
       { id: "muscolo", label: "Muscolo & movimento", html: muscleBlock(c) },
-      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)", html: pointsBlock(c.neuroLinfatici) + imgGrid(c.immaginiNL, "Punti NL") },
-      { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: pointsBlock(c.neurovascolari) + imgGrid(c.immaginiNV, "Punti NV") },
+      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)", html: pointsBlock(c.neuroLinfatici) + imgGrid(c.immaginiNL, "Punti NL", NLNV_CAP) },
+      { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: pointsBlock(c.neurovascolari) + imgGrid(c.immaginiNV, "Punti NV", NLNV_CAP) },
       { id: "modi", label: "Modi", html: pointsBlock(c.modi) },
       { id: "affermazioni", label: "Affermazioni", html: affBlock(c) },
       { id: "meridiani", label: "Meridiano", html: meridianiBlock(c) },

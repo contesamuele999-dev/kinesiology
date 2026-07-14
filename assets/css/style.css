@@ -233,3 +233,7 @@ body.installpop-open{ overflow:hidden; }
   .coord__mer{ font-size:1.2rem; }
   .coordtab__mer{ font-size:.95rem; }
 }
+  
+/* Miniature immagini con didascalia (NL/NV: scheda/agonista/antagonista) */
+.pagefig{ margin:0; display:flex; flex-direction:column; gap:6px; }
+.pagefig figcaption{ font-size:.82rem; font-weight:700; color:var(--muted); text-align:center; }
