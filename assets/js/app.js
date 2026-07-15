@@ -85,8 +85,8 @@
     if (firstMeridian) {
       const p = posFor(firstMeridian, c);
       extra = p
-        ? `<span class="card__pos">Posizione ${esc(p.posizione)}</span>`
-        : `<span class="card__pos card__pos--na">—</span>`;
+        ? `<span class="card__pos">${esc(p.posizione)}</span>`
+        : `<span class="card__pos card__pos--na">–</span>`;
     }
     return `
       <button class="card" data-id="${esc(c.id)}">
@@ -200,12 +200,17 @@
     const refMer = c2.meridiano;
     const posLabel = posN ? `Posizione ${posN} — ${refMer}` : refMer;
 
-    // Punti NL: elenco muscolo + immagine posizione
+    // Punti NL/NV: scheda principale del muscolo + dettaglio della posizione
+    const cap = posN ? ("Posizione " + posN + " — " + refMer) : refMer;
+    const nlScheda = has(c1.schedaNL) ? posImg(c1.schedaNL, "Punti principali del muscolo (Ant. & Post.)") : "";
+    const nvScheda = has(c1.schedaNV) ? posImg(c1.schedaNV, "Punti principali del muscolo") : "";
     const nlList = pointsBlock(c1.neuroLinfatici);
-    const nlImg = row && has(row.nl) ? posImg(row.nl, "NL · " + posLabel) : PH_IMG;
-    // Punti NV
+    const nlImg = row && has(row.nl) ? posImg(row.nl, "Dettaglio NL · " + cap) : "";
     const nvList = pointsBlock(c1.neurovascolari);
-    const nvImg = row && has(row.nv) ? posImg(row.nv, "NV · " + posLabel) : PH_IMG;
+    const nvImg = row && has(row.nv) ? posImg(row.nv, "Dettaglio NV · " + cap) : "";
+    const reflexHtml = row && has(row.reflex)
+      ? posImg(row.reflex, "Reflessologia · " + cap)
+      : '<p><span class="placeholder">Reflessologia non disponibile per questo muscolo nel manuale Basket Weaver.</span></p>';
 
     // Meridiani coinvolti
     let merHtml = "";
@@ -234,12 +239,12 @@
       { id: "muscolo", label: "Muscolo & come testarlo",
         html: muscleBlock(c1) + imgGrid(c1.immaginiMonitoraggio, "Monitoraggio", MON_CAP) + imgGrid(c1.immaginiAmpiezza, "Ampiezza", AMP_CAP) },
       { id: "posizione", label: "Posizione di test", html: posHtml },
-      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL) — posizione", html: nlList + nlImg },
-      { id: "neurovascolari", label: "Punti neurovascolari (NV) — posizione", html: nvList + nvImg },
+      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)", html: nlScheda + nlList + nlImg },
+      { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: nvScheda + nvList + nvImg },
       { id: "modi", label: "Modi", html: pointsBlock(c1.modi) || PH },
       { id: "meridiani", label: "Meridiani coinvolti", html: merHtml },
       { id: "fiore", label: "Fiori / essenze", html: fioreBlock(c1) },
-      { id: "immagini", label: "Immagini (Basket Weaver)", html: imgGrid(c1.immagini, "Diagramma") || PH_IMG }
+      { id: "reflessologia", label: "Reflessologia (Basket Weaver)", html: reflexHtml }
     ];
   }
 
@@ -392,3 +397,4 @@
 
   route();
 })();
+

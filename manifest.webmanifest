@@ -1,12 +1,11 @@
 {
-  "name": "Fisiologia Applicata — Consultazione rapida",
-  "short_name": "Fisiologia",
+  "name": "Kinesiology — Consultazione rapida",
+  "short_name": "Kinesiology",
   "description": "Consultazione rapida delle coordinate muscolo-movimento, meridiani, punti neuro-linfatici e neurovascolari, fiori e atteggiamenti.",
   "lang": "it",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
   "background_color": "#12202b",
   "theme_color": "#0f766e",
   "icons": [

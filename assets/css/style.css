@@ -233,17 +233,20 @@ body.installpop-open{ overflow:hidden; }
   .coord__mer{ font-size:1.2rem; }
   .coordtab__mer{ font-size:.95rem; }
 }
-  
+
 /* Miniature immagini con didascalia (NL/NV: scheda/agonista/antagonista) */
 .pagefig{ margin:0; display:flex; flex-direction:column; gap:6px; }
 .pagefig figcaption{ font-size:.82rem; font-weight:700; color:var(--muted); text-align:center; }
 
 /* ===== Modello Muscolo + Posizione (agg. 2026-07-15) ===== */
-.card__body{ flex:1; }
-.card__pos{ flex:0 0 auto; align-self:center; margin:0 14px 0 4px; padding:8px 12px;
-  border-radius:999px; background:var(--input-bg); border:1px solid var(--line);
-  font-size:.9rem; font-weight:800; color:var(--brand); white-space:nowrap; }
-.card__pos--na{ color:var(--muted); font-weight:700; }
+.card__body{ flex:1; min-width:0; }
+.card__pos{ flex:0 0 auto; align-self:stretch; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:2px; padding:8px 14px; min-width:78px;
+  background:var(--brand); color:#fff; font-weight:800; line-height:1.05; white-space:nowrap; }
+.card__pos::before{ content:"POSIZIONE"; font-size:.6rem; letter-spacing:.06em; font-weight:800; opacity:.9; }
+.card__pos{ font-size:1.5rem; }
+.card__pos--na{ background:var(--input-bg); color:var(--muted); border-left:1px solid var(--line); }
+.card__pos--na::before{ content:"POSIZIONE"; opacity:.7; }
 .listhead__muscle{ margin:2px 0 4px; font-size:1.05rem; }
 .listhead__muscle strong{ color:var(--brand); }
 
@@ -265,6 +268,4 @@ body.installpop-open{ overflow:hidden; }
 .posbox__hint{ color:var(--muted); font-size:.9rem; margin-top:2px; }
 .stress{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
 .stress__item{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
-.stress__lab{ display:block; font-size:.75rem; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:var(--muted); }
-.stress__val{ display:block; font-size:1.1rem; font-weight:700; margin-top:2px; }
 @media (max-width:480px){ .stress{ grid-template-columns:1fr; } }

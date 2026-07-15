@@ -93,8 +93,10 @@ for (cid,mer,mus,col,cn) in COORDS:
         for p,m,s in att:
             pn=int(p); extra=""
             _nl=f"assets/nlnv/{cid}/pos/nl_{pn}.jpg"; _nv=f"assets/nlnv/{cid}/pos/nv_{pn}.jpg"
+            _rx=f"assets/pages/{cid}/pos/refbody_{pn}.jpg"
             if os.path.exists(_nl): extra+=", nl: %s"%js(_nl)
             if os.path.exists(_nv): extra+=", nv: %s"%js(_nv)
+            if os.path.exists(_rx): extra+=", reflex: %s"%js(_rx)
             _rows.append("{ posizione: %d, meridiano: %s, stress: %s%s }"%(pn,js(m),js(s),extra))
         att_js="\n    atteggiamenti: [ "+", ".join(_rows)+" ],"
     st=ST.get(cid,{})
@@ -103,6 +105,7 @@ for (cid,mer,mus,col,cn) in COORDS:
       f"    id: {js(cid)}, muscolo: {js(mus)}, movimento: {js(mon.get('movimento',''))}, movimentoNote: {js(mon.get('movimentoNote',''))}, meridiano: {js(mer)}, meridianoKey: {js(MER.get(cid,mer))}, colore: {js(col)}, coloreNome: {js(cn)},",
       f"    immaginiMonitoraggio: {js(collect(cid,['mon_musc','mon_org']))}, immaginiAmpiezza: {js(collect(cid,['amp_ago','amp_anta','amp_anta2']))},",
       f"    neuroLinfatici: {js_list(mon.get('neuroLinfatici',[]))},",
+      f"    schedaNL: {js('assets/nlnv/'+cid+'/nl.jpg' if os.path.exists('assets/nlnv/'+cid+'/nl.jpg') else '')}, schedaNV: {js('assets/nlnv/'+cid+'/nv.jpg' if os.path.exists('assets/nlnv/'+cid+'/nv.jpg') else '')},",
       f"    immaginiNL: {js(nlnv(cid,'nl'))},",
       f"    neurovascolari: {js_list(mon.get('neurovascolari',[]))},",
       f"    immaginiNV: {js(nlnv(cid,'nv'))},",
