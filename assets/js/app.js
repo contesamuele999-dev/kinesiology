@@ -1,8 +1,9 @@
-/* app.js — Fisiologia Applicata (modello a COPPIE di meridiani).
-   Flusso: Home (elenco meridiani) → scelta 1° meridiano → scelta 2° meridiano
-   → coordinata completa (es. S-VC) con schede/tab per meridiano.
-   Ogni meridiano mostra: muscolo & movimento, punti NL, punti NV, modi,
-   affermazioni, meridiano, fiore, immagini (Basket Weaver). Vanilla JS. */
+/* app.js — Fisiologia Applicata (modello MUSCOLO + POSIZIONE).
+   Il 1° meridiano scelto definisce il MUSCOLO da testare.
+   Il 2° meridiano scelto definisce la POSIZIONE in cui testarlo.
+   La coordinata mostra: muscolo & come testarlo, la posizione specifica con
+   le sue emozioni/atteggiamenti, i punti NL e NV di quella posizione, i modi,
+   i meridiani coinvolti, i fiori e le immagini. Vanilla JS. */
 (function () {
   "use strict";
   const data = window.COORDINATE || [];
@@ -19,8 +20,17 @@
   const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   const has = (s) => s && String(s).trim().length > 0;
   const PH = '<p><span class="placeholder">Da compilare dai manuali.</span></p>';
-  const PH_IMG = '<p><span class="placeholder">Nessuna immagine disponibile per questo meridiano.</span></p>';
+  const PH_IMG = '<p><span class="placeholder">Nessuna immagine disponibile.</span></p>';
   const find = (id) => data.find((x) => x.id === id);
+  const keyOf = (c) => c.meridianoKey || c.meridiano;
+
+  /* Trova la riga atteggiamenti (posizione) del muscolo c1 che corrisponde
+     al meridiano di riferimento del 2° meridiano c2. */
+  function posFor(c1, c2) {
+    if (!c1 || !c2) return null;
+    const k = keyOf(c2);
+    return (c1.atteggiamenti || []).find((a) => a.meridiano === k) || null;
+  }
 
   /* ---------- Tema chiaro/scuro ---------- */
   function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
@@ -50,7 +60,7 @@
   }
   window.addEventListener("resize", updateStick);
 
-  /* ---------- Indice di ricerca: tutto il testo del meridiano ---------- */
+  /* ---------- Indice di ricerca ---------- */
   function collectText(v, out) {
     if (v == null) return;
     if (typeof v === "string" || typeof v === "number") { out.push(String(v)); return; }
@@ -64,13 +74,20 @@
     c._search = norm(parts.join(" "));
   });
 
-  /* ---------- Stato corrente della vista ----------
-     firstMeridian = null  → Home (scegli 1° meridiano)
-     firstMeridian = <c>   → scegli 2° meridiano                  */
+  /* ---------- Stato ----------
+     firstMeridian = null  → Home (scegli 1° meridiano = MUSCOLO)
+     firstMeridian = <c>   → scegli 2° meridiano = POSIZIONE            */
   let firstMeridian = null;
 
   /* ---------- Card meridiano ---------- */
   function meridianCard(c) {
+    let extra = "";
+    if (firstMeridian) {
+      const p = posFor(firstMeridian, c);
+      extra = p
+        ? `<span class="card__pos">Posizione ${esc(p.posizione)}</span>`
+        : `<span class="card__pos card__pos--na">—</span>`;
+    }
     return `
       <button class="card" data-id="${esc(c.id)}">
         <span class="card__color" style="background:${esc(c.colore)}"></span>
@@ -79,6 +96,7 @@
           <span class="card__muscle">${esc(c.muscolo)}</span>
           <span class="card__colorname">${esc(c.coloreNome)}</span>
         </span>
+        ${extra}
       </button>`;
   }
 
@@ -94,13 +112,16 @@
       listHead.innerHTML =
         `<p class="listhead__step">Coordinata in costruzione</p>
          <div class="listhead__pair">
-           <span class="pairchip" style="--c:${esc(firstMeridian.colore)}">${esc(firstMeridian.meridiano)}</span>
-           <span class="pairchip pairchip--q">+ scegli il 2°</span>
+           <span class="pairchip" style="--c:${esc(firstMeridian.colore)}">
+             1° · ${esc(firstMeridian.meridiano)}
+           </span>
+           <span class="pairchip pairchip--q">2° · scegli la posizione</span>
          </div>
-         <p class="listhead__hint">Tocca il secondo meridiano per aprire la coordinata completa.</p>`;
+         <p class="listhead__muscle">Muscolo da testare: <strong>${esc(firstMeridian.muscolo)}</strong></p>
+         <p class="listhead__hint">Il <strong>2° meridiano</strong> definisce la <strong>posizione</strong> in cui testarlo. L'etichetta mostra il numero di posizione.</p>`;
     } else {
       listHead.innerHTML =
-        `<p class="listhead__hint">Scegli il <strong>primo meridiano</strong> della coppia da testare.</p>`;
+        `<p class="listhead__hint">Scegli il <strong>1° meridiano</strong>: definisce il <strong>muscolo</strong> da testare.</p>`;
     }
 
     grid.innerHTML = rows.map(meridianCard).join("");
@@ -112,13 +133,12 @@
     const card = e.target.closest(".card");
     if (!card) return;
     const id = card.dataset.id;
-    if (firstMeridian) location.hash = "#/" + firstMeridian.id + "+" + id; // apre la coordinata
-    else location.hash = "#/" + id;                                        // passa alla scelta del 2°
+    if (firstMeridian) location.hash = "#/" + firstMeridian.id + "+" + id;
+    else location.hash = "#/" + id;
   });
   searchInput.addEventListener("input", () => renderList(searchInput.value));
 
-  /* ---------- Blocchi di rendering delle sezioni ---------- */
-  // Muscolo & movimento
+  /* ---------- Blocchi di rendering ---------- */
   function muscleBlock(c) {
     const parts = [`<p class="mus-name">${esc(c.muscolo)}</p>`];
     parts.push(has(c.movimento) ? `<p>${esc(c.movimento)}</p>`
@@ -127,10 +147,9 @@
     return parts.join("");
   }
 
-  // Punti (NL / NV) e modi: {zona|nome, lato, note}
   function pointsBlock(arr) {
     const items = (arr || []).filter((x) => x && (has(x.zona) || has(x.nome) || has(x.note)));
-    if (!items.length) return PH;
+    if (!items.length) return "";
     return '<ul class="points">' + items.map((x) => {
       const title = esc(x.zona || x.nome || "");
       const lato = has(x.lato) ? ` <span class="pt-lato">(${esc(x.lato)})</span>` : "";
@@ -139,28 +158,6 @@
     }).join("") + "</ul>";
   }
 
-  // Affermazioni + tabella atteggiamenti collegati
-  function affBlock(c) {
-    const aff = (c.affermazioni || []).filter(has);
-    const affHtml = aff.length
-      ? '<ul class="aff">' + aff.map((a) => `<li>${esc(a)}</li>`).join("") + "</ul>" : "";
-    const attRows = (c.atteggiamenti || []).map((a) =>
-      `<tr><td class="att__pos">${esc(a.posizione)}</td><td>${esc(a.meridiano)}</td><td>${esc(a.stress)}</td></tr>`).join("");
-    const attHtml = attRows
-      ? `<h4 class="subh">Atteggiamenti collegati</h4><div class="att__wrap"><table class="att"><thead><tr><th>Pos.</th><th>Meridiano rif.</th><th>Stress: pensieri &amp; emozioni</th></tr></thead><tbody>${attRows}</tbody></table></div>`
-      : "";
-    return (affHtml || attHtml) ? (affHtml + attHtml) : PH;
-  }
-
-  // Meridiano: nome + storia/attributi
-  function meridianiBlock(c) {
-    const parts = [];
-    if (has(c.meridiano)) parts.push(`<p class="mer-name">${esc(c.meridiano)}</p>`);
-    if (has(c.storiaMeridiano)) parts.push(`<p>${esc(c.storiaMeridiano)}</p>`);
-    return parts.length ? parts.join("") : PH;
-  }
-
-  // Fiore: nome, tipo, squilibri, frasi
   function fioreBlock(c) {
     const rows = (c.fiore || []).filter((x) => has(x.nome) || has(x.tipo));
     if (!rows.length) return PH;
@@ -175,8 +172,77 @@
     }).join("") + "</div>";
   }
 
-  // Griglia di miniature (NL/NV/Basket Weaver) che aprono la lightbox.
-  const NLNV_CAP = ["Scheda riassuntiva", "Dettaglio · Agonista", "Dettaglio · Antagonista"];
+  /* Immagine singola (posizione) con didascalia, apre lightbox */
+  function posImg(src, caption) {
+    if (!has(src)) return PH_IMG;
+    const cap = caption ? `<figcaption>${esc(caption)}</figcaption>` : "";
+    return `<div class="pages"><figure class="pagefig"><img class="pageimg" src="${esc(src)}" loading="lazy" alt="${esc(caption || "Immagine")}" />${cap}</figure></div>`;
+  }
+
+  /* Parsing dello stress "IrF: X / IoF: Y" in coppia leggibile */
+  function stressBlock(stress) {
+    if (!has(stress)) return "";
+    const parts = String(stress).split("/").map((s) => s.trim()).filter(Boolean);
+    if (parts.length < 2) return `<p class="stress-line">${esc(stress)}</p>`;
+    return '<div class="stress">' + parts.map((p) => {
+      const m = p.match(/^([^:]+):\s*(.*)$/);
+      const lab = m ? m[1].trim() : "";
+      const val = m ? m[2].trim() : p;
+      return `<div class="stress__item"><span class="stress__lab">${esc(lab)}</span><span class="stress__val">${esc(val)}</span></div>`;
+    }).join("") + "</div>";
+  }
+
+  /* ---------- Vista coordinata (muscolo + posizione) ---------- */
+  let pair = [null, null];   // [c1 = muscolo/1°, c2 = posizione/2°]
+
+  function sectionsFor(c1, c2, row) {
+    const posN = row ? row.posizione : null;
+    const refMer = c2.meridiano;
+    const posLabel = posN ? `Posizione ${posN} — ${refMer}` : refMer;
+
+    // Punti NL: elenco muscolo + immagine posizione
+    const nlList = pointsBlock(c1.neuroLinfatici);
+    const nlImg = row && has(row.nl) ? posImg(row.nl, "NL · " + posLabel) : PH_IMG;
+    // Punti NV
+    const nvList = pointsBlock(c1.neurovascolari);
+    const nvImg = row && has(row.nv) ? posImg(row.nv, "NV · " + posLabel) : PH_IMG;
+
+    // Meridiani coinvolti
+    let merHtml = "";
+    if (has(c1.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano del muscolo (1°): ${esc(c1.meridiano)}</h4><p>${esc(c1.storiaMeridiano)}</p>`;
+    if (c2.id !== c1.id && has(c2.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano di riferimento (2° · posizione): ${esc(c2.meridiano)}</h4><p>${esc(c2.storiaMeridiano)}</p>`;
+    if (!merHtml) merHtml = PH;
+
+    // Sezione posizione: numero + riferimento + emozioni/atteggiamenti
+    let posHtml;
+    if (row) {
+      posHtml =
+        `<div class="posbox">
+           <span class="posbox__num">Pos. ${esc(posN)}</span>
+           <div class="posbox__body">
+             <p class="posbox__ref">Meridiano di riferimento: <strong>${esc(refMer)}</strong></p>
+             <p class="posbox__hint">Definita dal 2° meridiano testato.</p>
+           </div>
+         </div>
+         <h4 class="subh">Emozioni &amp; atteggiamenti</h4>
+         ${stressBlock(row.stress)}`;
+    } else {
+      posHtml = `<p><span class="placeholder">Nessuna posizione trovata per «${esc(refMer)}» sul muscolo ${esc(c1.muscolo)}.</span></p>`;
+    }
+
+    return [
+      { id: "muscolo", label: "Muscolo & come testarlo",
+        html: muscleBlock(c1) + imgGrid(c1.immaginiMonitoraggio, "Monitoraggio", MON_CAP) + imgGrid(c1.immaginiAmpiezza, "Ampiezza", AMP_CAP) },
+      { id: "posizione", label: "Posizione di test", html: posHtml },
+      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL) — posizione", html: nlList + nlImg },
+      { id: "neurovascolari", label: "Punti neurovascolari (NV) — posizione", html: nvList + nvImg },
+      { id: "modi", label: "Modi", html: pointsBlock(c1.modi) || PH },
+      { id: "meridiani", label: "Meridiani coinvolti", html: merHtml },
+      { id: "fiore", label: "Fiori / essenze", html: fioreBlock(c1) },
+      { id: "immagini", label: "Immagini (Basket Weaver)", html: imgGrid(c1.immagini, "Diagramma") || PH_IMG }
+    ];
+  }
+
   const MON_CAP = ["Test muscolo (facilitazione)", "Test organo correlato (inibizione)"];
   const AMP_CAP = ["Agonista", "Antagonista", "Antagonista (2)"];
   function imgGrid(list, alt, captions) {
@@ -188,71 +254,44 @@
     }).join("") + "</div>";
   }
 
-  function sectionsFor(c) {
-    return [
-      { id: "muscolo", label: "Muscolo & movimento", html: muscleBlock(c) + imgGrid(c.immaginiMonitoraggio, "Monitoraggio", MON_CAP) },
-      { id: "ampiezza", label: "Ampiezza del movimento", html: imgGrid(c.immaginiAmpiezza, "Ampiezza del movimento", AMP_CAP) || PH_IMG },
-      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)", html: pointsBlock(c.neuroLinfatici) + imgGrid(c.immaginiNL, "Punti NL", NLNV_CAP) },
-      { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: pointsBlock(c.neurovascolari) + imgGrid(c.immaginiNV, "Punti NV", NLNV_CAP) },
-      { id: "modi", label: "Modi", html: pointsBlock(c.modi) },
-      { id: "affermazioni", label: "Affermazioni", html: affBlock(c) },
-      { id: "meridiani", label: "Meridiano", html: meridianiBlock(c) },
-      { id: "fiore", label: "Fiore", html: fioreBlock(c) },
-      { id: "immagini", label: "Immagini (Basket Weaver)", html: imgGrid(c.immagini, "Diagramma") || PH_IMG }
-    ];
-  }
-
-  /* ---------- Vista coordinata (coppia di meridiani) ---------- */
-  let pair = [null, null];   // [meridianoA, meridianoB]
-  let activeIdx = 0;
-
   function renderCoordHead() {
-    const [a, b] = pair;
+    const [c1, c2] = pair;
+    const row = posFor(c1, c2);
+    const posN = row ? row.posizione : "—";
     coordHead.innerHTML = `
-      <p class="coord__label">Coordinata completa</p>
-      <div class="coord__pair">
-        <span class="coord__mer" style="--c:${esc(a.colore)}">${esc(a.meridiano)}</span>
-        <span class="coord__x">↔</span>
-        <span class="coord__mer" style="--c:${esc(b.colore)}">${esc(b.meridiano)}</span>
+      <p class="coord__label">Coordinata di test</p>
+      <div class="coord__roles">
+        <div class="coord__role" style="--c:${esc(c1.colore)}">
+          <span class="coord__tag">1° meridiano → muscolo</span>
+          <span class="coord__mer">${esc(c1.meridiano)}</span>
+          <span class="coord__mus">${esc(c1.muscolo)}</span>
+        </div>
+        <div class="coord__role" style="--c:${esc(c2.colore)}">
+          <span class="coord__tag">2° meridiano → posizione</span>
+          <span class="coord__mer">${esc(c2.meridiano)}</span>
+          <span class="coord__mus">Posizione ${esc(posN)}</span>
+        </div>
       </div>
-      <button id="changeSecond" class="coord__change" type="button">↺ Cambia 2° meridiano</button>`;
+      <button id="changeSecond" class="coord__change" type="button">↺ Cambia 2° meridiano (posizione)</button>`;
     el("changeSecond").addEventListener("click", () => { location.hash = "#/" + pair[0].id; });
   }
 
-  function renderCoordTabs() {
-    coordTabs.innerHTML = pair.map((c, i) =>
-      `<button class="coordtab${i === activeIdx ? " active" : ""}" data-idx="${i}"
-               style="--c:${esc(c.colore)}">
-         <span class="coordtab__mer">${esc(c.meridiano)}</span>
-         <span class="coordtab__mus">${esc(c.muscolo)}</span>
-       </button>`).join("");
-  }
-
-  function renderActiveSections() {
-    const c = pair[activeIdx];
-    sections.innerHTML = sectionsFor(c).map((s) =>
+  function renderSections() {
+    const [c1, c2] = pair;
+    const row = posFor(c1, c2);
+    sections.innerHTML = sectionsFor(c1, c2, row).map((s) =>
       `<section class="section" id="sec-${s.id}">
          <h3>${s.label}</h3>${s.html}</section>`).join("");
     updateStick();
   }
 
-  coordTabs.addEventListener("click", (e) => {
-    const t = e.target.closest(".coordtab");
-    if (!t) return;
-    activeIdx = Number(t.dataset.idx) || 0;
-    renderCoordTabs();
-    renderActiveSections();
-    window.scrollTo(0, 0);
-  });
-
-  function showCoordinate(a, b) {
-    pair = [a, b];
-    activeIdx = 0;
+  function showCoordinate(c1, c2) {
+    pair = [c1, c2];
+    coordTabs.innerHTML = "";
     listView.hidden = true; coordView.hidden = false;
     backBtn.hidden = false; searchWrap.hidden = true;
     renderCoordHead();
-    renderCoordTabs();
-    renderActiveSections();
+    renderSections();
     window.scrollTo(0, 0);
     updateStick();
   }
@@ -260,16 +299,15 @@
   function showList() {
     coordView.hidden = true; listView.hidden = false;
     searchWrap.hidden = false;
-    backBtn.hidden = !firstMeridian; // in Home niente "indietro"
+    backBtn.hidden = !firstMeridian;
     renderList(searchInput.value);
     updateStick();
   }
 
-  /* ---------- Lightbox immagini ---------- */
+  /* ---------- Lightbox ---------- */
   const lightbox = el("lightbox"), lbImg = el("lbImg"), lbCount = el("lbCount");
   const lbPrev = el("lbPrev"), lbNext = el("lbNext"), lbClose = el("lbClose");
   let lbList = [], lbIdx = 0;
-
   function lbShow(i) {
     if (!lbList.length) return;
     lbIdx = (i + lbList.length) % lbList.length;
@@ -278,20 +316,14 @@
     const multi = lbList.length > 1;
     lbPrev.hidden = !multi; lbNext.hidden = !multi; lbCount.hidden = !multi;
   }
-  function lbOpen(list, i) {
-    lbList = list; lightbox.hidden = false;
-    document.body.classList.add("lb-open");
-    lbShow(i);
-  }
+  function lbOpen(list, i) { lbList = list; lightbox.hidden = false; document.body.classList.add("lb-open"); lbShow(i); }
   function lbCloseFn() { lightbox.hidden = true; document.body.classList.remove("lb-open"); lbImg.src = ""; }
-
   sections.addEventListener("click", (e) => {
     const img = e.target.closest(".pageimg");
     if (!img) return;
     const sec = img.closest(".section");
     const thumbs = Array.from(sec.querySelectorAll(".pageimg"));
-    const list = thumbs.map((t) => t.getAttribute("src"));
-    lbOpen(list, thumbs.indexOf(img));
+    lbOpen(thumbs.map((t) => t.getAttribute("src")), thumbs.indexOf(img));
   });
   lbPrev.addEventListener("click", (e) => { e.stopPropagation(); lbShow(lbIdx - 1); });
   lbNext.addEventListener("click", (e) => { e.stopPropagation(); lbShow(lbIdx + 1); });
@@ -304,10 +336,7 @@
     else if (e.key === "ArrowRight") lbShow(lbIdx + 1);
   });
 
-  /* ---------- Router (hash) ----------
-     #/            → Home
-     #/<id>        → scelta 2° meridiano (1° = id)
-     #/<id>+<id2>  → coordinata completa                        */
+  /* ---------- Router (hash) ---------- */
   function route() {
     const h = location.hash;
     const mPair = h.match(/^#\/([^+]+)\+(.+)$/);
@@ -322,63 +351,44 @@
     }
     firstMeridian = null; showList();
   }
-
   backBtn.addEventListener("click", () => {
-    if (!coordView.hidden) location.hash = "#/" + pair[0].id; // da coordinata → scelta 2°
-    else location.hash = "";                                  // da scelta 2° → Home
+    if (!coordView.hidden) location.hash = "#/" + pair[0].id;
+    else location.hash = "";
   });
   window.addEventListener("hashchange", route);
 
-  /* ---------- PWA: service worker + popup installazione ---------- */
+  /* ---------- PWA ---------- */
   if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch(() => {});
-    });
+    window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
   }
-
   (function initInstallPopup() {
     const pop = el("installPop");
     if (!pop) return;
     const btn = el("installBtn"), later = el("installLater"), closeX = el("installClose");
     const textEl = el("installText"), titleEl = el("installTitle");
     const SEEN_KEY = "kapp-install-seen";
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches
-      || window.navigator.standalone === true;
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
     const ua = navigator.userAgent || "";
     const isIOS = /iphone|ipad|ipod/i.test(ua) && !window.MSStream;
     let deferredPrompt = null;
-
-    function show() {
-      if (isStandalone) return;
-      if (safeGet(SEEN_KEY)) return;
-      pop.hidden = false; document.body.classList.add("installpop-open");
-    }
-    function dismiss() {
-      pop.hidden = true; document.body.classList.remove("installpop-open");
-      safeSet(SEEN_KEY, "1");
-    }
+    function show() { if (isStandalone) return; if (safeGet(SEEN_KEY)) return; pop.hidden = false; document.body.classList.add("installpop-open"); }
+    function dismiss() { pop.hidden = true; document.body.classList.remove("installpop-open"); safeSet(SEEN_KEY, "1"); }
     window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredPrompt = e; show(); });
     window.addEventListener("appinstalled", () => { safeSet(SEEN_KEY, "1"); dismiss(); });
     btn.addEventListener("click", async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        try { await deferredPrompt.userChoice; } catch (e) {}
-        deferredPrompt = null; dismiss();
-      } else { dismiss(); }
+      if (deferredPrompt) { deferredPrompt.prompt(); try { await deferredPrompt.userChoice; } catch (e) {} deferredPrompt = null; dismiss(); }
+      else { dismiss(); }
     });
     later.addEventListener("click", dismiss);
     closeX.addEventListener("click", dismiss);
     pop.addEventListener("click", (e) => { if (e.target === pop) dismiss(); });
     if (isIOS && !isStandalone && !safeGet(SEEN_KEY)) {
       titleEl.textContent = "Aggiungi alla Home";
-      textEl.innerHTML = 'Tocca il pulsante <strong>Condividi</strong> ' +
-        '<span aria-hidden="true">⏏</span> e poi <strong>«Aggiungi a Home»</strong> ' +
-        'per installare l\'app e usarla offline.';
+      textEl.innerHTML = 'Tocca il pulsante <strong>Condividi</strong> <span aria-hidden="true">⏏</span> e poi <strong>«Aggiungi a Home»</strong> per installare l\'app e usarla offline.';
       btn.textContent = "Ho capito";
       setTimeout(show, 1200);
     }
   })();
 
-  /* ---------- Avvio ---------- */
   route();
 })();

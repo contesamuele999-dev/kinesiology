@@ -237,3 +237,34 @@ body.installpop-open{ overflow:hidden; }
 /* Miniature immagini con didascalia (NL/NV: scheda/agonista/antagonista) */
 .pagefig{ margin:0; display:flex; flex-direction:column; gap:6px; }
 .pagefig figcaption{ font-size:.82rem; font-weight:700; color:var(--muted); text-align:center; }
+
+/* ===== Modello Muscolo + Posizione (agg. 2026-07-15) ===== */
+.card__body{ flex:1; }
+.card__pos{ flex:0 0 auto; align-self:center; margin:0 14px 0 4px; padding:8px 12px;
+  border-radius:999px; background:var(--input-bg); border:1px solid var(--line);
+  font-size:.9rem; font-weight:800; color:var(--brand); white-space:nowrap; }
+.card__pos--na{ color:var(--muted); font-weight:700; }
+.listhead__muscle{ margin:2px 0 4px; font-size:1.05rem; }
+.listhead__muscle strong{ color:var(--brand); }
+
+/* Header coordinata: due ruoli affiancati */
+.coord__roles{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:6px; }
+.coord__role{ background:var(--card); border:1px solid var(--line); border-left:6px solid var(--c,var(--brand));
+  border-radius:14px; padding:12px 14px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:2px; }
+.coord__tag{ font-size:.72rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); }
+.coord__role .coord__mer{ font-size:1.15rem; }
+.coord__mus{ color:var(--brand); font-weight:700; font-size:1rem; }
+@media (max-width:560px){ .coord__roles{ grid-template-columns:1fr; } }
+
+/* Box posizione + emozioni/atteggiamenti */
+.posbox{ display:flex; align-items:center; gap:14px; background:var(--input-bg);
+  border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+.posbox__num{ flex:0 0 auto; font-size:1.05rem; font-weight:800; color:#fff; background:var(--brand);
+  border-radius:12px; padding:10px 14px; }
+.posbox__ref{ font-size:1.05rem; }
+.posbox__hint{ color:var(--muted); font-size:.9rem; margin-top:2px; }
+.stress{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+.stress__item{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+.stress__lab{ display:block; font-size:.75rem; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:var(--muted); }
+.stress__val{ display:block; font-size:1.1rem; font-weight:700; margin-top:2px; }
+@media (max-width:480px){ .stress{ grid-template-columns:1fr; } }

@@ -88,11 +88,19 @@ for (cid,mer,mus,col,cn) in COORDS:
     fiore_js="[ "+", ".join(parts)+" ]"
     aff=[f"{x['nome']}: {x['frasi']}" for x in fl if x.get("frasi")]
     att=ATT.get(cid); att_js=""
-    if att: att_js="\n    atteggiamenti: [ "+", ".join("{ posizione: %d, meridiano: %s, stress: %s }"%(int(p),js(m),js(s)) for p,m,s in att)+" ],"
+    if att:
+        _rows=[]
+        for p,m,s in att:
+            pn=int(p); extra=""
+            _nl=f"assets/nlnv/{cid}/pos/nl_{pn}.jpg"; _nv=f"assets/nlnv/{cid}/pos/nv_{pn}.jpg"
+            if os.path.exists(_nl): extra+=", nl: %s"%js(_nl)
+            if os.path.exists(_nv): extra+=", nv: %s"%js(_nv)
+            _rows.append("{ posizione: %d, meridiano: %s, stress: %s%s }"%(pn,js(m),js(s),extra))
+        att_js="\n    atteggiamenti: [ "+", ".join(_rows)+" ],"
     st=ST.get(cid,{})
     im_js="["+", ".join(js(p) for p in im)+"]" if im else "[]"
     out+=["  {",
-      f"    id: {js(cid)}, muscolo: {js(mus)}, movimento: {js(mon.get('movimento',''))}, movimentoNote: {js(mon.get('movimentoNote',''))}, meridiano: {js(mer)}, colore: {js(col)}, coloreNome: {js(cn)},",
+      f"    id: {js(cid)}, muscolo: {js(mus)}, movimento: {js(mon.get('movimento',''))}, movimentoNote: {js(mon.get('movimentoNote',''))}, meridiano: {js(mer)}, meridianoKey: {js(MER.get(cid,mer))}, colore: {js(col)}, coloreNome: {js(cn)},",
       f"    immaginiMonitoraggio: {js(collect(cid,['mon_musc','mon_org']))}, immaginiAmpiezza: {js(collect(cid,['amp_ago','amp_anta','amp_anta2']))},",
       f"    neuroLinfatici: {js_list(mon.get('neuroLinfatici',[]))},",
       f"    immaginiNL: {js(nlnv(cid,'nl'))},",
