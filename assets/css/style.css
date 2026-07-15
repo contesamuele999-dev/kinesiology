@@ -94,6 +94,8 @@ html,body{ background:var(--bg); color:var(--ink);
 .pageimg{ width:100%; height:auto; border:1px solid var(--line); border-radius:10px; cursor:zoom-in;
   background:#fff; box-shadow:var(--shadow); transition:transform .08s; }
 .pageimg:active{ transform:scale(.99); }
+.pages--single{ grid-template-columns:minmax(0,1fr); justify-items:center; }
+.pages--single .pagefig{ width:100%; max-width:560px; }
 
 /* Tabella atteggiamenti (pensieri & emozioni) */
 .att__wrap{ overflow-x:auto; margin-bottom:14px; }
@@ -269,3 +271,6 @@ body.installpop-open{ overflow:hidden; }
 .stress{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
 .stress__item{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
 @media (max-width:480px){ .stress{ grid-template-columns:1fr; } }
+.stress__lab{ font-weight:800; color:var(--brand); }
+.stress__sep{ margin:0 .4em; color:var(--muted); }
+.stress__val{ }

@@ -176,7 +176,7 @@
   function posImg(src, caption) {
     if (!has(src)) return PH_IMG;
     const cap = caption ? `<figcaption>${esc(caption)}</figcaption>` : "";
-    return `<div class="pages"><figure class="pagefig"><img class="pageimg" src="${esc(src)}" loading="lazy" alt="${esc(caption || "Immagine")}" />${cap}</figure></div>`;
+    return `<div class="pages pages--single"><figure class="pagefig"><img class="pageimg" src="${esc(src)}" loading="lazy" alt="${esc(caption || "Immagine")}" />${cap}</figure></div>`;
   }
 
   /* Parsing dello stress "IrF: X / IoF: Y" in coppia leggibile */
@@ -188,7 +188,7 @@
       const m = p.match(/^([^:]+):\s*(.*)$/);
       const lab = m ? m[1].trim() : "";
       const val = m ? m[2].trim() : p;
-      return `<div class="stress__item"><span class="stress__lab">${esc(lab)}</span><span class="stress__val">${esc(val)}</span></div>`;
+      return `<div class="stress__item"><span class="stress__lab">${esc(lab)}</span><span class="stress__sep">–</span><span class="stress__val">${esc(val)}</span></div>`;
     }).join("") + "</div>";
   }
 
@@ -235,9 +235,14 @@
       posHtml = `<p><span class="placeholder">Nessuna posizione trovata per «${esc(refMer)}» sul muscolo ${esc(c1.muscolo)}.</span></p>`;
     }
 
+    // Ampiezza: ritaglio della singola posizione (come NL/NV); fallback pagine intere
+    const ampHtml = row && has(row.amp)
+      ? '<h4 class="subh">Ampiezza del movimento · ' + esc(cap) + '</h4>' + posImg(row.amp, "Ampiezza · " + cap)
+      : imgGrid(c1.immaginiAmpiezza, "Ampiezza", AMP_CAP);
+
     return [
       { id: "muscolo", label: "Muscolo & come testarlo",
-        html: muscleBlock(c1) + imgGrid(c1.immaginiMonitoraggio, "Monitoraggio", MON_CAP) + imgGrid(c1.immaginiAmpiezza, "Ampiezza", AMP_CAP) },
+        html: muscleBlock(c1) + imgGrid(c1.immaginiMonitoraggio, "Monitoraggio", MON_CAP) + ampHtml },
       { id: "posizione", label: "Posizione di test", html: posHtml },
       { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)", html: nlScheda + nlList + nlImg },
       { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: nvScheda + nvList + nvImg },
