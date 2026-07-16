@@ -179,6 +179,37 @@
     return `<div class="pages pages--single"><figure class="pagefig"><img class="pageimg" src="${esc(src)}" loading="lazy" alt="${esc(caption || "Immagine")}" />${cap}</figure></div>`;
   }
 
+  /* Riga di immagini reflessologia (mani/piedi dominante dx+sx) */
+  function reflexRow(items) {
+    const figs = items.filter((it) => has(it.src));
+    if (!figs.length) return "";
+    return '<div class="pages">' + figs.map((it) =>
+      `<figure class="pagefig"><img class="pageimg" src="${esc(it.src)}" loading="lazy" alt="${esc(it.cap)}" /><figcaption>${esc(it.cap)}</figcaption></figure>`
+    ).join("") + "</div>";
+  }
+
+  /* Sezione Reflessologia (Basket Weaver): corpo + mani dx/sx + piedi dx/sx + ruota */
+  function reflexBlock(c1, row, cap) {
+    const parts = [];
+    if (row && has(row.reflex))
+      parts.push('<h4 class="subh">Corpo · ' + esc(cap) + '</h4>' + posImg(row.reflex, "Corpo · " + cap));
+    const mani = row ? reflexRow([
+      { src: row.refHandDx, cap: "Mano · dominante destra" },
+      { src: row.refHandSx, cap: "Mano · dominante sinistra" }
+    ]) : "";
+    if (mani) parts.push('<h4 class="subh">Mani · ' + esc(cap) + '</h4>' + mani);
+    const piedi = row ? reflexRow([
+      { src: row.refFootDx, cap: "Piede · dominante destro" },
+      { src: row.refFootSx, cap: "Piede · dominante sinistro" }
+    ]) : "";
+    if (piedi) parts.push('<h4 class="subh">Piedi · ' + esc(cap) + '</h4>' + piedi);
+    if (has(c1.ruota))
+      parts.push('<h4 class="subh">Ruota energetica</h4>' + posImg(c1.ruota, "Ruota energetica — " + c1.muscolo));
+    if (!parts.length)
+      return '<p><span class="placeholder">Reflessologia non disponibile per questo muscolo nel manuale Basket Weaver.</span></p>';
+    return parts.join("");
+  }
+
   /* Parsing dello stress "IrF: X / IoF: Y" in coppia leggibile */
   function stressBlock(stress) {
     if (!has(stress)) return "";
@@ -208,9 +239,7 @@
     const nlImg = row && has(row.nl) ? posImg(row.nl, "Dettaglio NL · " + cap) : "";
     const nvList = pointsBlock(c1.neurovascolari);
     const nvImg = row && has(row.nv) ? posImg(row.nv, "Dettaglio NV · " + cap) : "";
-    const reflexHtml = row && has(row.reflex)
-      ? posImg(row.reflex, "Reflessologia · " + cap)
-      : '<p><span class="placeholder">Reflessologia non disponibile per questo muscolo nel manuale Basket Weaver.</span></p>';
+    const reflexHtml = reflexBlock(c1, row, cap);
 
     // Meridiani coinvolti
     let merHtml = "";

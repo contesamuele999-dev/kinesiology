@@ -95,10 +95,17 @@ for (cid,mer,mus,col,cn) in COORDS:
             _nl=f"assets/nlnv/{cid}/pos/nl_{pn}.jpg"; _nv=f"assets/nlnv/{cid}/pos/nv_{pn}.jpg"
             _amp=f"assets/nlnv/{cid}/pos/amp_{pn}.jpg"
             _rx=f"assets/pages/{cid}/pos/refbody_{pn}.jpg"
+            _rp=f"assets/pages/{cid}/pos"
+            _hdx=f"{_rp}/refhand_dx_{pn}.jpg"; _hsx=f"{_rp}/refhand_sx_{pn}.jpg"
+            _fdx=f"{_rp}/reffoot_dx_{pn}.jpg"; _fsx=f"{_rp}/reffoot_sx_{pn}.jpg"
             if os.path.exists(_nl): extra+=", nl: %s"%js(_nl)
             if os.path.exists(_nv): extra+=", nv: %s"%js(_nv)
             if os.path.exists(_amp): extra+=", amp: %s"%js(_amp)
             if os.path.exists(_rx): extra+=", reflex: %s"%js(_rx)
+            if os.path.exists(_hdx): extra+=", refHandDx: %s"%js(_hdx)
+            if os.path.exists(_hsx): extra+=", refHandSx: %s"%js(_hsx)
+            if os.path.exists(_fdx): extra+=", refFootDx: %s"%js(_fdx)
+            if os.path.exists(_fsx): extra+=", refFootSx: %s"%js(_fsx)
             _rows.append("{ posizione: %d, meridiano: %s, stress: %s%s }"%(pn,js(m),js(s),extra))
         att_js="\n    atteggiamenti: [ "+", ".join(_rows)+" ],"
     st=ST.get(cid,{})
@@ -106,6 +113,7 @@ for (cid,mer,mus,col,cn) in COORDS:
     out+=["  {",
       f"    id: {js(cid)}, muscolo: {js(mus)}, movimento: {js(mon.get('movimento',''))}, movimentoNote: {js(mon.get('movimentoNote',''))}, meridiano: {js(mer)}, meridianoKey: {js(MER.get(cid,mer))}, colore: {js(col)}, coloreNome: {js(cn)},",
       f"    immaginiMonitoraggio: {js(collect(cid,['mon_musc','mon_org']))}, immaginiAmpiezza: {js(collect(cid,['amp_ago','amp_anta','amp_anta2']))},",
+      f"    ruota: {js('assets/pages/'+cid+'/ruota.jpg' if os.path.exists('assets/pages/'+cid+'/ruota.jpg') else '')},",
       f"    neuroLinfatici: {js_list(mon.get('neuroLinfatici',[]))},",
       f"    schedaNL: {js('assets/nlnv/'+cid+'/nl.jpg' if os.path.exists('assets/nlnv/'+cid+'/nl.jpg') else '')}, schedaNV: {js('assets/nlnv/'+cid+'/nv.jpg' if os.path.exists('assets/nlnv/'+cid+'/nv.jpg') else '')},",
       f"    immaginiNL: {js(nlnv(cid,'nl'))},",
