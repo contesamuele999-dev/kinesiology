@@ -274,3 +274,15 @@ body.installpop-open{ overflow:hidden; }
 .stress__lab{ font-weight:800; color:var(--brand); }
 .stress__sep{ margin:0 .4em; color:var(--muted); }
 .stress__val{ }
+
+/* --- Fiori: filtro per posizione + testo con checkbox (fix 2026-07-22) --- */
+.ess__head-sec{ margin:0 0 10px; font-size:1.02rem; }
+.ess__head-sec strong{ color:var(--brand); }
+.ess__ref{ margin-left:auto; font-size:.8rem; font-weight:700; color:#fff;
+  background:var(--brand); padding:2px 8px; border-radius:999px; white-space:nowrap; }
+.ess__intro{ margin:8px 0 6px; }
+.ess__scelgo{ list-style:none; margin:0 0 8px; padding:0; display:flex; flex-wrap:wrap; gap:6px 18px; }
+.ess__scelgo li{ font-weight:700; }
+.ess__label{ margin:8px 0 4px; color:var(--muted); }
+.ess__sq{ list-style:none; margin:4px 0 0 4px; padding:0; }
+.ess__box{ display:inline-block; margin-right:6px; color:var(--brand); font-size:1.05em; line-height:1; }

@@ -11,7 +11,11 @@
     "Inflessibilita e rigidità",
     "Perfezionismo"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere fiducia nella vita permettendomi di fare parte del suo flusso, lasciarmi andare alla grandezza della realtà, e sentirmi a mio agio in qualsiasi situazione."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere fiducia nella vita permettendomi di fare parte del suo flusso, lasciarmi andare alla grandezza della realtà, e sentirmi a mio agio in qualsiasi situazione.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Red Helmet Orchid",
@@ -21,7 +25,11 @@
     "Essere testa calda",
     "Essere egoista"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a esprimere il mio vero io mostrando sensibilità, rispetto e considerazione per me stesso e per gli altri."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a esprimere il mio vero io mostrando sensibilità, rispetto e considerazione per me stesso e per gli altri.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Honeysuckle",
@@ -30,7 +38,11 @@
     "Profonda malinconia per essere lontano da casa",
     "Desiderio di fuggire dal crescere vivendo nel passato"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare e affermare il presente abbracciando il processo di crescita. Avrò fiducia nella mia guida interiore e andrò avanti con sicurezza in tutte le aree della vita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare e affermare il presente abbracciando il processo di crescita. Avrò fiducia nella mia guida interiore e andrò avanti con sicurezza in tutte le aree della vita.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Beech",
@@ -40,7 +52,11 @@
     "Fastidio per le abitudini, i gesti, le caratteristiche degli altri",
     "Continuare a trovare difetti negli altri"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare le differenze degli altri, guardare le loro qualità e creare un ambiente di fiducia e benessere."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare le differenze degli altri, guardare le loro qualità e creare un ambiente di fiducia e benessere.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Swamp Banksia",
@@ -51,7 +67,11 @@
     "Scoraggiamento",
     "Frustrazione"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad abbracciare la vita con energia, entusiasmo e amore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad abbracciare la vita con energia, entusiasmo e amore.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Willow",
@@ -61,7 +81,11 @@
     "Riluttanza ad essere contento per la buona fortuna degli altri",
     "Pessimismo"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere la responsabilità per le situazioni della mia vita, creare armonia nei miei pensieri ed azioni ed accettare con gioia la buona fortuna degli altri."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere la responsabilità per le situazioni della mia vita, creare armonia nei miei pensieri ed azioni ed accettare con gioia la buona fortuna degli altri.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Coral Bean",
@@ -71,7 +95,11 @@
     "Mancanza di concentrazione",
     "Indebolimento del mio istinto di sopravvivenza"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riallineare e rinnovare la mia forza d'animo, attenzione e concentrazione per essere in contatto con la mia saggezza interiore che mi da' ottimismo, sicurezza e capacità di mantenermi al sicuro."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riallineare e rinnovare la mia forza d'animo, attenzione e concentrazione per essere in contatto con la mia saggezza interiore che mi da' ottimismo, sicurezza e capacità di mantenermi al sicuro.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Vaso Concezione": [
@@ -84,7 +112,11 @@
     "Umore variabile",
     "Esitazione"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a prendere le mie decisioni dalla prospettiva dell'amore senza limiti; chiaramente e facilmente integrare ciò che sembra in opposizione, quando é appropriato; e agire con sicurezza interiore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a prendere le mie decisioni dalla prospettiva dell'amore senza limiti; chiaramente e facilmente integrare ciò che sembra in opposizione, quando é appropriato; e agire con sicurezza interiore.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Grey Spider Flower",
@@ -93,7 +125,11 @@
     "Terrore",
     "Paura di attacchi psichici e soprannaturali"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a credere nella sicurezza dell'universo e ad agire con fiducia, tranquillita e coraggio."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a credere nella sicurezza dell'universo e ad agire con fiducia, tranquillita e coraggio.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Bluebell",
@@ -104,13 +140,21 @@
     "Avidita",
     "Rigidità"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad aprire il mio cuore, essere fiducioso nell'abbondanza dell'universo, ricevere con fiducia e condividere con gioia."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad aprire il mio cuore, essere fiducioso nell'abbondanza dell'universo, ricevere con fiducia e condividere con gioia.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Devil's Claw",
    "tipo": "Fiore del Deserto",
    "squilibri": [],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad essere responsabile di accettare ciò che sono, mostrare sicurezza in modo da ispirare e stimolare gli altri, concedermi con facilita agli altri, e restare consapevole della mia pura identità."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad essere responsabile di accettare ciò che sono, mostrare sicurezza in modo da ispirare e stimolare gli altri, concedermi con facilita agli altri, e restare consapevole della mia pura identità.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Mimulus",
@@ -118,7 +162,11 @@
    "squilibri": [
     "Paura cosciente di cose che possono essere percepite dalla mente e dai sensi"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare l'amore come forza per affrontare la vita con intuito, forza d'animo e buon senso."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare l'amore come forza per affrontare la vita con intuito, forza d'animo e buon senso.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Crab Apple",
@@ -128,7 +176,11 @@
     "Scoraggiamento",
     "Vergogna per le mie debolezze mentali, emotive, fisiche o spirituali"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare il mio corpo ed i suoi cambiamenti. Comprendo che la purificazione é una tappa necessaria per avere più chiarezza e maggiore coscienza di me stesso."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare il mio corpo ed i suoi cambiamenti. Comprendo che la purificazione é una tappa necessaria per avere più chiarezza e maggiore coscienza di me stesso.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Evening Star",
@@ -140,7 +192,11 @@
     "Mancanza di autoaffermazione e di autostima",
     "Senso di inadeguatezza, come se non avessi niente da offrire"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad apprezzare ed affermare il mio vero essere con fiducia tanto da accettare intimità e intensità nelle mie relazioni, sviluppando fiducia in me stesso, e accettando il mio valore e la mia vera bellezza."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad apprezzare ed affermare il mio vero essere con fiducia tanto da accettare intimità e intensità nelle mie relazioni, sviluppando fiducia in me stesso, e accettando il mio valore e la mia vera bellezza.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Stomaco": [
@@ -152,7 +208,11 @@
     "Ribrezzo per il mio fisico",
     "Repulsione sessuale"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a godere della mia sessualità, a provare piacere sessuale, ad accettare la mia mascolinità/femminilità e provare piacere nel vivere nel mio corpo."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a godere della mia sessualità, a provare piacere sessuale, ad accettare la mia mascolinità/femminilità e provare piacere nel vivere nel mio corpo.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Chaparral",
@@ -163,7 +223,11 @@
     "Interiorizzare le cose creando tensione nervosa",
     "Chiusura nel mio mondo magico"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare l'amicizia degli altri per tutta la vita, pormi in connessione con la mia fonte interiore ed esprimere le mie emozioni e la mia energia creativa."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare l'amicizia degli altri per tutta la vita, pormi in connessione con la mia fonte interiore ed esprimere le mie emozioni e la mia energia creativa.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Waratah",
@@ -173,7 +237,11 @@
     "Mancanza di speranza",
     "Q) Incapacità di reagire ad una crisi"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad acquisire il coraggio di connettermi alla vita con tenacia, adattabilita e fiducia."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad acquisire il coraggio di connettermi alla vita con tenacia, adattabilita e fiducia.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Holly",
@@ -184,7 +252,11 @@
     "Bramare ie caratteristiche o la buona sorte di altri",
     "OQ) Aspettarsi il peggio dagli altri"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a far si che i miei pensieri e sentimenti si basino sul potere più alto dell'amore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a far si che i miei pensieri e sentimenti si basino sul potere più alto dell'amore.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Cane Cholla Cactus",
@@ -195,7 +267,11 @@
     "azione",
     "Mancanza di atteggiamento difensivo o di pretesa nelle mie relazioni con gli altri"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ascoltare gli altri con comprensione e mentalita aperta e a prendere decisioni con fiducia."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ascoltare gli altri con comprensione e mentalita aperta e a prendere decisioni con fiducia.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Walnut",
@@ -206,7 +282,25 @@
     "obiettivi",
     "Incapacità di avanzare nella mia vita"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ascoltare la mia voce interiore e con fiducia seguire la mia propria ed unica direzione nella vita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ascoltare la mia voce interiore e con fiducia seguire la mia propria ed unica direzione nella vita.",
+   "posizioni": [
+    6,
+    9
+   ]
+  },
+  {
+   "nome": "Cherry Plum",
+   "tipo": "Fiore di Bach",
+   "squilibri": [
+    "Paura di un crollo mentale",
+    "Paura di causare del male irrazionalmente a me stesso o agli altri",
+    "Angoscia mentale"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a rimanere calmo e accettare la guida del mio grande io.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Milza": [
@@ -218,7 +312,11 @@
     "Resistenza a far uscire tutto ciò che ho \"represso\"",
     "i Percepire una crisi di salute come ingiusta o pericolosa"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a coltivare pazienza | a proposito del mio processo di guarigione, permettere alle mie emozioni di salire in | superficie e far progressi nella vita con un completo supporto interiore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a coltivare pazienza | a proposito del mio processo di guarigione, permettere alle mie emozioni di salire in | superficie e far progressi nella vita con un completo supporto interiore.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Arizona White Oak",
@@ -229,13 +327,21 @@
     "Depressione",
     "Tristezza"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a conseguire forza e | stabilita per progredire nella vita con gioia."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a conseguire forza e | stabilita per progredire nella vita con gioia.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Star of Bethlehem",
    "tipo": "Fiore di Bach",
    "squilibri": [],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mantenere una pace interiore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mantenere una pace interiore.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Dagger Hakea",
@@ -244,7 +350,11 @@
     "Risentimento",
     "Amarezza nei confronti dei miei amici più stretti, famiglia ed amanti"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a esprimere i miei sentimenti e a perdonare gli altri come mezzo per guarire me stesso."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a esprimere i miei sentimenti e a perdonare gli altri come mezzo per guarire me stesso.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Hickory",
@@ -255,7 +365,11 @@
     "Provare dispiacere per me stesso",
     "Concentrarmi troppo su me stesso anziché sugli altri"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a esprimere i miei sentimenti e perdonare gli altri come mezzo per guarire me stesso."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a esprimere i miei sentimenti e perdonare gli altri come mezzo per guarire me stesso.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Black-eyed Susan",
@@ -266,7 +380,11 @@
     "Impazienza",
     "Stile di vita prendi-e-vai"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a rallentare e a godere dei momenti speciali di ogni giorno ed essere in sintonia con la mia guida interiore che é la , fonte della mia fiducia e della mia pace interiore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a rallentare e a godere dei momenti speciali di ogni giorno ed essere in sintonia con la mia guida interiore che é la , fonte della mia fiducia e della mia pace interiore.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Agrimony",
@@ -276,7 +394,11 @@
     "Abitudine di nascondere l'infelicita o l'ansieta agli altri",
     "Angoscia mentale"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a condividere le mie emozioni e pensieri e coinvolgendo coloro che mi amano cosicché gli altri possano sapere chi sono veramente."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a condividere le mie emozioni e pensieri e coinvolgendo coloro che mi amano cosicché gli altri possano sapere chi sono veramente.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Cuore": [
@@ -290,7 +412,11 @@
     "Processi mentali molto contorti",
     "Continuo uso eccessivo e prolungato di energie"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad incoraggiare chiunque a realizzarsi, rilassarmi, e allineare la mia volontà alla volontà universale."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad incoraggiare chiunque a realizzarsi, rilassarmi, e allineare la mia volontà alla volontà universale.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Vine",
@@ -300,7 +426,11 @@
     "Cercare di essere utile agli altri dirigendo le loro attività",
     "Rigidità mentale"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare che Vetfettive potere e gentile ed amorevole ed é cosi saldo che semplicemente sostiene le capacità degli altri."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare che Vetfettive potere e gentile ed amorevole ed é cosi saldo che semplicemente sostiene le capacità degli altri.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Chestnut Bud",
@@ -309,7 +439,11 @@
     "Riluttanza a imparare dagli errori del passato",
     "Tendenza a ripetere le abitudini del passato"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a vedere il significato dietro ai drammi della vita e ad imparare ciò di cui ho bisogno per progredire con occulatezza."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a vedere il significato dietro ai drammi della vita e ad imparare ciò di cui ho bisogno per progredire con occulatezza.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Sturt Desert Rose",
@@ -319,7 +453,11 @@
     "Poca autostima",
     "Tendenza a farmi comandare dagli altri"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a essere sincero con me stesso seguendo la mia saggezza interiore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a essere sincero con me stesso seguendo la mia saggezza interiore.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Agave",
@@ -330,7 +468,11 @@
     "Mancanza di crescita interiore",
     "Sensazione di debolezza nella vita quotidiana"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare tutti i miei aspetti e a manifestare la mia forza interiore nella vita quotidiana."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare tutti i miei aspetti e a manifestare la mia forza interiore nella vita quotidiana.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Prickly Pear Cactus",
@@ -340,7 +482,11 @@
     "Desiderio di controllare il tempismo degli eventi e delle situazioni",
     "Non essere attaccato a ciò che so essere giusto per me"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ascoltare la mia voce interiore a proposito di ciò che é giusto per me, accettare ciò che non posso cambiare e agire per cambiare quelle cose che posso."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ascoltare la mia voce interiore a proposito di ciò che é giusto per me, accettare ciò che non posso cambiare e agire per cambiare quelle cose che posso.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Bauhinia",
@@ -349,7 +495,11 @@
     "Resistenza a cambiare",
     "Rigidità e riluttanza"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad agire con flessibilita ed entusiasmo."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad agire con flessibilita ed entusiasmo.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Intestino Tenue": [
@@ -360,7 +510,11 @@
     "Lottare contro la mia vita e i suoi processi di crescita",
     "Scoraggiamento nei confronti dei problemi"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad affrontare la vita con fiducia, forza, coraggio e stabilità."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad affrontare la vita con fiducia, forza, coraggio e stabilità.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Old Man Banksia",
@@ -373,7 +527,11 @@
     "Sconforto",
     "Eccesso"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mostrare tanta gentilezza e considerazione per me stesso quanto per gli altri e vivere la vita con energia, entusiasmo ed interesse."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mostrare tanta gentilezza e considerazione per me stesso quanto per gli altri e vivere la vita con energia, entusiasmo ed interesse.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Hoptree",
@@ -383,7 +541,11 @@
     "Cj Tentare con troppa forza di controllare O Incapacità di evitare le distrazioni",
     "Perdere di vista il mio vero scopo QO Profonda ansia interiore"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a entrare in contatto con un profondo livello di obiettivi, rimanere focalizzato su ciò che é più essenziale e rinunciare con gioia al mio desiderio personale per uno piti alto."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a entrare in contatto con un profondo livello di obiettivi, rimanere focalizzato su ciò che é più essenziale e rinunciare con gioia al mio desiderio personale per uno piti alto.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Mustard",
@@ -393,7 +555,11 @@
     "Instabilita",
     "Incapacità di capire da dove nascono le mie emozioni"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a portare amore ad ogni esperienza, mantenere equilibrio nella mia vita e progredire con fiducia poiché ogni esperienza contiene delle opportunita per crescere."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a portare amore ad ogni esperienza, mantenere equilibrio nella mia vita e progredire con fiducia poiché ogni esperienza contiene delle opportunita per crescere.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Rock Rose",
@@ -401,7 +567,11 @@
    "squilibri": [
     "Estrema paura causata da incidenti, malattie 0 esperienze sconosciute"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare il coraggio e la capacità di dimenticare i miei problemi. Mi concentrero sull'aiutare le altre persone in situazioni d'emergenza."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare il coraggio e la capacità di dimenticare i miei problemi. Mi concentrero sull'aiutare le altre persone in situazioni d'emergenza.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Mountain Devil",
@@ -412,7 +582,27 @@
     "Sospetto",
     "Tenere rancore"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere ed accettare le mie emozioni. Inoltre accetterd, perdonerd e amero me stesso e gli altri."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere ed accettare le mie emozioni. Inoltre accetterd, perdonerd e amero me stesso e gli altri.",
+   "posizioni": [
+    6,
+    9
+   ]
+  },
+  {
+   "nome": "Hedgehog Cactus",
+   "tipo": "Fiore del Deserto",
+   "squilibri": [
+    "Trascuratezza nei miei confronti",
+    "Mancanza di empatia con la natura e gli altri",
+    "Indulgenza eccessiva",
+    "Isolamento dalla natura e dagli altri",
+    "Essere concentrato sui dettagli"
+   ],
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad allargare la mia visione della vita incrementando la mia empatia e vicinanza agli altri e alla natura.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Vescica": [
@@ -425,7 +615,11 @@
     "Sentirmi soppraffatto dai dettagli",
     "Paura di essere vulnerabile"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a concentrarmi in una direzione specifica quando é appropriate, e mantenere le mie energie in equilibrio."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a concentrarmi in una direzione specifica quando é appropriate, e mantenere le mie energie in equilibrio.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Ocotillo",
@@ -435,7 +629,11 @@
     "Essere vittima delle mie emozioni",
     "Ly Insicurezza"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare le mie emozioni con maggior giudizio ed esprimerle in modo più responsabile."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare le mie emozioni con maggior giudizio ed esprimerle in modo più responsabile.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Sweet Chestnut",
@@ -443,7 +641,11 @@
    "squilibri": [
     "Incapacità di sopportare la mia intensa sofferenza mentale"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a credere in un potere superiore, accettare una capacità pit' grande e crescere in consapevolezza, andando aldila dei miei limiti e capacità personali."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a credere in un potere superiore, accettare una capacità pit' grande e crescere in consapevolezza, andando aldila dei miei limiti e capacità personali.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Water Violet",
@@ -452,7 +654,11 @@
     "Egoismo",
     "Isolamento emotivo dagli altri"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a rivelare la mia essenza interiore nelle relazioni con gli altri, che é essenziale per la mia realizzazione."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a rivelare la mia essenza interiore nelle relazioni con gli altri, che é essenziale per la mia realizzazione.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Gentian",
@@ -463,7 +669,11 @@
     "La tendenza ad arrendermi quando sono sotto stress",
     "La mia idea che gli ostacoli sono insormontabili"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad affrontare gli ostacoli con vigore, capire che i miei sforzi sono una forma di successo e concentrarmi sulla vita come se fosse una serie di possibilità."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad affrontare gli ostacoli con vigore, capire che i miei sforzi sono una forma di successo e concentrarmi sulla vita come se fosse una serie di possibilità.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Mariposa Lily",
@@ -472,7 +682,11 @@
     "i) Mancanza di nutrimento da parte della mia \"madre interiore\" che si mostra con un",
     "senso di desolazione ed una mancanza di fiducia in me stesso"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a dar vita a me stesso, che si mostrera in gioia, una sensazione di libertà e nell'abilita di dare e ricevere amore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a dar vita a me stesso, che si mostrera in gioia, una sensazione di libertà e nell'abilita di dare e ricevere amore.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Tall Yellow Top",
@@ -482,7 +696,11 @@
     "Solitudine",
     "Isolamento"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare me stesso e gli altri mentre nel mio ambiente mi sento a casa aprendomi al mio senso interiore di appartenenza."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare me stesso e gli altri mentre nel mio ambiente mi sento a casa aprendomi al mio senso interiore di appartenenza.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Rene": [
@@ -494,7 +712,11 @@
     "Paura (0 Apprensione per gli altri",
     "Oi Timidezza QO Timori ingiustificati"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a intraprendere fiduciosamente nuove sfide e ad esprimermi serenamente con gli altri, godendo della loro compagnia."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a intraprendere fiduciosamente nuove sfide e ad esprimermi serenamente con gli altri, godendo della loro compagnia.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Ephedra",
@@ -505,7 +727,11 @@
     "i Mancanza di direzione ( Auto aceusa",
     "Disfattismo C1 Sofferenza emotiva"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare la mia capacità di gestire gli stress della vita, a scegliere una direzione per la mia vita e a fare progressi con fiducia."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare la mia capacità di gestire gli stress della vita, a scegliere una direzione per la mia vita e a fare progressi con fiducia.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Olive",
@@ -513,7 +739,11 @@
    "squilibri": [
     "O) Totale fatica fisica, mentale ed emotiva dovute ad uno stress prolungato"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a scegliere libertà e creativita attingendole dalle mie abbondanti risorse di energia."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a scegliere libertà e creativita attingendole dalle mie abbondanti risorse di energia.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Wild Rose",
@@ -522,7 +752,11 @@
     "i Totale abbandono agli aspetti della vita",
     "Mancanza di motivazione a cambiare la mia vita e crescere"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a partecipare alla vita e ad interagire con gli altri ed esprimere me stesso accogliendo la forza creativa nella mia vita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a partecipare alla vita e ad interagire con gli altri ed esprimere me stesso accogliendo la forza creativa nella mia vita.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Centaury",
@@ -530,7 +764,11 @@
    "squilibri": [
     "Innata attitudine a farmi sfruttare e prevaricare dagli altri"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a seguire il mio personale corso della vita, a creare la mia avyentura personale, a costituire la mia vitalita fisica, e scegliere con saggezza quando servire gli altri."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a seguire il mio personale corso della vita, a creare la mia avyentura personale, a costituire la mia vitalita fisica, e scegliere con saggezza quando servire gli altri.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Five Corners",
@@ -541,7 +779,11 @@
     "J Personalita schiacciata, \"trattenuta\"",
     "Vestirmi di grigio o senza colori"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad amarmi, accettarmi e a celebrare la mia bellezza."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad amarmi, accettarmi e a celebrare la mia bellezza.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Paw Paw",
@@ -551,7 +793,11 @@
     "Incapacità di risolvere problemi",
     "Essere oppresso dal dover prendere delle decisioni"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a restare calmo, autosufficiente ed avere chiarezza mentre prendo delle decisioni avendo accesso al mio IO superiore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a restare calmo, autosufficiente ed avere chiarezza mentre prendo delle decisioni avendo accesso al mio IO superiore.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Maestro del Cuore": [
@@ -564,7 +810,11 @@
     "Ritirarmi in un mondo di illusioni quando incontro delle difficoltà",
     "Disinteresse nella vita"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a diyentare completamente consapevole e responsabile delle mie realtà , soprattutto nel presente, ed apprezzare lo scopo della mia vita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a diyentare completamente consapevole e responsabile delle mie realtà , soprattutto nel presente, ed apprezzare lo scopo della mia vita.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Hornbeam",
@@ -573,7 +823,11 @@
     "Fatica mentale, fisica e/o emotiva risultante dal disinteresse nella vita e dal mio",
     "egocentrismo"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad apprezzare la mia forza e le mie capacità, portare avanti le mie intenzioni personali e utilizzare la mia volontà in maniera continuativa."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad apprezzare la mia forza e le mie capacità, portare avanti le mie intenzioni personali e utilizzare la mia volontà in maniera continuativa.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Philotheca",
@@ -582,7 +836,11 @@
     "Incapacità ad accettare i riconoscimenti",
     "Eccessiva generosità"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere le mie forze e con piacere ricevere amore e riconoscimento dagli altri."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere le mie forze e con piacere ricevere amore e riconoscimento dagli altri.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Cow Parsnip",
@@ -593,7 +851,11 @@
     "Oi Tensione",
     "i Combattere il volere divino"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a stare in contatto con un profondo senso dell'IO, lasciare che sia l'universo a gestire i dettagli, e integrare il divertimento e il rilassamento nella mia vita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a stare in contatto con un profondo senso dell'IO, lasciare che sia l'universo a gestire i dettagli, e integrare il divertimento e il rilassamento nella mia vita.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Strawberry Cactus",
@@ -603,7 +865,11 @@
     "Prendere la vita troppo seriamente senza alcun divertimento",
     "Controllare emozioni difficili"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a scegliere di lasciar andare le mie emozioni in modo tale che arrivino al cuore, accettando che regni amore e felicità."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a scegliere di lasciar andare le mie emozioni in modo tale che arrivino al cuore, accettando che regni amore e felicità.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Impatiens",
@@ -613,7 +879,11 @@
     "Desiderio di mettere fretta a tutti e a tutti gli eventi",
     "Essere facilmente irritato dalle mie limitazioni e da quelle degli altri"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mostrare apprezzamento per le capacità degli altri e capire che la vita progredisce seguendo il suo ritmo personale."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mostrare apprezzamento per le capacità degli altri e capire che la vita progredisce seguendo il suo ritmo personale.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Fairy Duster",
@@ -623,7 +893,11 @@
     "Ipersensibilita alle stimolazioni, specialmente quelle mentali",
     "Oscillazioni tra alta e bassa energia"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a maneggiare con facilita ed energia una maggiore intensità di stimolazione pur mantenendo i livelli emotivi, mentali ed eterici ancorati a terra e allineati."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a maneggiare con facilita ed energia una maggiore intensità di stimolazione pur mantenendo i livelli emotivi, mentali ed eterici ancorati a terra e allineati.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Triplice Riscaldatore": [
@@ -634,7 +908,11 @@
     "Cercare conferme attrayerso gli occhi degli altri",
     "Agire seguendo ciò che gli altri yorrebbero che io facessi anziché il mio giudizio"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad apprezzarmi basandomi sulla mia direzione interiore e sul mio giudizio."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad apprezzarmi basandomi sulla mia direzione interiore e sul mio giudizio.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Kangaroo Paw",
@@ -646,7 +924,11 @@
     "Insensibilita",
     "QO) Mancanza di tatto"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a gioire della gente in modo affabile, sensibile e rilassato."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a gioire della gente in modo affabile, sensibile e rilassato.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Sundew",
@@ -659,7 +941,11 @@
     "Sognare ad occhi aperti",
     "Separare le situazioni emotive"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ancorarmi alla certezza dell'amore e rimanere focalizzato ed attento ai dettagli."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad ancorarmi alla certezza dell'amore e rimanere focalizzato ed attento ai dettagli.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Flame Tree",
@@ -668,7 +954,11 @@
     "Paura delle responsabilità",
     "Opprimente paura di essere rifiutato"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad agire con sicurezza, fiducia in me stesso, forza ed impegno."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad agire con sicurezza, fiducia in me stesso, forza ed impegno.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Southern Cross",
@@ -680,7 +970,11 @@
     "Lamentarmi",
     "Martirizzarmi"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a volere forza personale e responsabilità. Continuerò a lavorare per creare circostanze positive e un'atmosfera di ottimismo nella mia vita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a volere forza personale e responsabilità. Continuerò a lavorare per creare circostanze positive e un'atmosfera di ottimismo nella mia vita.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Gorse",
@@ -688,7 +982,11 @@
    "squilibri": [
     "Abbattermi e scoraggiarmi"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad usare il potere curativo dell'amore per creare un nuovo sentimento di speranza e fiducia nella mia vita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad usare il potere curativo dell'amore per creare un nuovo sentimento di speranza e fiducia nella mia vita.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Red Chestnut",
@@ -697,7 +995,11 @@
     "Apprensione riguardo il benessere degli altri e le proiezioni delle mie emozioni su",
     "di loro stessi"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a restare in sintonia con gli altri con amore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a restare in sintonia con gli altri con amore.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Vescica Biliare": [
@@ -710,7 +1012,11 @@
     "Sacrificarmi",
     "Inflessibilita mentale"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad essere pit: buono con me Stesso e seguire la disciplina che ho in me e nella vita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad essere pit: buono con me Stesso e seguire la disciplina che ho in me e nella vita.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Wild Potato",
@@ -720,7 +1026,11 @@
     "Ingombro fisico",
     "Essere in soyrappeso"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere caro il mio corpo e progredire nella vita con libertà e vitalita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere caro il mio corpo e progredire nella vita con libertà e vitalita.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Wisteria",
@@ -730,7 +1040,11 @@
     "Immagine da \"Macho\"",
     "Isterismo sessuale"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad incoraggiare Vintimita nelle mie relazioni e a provare calore e sicurezza nella mia sessualità."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad incoraggiare Vintimita nelle mie relazioni e a provare calore e sicurezza nella mia sessualità.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Spineless Prickly Pear",
@@ -739,7 +1053,11 @@
     "Mancanza di scopi e di forza",
     "Dipendenza da fonti esterne per avere un senso di identità"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere che ogni cosa esiste in un dato momento per fornire uno strumento per l'esistenza. Io mi basto."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riconoscere che ogni cosa esiste in un dato momento per fornire uno strumento per l'esistenza. Io mi basto.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Wolfberry",
@@ -749,7 +1067,11 @@
     "Trattenere o evitare il dolore",
     "Senso di profondo cambiamento interiore che non riesco a capire"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a permettere al mio dolore e alla mia tristezza di portarmi ad un nuovo livello di coscienza e di permettere che avvengano profondi processi interiori senza aver bisogno di capirli."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a permettere al mio dolore e alla mia tristezza di portarmi ad un nuovo livello di coscienza e di permettere che avvengano profondi processi interiori senza aver bisogno di capirli.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Aspen",
@@ -757,7 +1079,11 @@
    "squilibri": [
     "Paura, panico o brutti presentimenti da una fonte che non può essere identificata o misurata con i sensi"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere il coraggio e sufficiente fiducia per procedere nella vita in tutte le circostanze."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere il coraggio e sufficiente fiducia per procedere nella vita in tutte le circostanze.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Wild Oat",
@@ -768,7 +1094,11 @@
     "Mancanza di concentrazione",
     "Scoraggiamento"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad integrare le mie energie in modo da intuire e poi realizzare gli intenti della mia vita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad integrare le mie energie in modo da intuire e poi realizzare gli intenti della mia vita.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Fegato": [
@@ -779,7 +1109,11 @@
     "Blocco creativo",
     "OC) Sfiducia verso le mie capacità creative"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a credere in me stesso e nella mia ispirata creativita ed espressione."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a credere in me stesso e nella mia ispirata creativita ed espressione.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Fishhook Cactus",
@@ -790,7 +1124,11 @@
     "Diffidenza nei confronti degli altri per paura di perdere o interrompere qualcosa",
     "Riluttanza a prendere rischi"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a realizzare che comunicazione, cooperazione e relazionarsi sono sicure e aiutano chiunque."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a realizzare che comunicazione, cooperazione e relazionarsi sono sicure e aiutano chiunque.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Desert Marigold",
@@ -800,7 +1138,11 @@
     "Essere vittima delle circostanze",
     "Riluttanza a prendermi delle responsabilità"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a scegliere di prendermi la responsabilità per la mia forza personale."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a scegliere di prendermi la responsabilità per la mia forza personale.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Heather",
@@ -809,7 +1151,11 @@
     "Ossessione verso i miei problemi e le mie esperienze",
     "s UO Essere troppo concentrato a realizzare i miei bisogni personali"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a percepire la mia responsabilità come il fiore dell'anima e a layorare sui bisogni degli altri ed i miei personali partendo da una prospettiva di maggiore coscienza."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a percepire la mia responsabilità come il fiore dell'anima e a layorare sui bisogni degli altri ed i miei personali partendo da una prospettiva di maggiore coscienza.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Hackberry",
@@ -818,7 +1164,11 @@
     "Resistenza al provare dolore",
     "Giudicare che il mio dolore dovrebbe essere gia finito"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a provare ed esprimere il mio dolore in modo tale che possa risolversi."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a provare ed esprimere il mio dolore in modo tale che possa risolversi.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Elm",
@@ -828,7 +1178,11 @@
     "Fatica di tentare di vivere secondo un'immagine ideale di me stesso",
     "Depressione"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare me stesso così come sono ed incorporando il mio idealismo in una situazione più realistica."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare me stesso così come sono ed incorporando il mio idealismo in una situazione più realistica.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Melon Loco",
@@ -838,7 +1192,11 @@
     "Perdita di contatto tra le mie emozioni e il mio corpo fisico",
     "Inibizione e confusione"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riallineare le mie emozioni con il mio corpo ed aumentare la mia sensibilità emotiva e responsabilità."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a riallineare le mie emozioni con il mio corpo ed aumentare la mia sensibilità emotiva e responsabilità.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Polmone": [
@@ -853,7 +1211,11 @@
     "necessariamente si adattano alla mia natura interiore",
     "Cercare fonti esterne come guida o come auto apprezzamento"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a capire chiaramente la forma e lo scopo della mia anima cosicché io possa scegliere forme di espressione che siano in armonia con la mia natura interiore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a capire chiaramente la forma e lo scopo della mia anima cosicché io possa scegliere forme di espressione che siano in armonia con la mia natura interiore.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "Larch",
@@ -863,7 +1225,11 @@
     "oO Depressione",
     "Pessimismo circa le mie capacità di avere successo"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad imparare da ogni esperienza ed agire con sicurezza usando la mia direzione interiore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad imparare da ogni esperienza ed agire con sicurezza usando la mia direzione interiore.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Queen of the Night",
@@ -875,7 +1241,11 @@
     "Impotenza ed inadeguatezza al cospetto di Dio",
     "Distorsione o blocco del principio ricettivo femminile"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sperimentare la padronanza dell'introspezione, del capire, del sentire e della sensualita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sperimentare la padronanza dell'introspezione, del capire, del sentire e della sensualita.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Silver Princess",
@@ -885,7 +1255,11 @@
     "Piattezza emotiva",
     "Maneanza di direzione"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mettermi in sintonia con gli obiettivi della mia vita, agire con motivazione e direzione, ed esprimere completamente e liberamente il mie amore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a mettermi in sintonia con gli obiettivi della mia vita, agire con motivazione e direzione, ed esprimere completamente e liberamente il mie amore.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "Slender Rice Flower",
@@ -895,7 +1269,11 @@
     "Razzismo O Ristrettezza d'idee",
     "Fare dei paragoni tra me e gli altri"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a cooperare con gli altri e riconoscere la yera umiltà come desiderio di vedere solo le cose migliori negli altri."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a cooperare con gli altri e riconoscere la yera umiltà come desiderio di vedere solo le cose migliori negli altri.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Pine",
@@ -906,7 +1284,11 @@
     "Irrealistico senso di responsabilità",
     "Fatica e depressione"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a prendermi quelle responsabilità che sono nel miglior interesse mio e degli altri. Valuterò i miei risultati e i miei fallimenti in maniera realistica e con amore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a prendermi quelle responsabilità che sono nel miglior interesse mio e degli altri. Valuterò i miei risultati e i miei fallimenti in maniera realistica e con amore.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Whitethorn",
@@ -917,7 +1299,11 @@
     "Tensione nervosa",
     "Soccombere a vecchi modelli, abitudini 0 situazioni che non sono pit: apropriate"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a vivere nel presente, sperimentare una pace interiore in modo che l'ottimismo e Ja dinamicita mi portino verso nuove direzioni."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a vivere nel presente, sperimentare una pace interiore in modo che l'ottimismo e Ja dinamicita mi portino verso nuove direzioni.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ],
  "Intestino Crasso": [
@@ -929,7 +1315,11 @@
     "Profondo dolore",
     "Tristezza"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad esprimere le mie emozioni e permettere che avyenga la mia guarigione attrayerso la forza dell'amore senza limiti."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad esprimere le mie emozioni e permettere che avyenga la mia guarigione attrayerso la forza dell'amore senza limiti.",
+   "posizioni": [
+    1,
+    14
+   ]
   },
   {
    "nome": "White Chestnut",
@@ -939,7 +1329,11 @@
     "I miei ripetuti dialoghi mentali",
     "Agitazione mentale e fatica"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a fermare la mia mente in modo tale che le mie capacità creative ed intuitive possano operare, ed io posso ottenere un vero riposo."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a fermare la mia mente in modo tale che le mie capacità creative ed intuitive possano operare, ed io posso ottenere un vero riposo.",
+   "posizioni": [
+    2,
+    13
+   ]
   },
   {
    "nome": "Yellow Cowslip Orchid",
@@ -949,7 +1343,11 @@
     "Tendenza burocratica",
     "Scelte stupide"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad aprire la mia mente yerso le persone e le idee. Capird che otterro tanto quanto lasceré liberi gli altri, sostenendoli ad attingere alla loro guida interiore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad aprire la mia mente yerso le persone e le idee. Capird che otterro tanto quanto lasceré liberi gli altri, sostenendoli ad attingere alla loro guida interiore.",
+   "posizioni": [
+    3,
+    12
+   ]
   },
   {
    "nome": "Sunshine Wattle",
@@ -959,7 +1357,11 @@
     "Avere aspettative per un futuro negativo",
     "Essere senza speranza"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a voler vedere un futuro gioioso ed ottimistico per me. Accettero la bellezza e la gioia del presente."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a voler vedere un futuro gioioso ed ottimistico per me. Accettero la bellezza e la gioia del presente.",
+   "posizioni": [
+    4,
+    11
+   ]
   },
   {
    "nome": "She Oak",
@@ -968,7 +1370,11 @@
     "Squilibrio ormonale",
     "Incapacità di immaginazione"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere sicurezza nella mia capacità di immaginare."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad avere sicurezza nella mia capacità di immaginare.",
+   "posizioni": [
+    5,
+    10
+   ]
   },
   {
    "nome": "Ratany",
@@ -979,7 +1385,11 @@
     "Incapacità di percepire o esprimere i desideri del mio cuore",
     "Presunzione e martirio"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare la gioia ottenuta dal riconoscere, seguire ed esprimere la verità che ho nel mio cuore."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno ad accettare la gioia ottenuta dal riconoscere, seguire ed esprimere la verità che ho nel mio cuore.",
+   "posizioni": [
+    6,
+    9
+   ]
   },
   {
    "nome": "Canyon Grapevine",
@@ -989,7 +1399,11 @@
     "Incapacità di ayere limiti appropriati",
     "Vedere le situazioni della vita come ostacoli"
    ],
-   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare la capacità di comprendere la necessità di un equilibrio nelle mie responsabilità, relazioni e altre aree della mia vita che richiedono le mie energie. Guarderd alle situazioni della vita come a delle opportunita."
+   "frasi": "Mi impegno con gentilezza, cortesia, amore e dandomi sostegno a sviluppare la capacità di comprendere la necessità di un equilibrio nelle mie responsabilità, relazioni e altre aree della mia vita che richiedono le mie energie. Guarderd alle situazioni della vita come a delle opportunita.",
+   "posizioni": [
+    7,
+    8
+   ]
   }
  ]
 }

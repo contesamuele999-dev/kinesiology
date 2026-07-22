@@ -82,6 +82,7 @@ for (cid,mer,mus,col,cn) in COORDS:
     fl=FIORI.get(MER.get(cid,""),[]); parts=[]
     for x in fl:
         extra=""
+        if x.get("posizioni"): extra+=", posizioni: "+js(x["posizioni"])
         if x.get("squilibri"): extra+=", squilibri: "+js(x["squilibri"])
         if x.get("frasi"): extra+=", frasi: "+js(x["frasi"])
         parts.append("{ nome: %s, tipo: %s%s }"%(js(x["nome"]),js(x.get("tipo","")),extra))

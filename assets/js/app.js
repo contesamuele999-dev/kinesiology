@@ -158,15 +158,35 @@
     }).join("") + "</ul>";
   }
 
-  function fioreBlock(c) {
-    const rows = (c.fiore || []).filter((x) => has(x.nome) || has(x.tipo));
+  /* Checkbox fissi "scelgo di ..." (uguali per tutti i fiori nel manuale) */
+  function essScelgoBlock() {
+    const opzioni = ["tramutare", "trasformare", "trascendere", "dissolvere"];
+    return `<p class="ess__intro">Mi prendo la responsabilit\u00e0 dei miei atteggiamenti ed ora con gentilezza, cortesia, amore e dandomi sostegno scelgo di \u2026</p>` +
+      '<ul class="ess__scelgo">' + opzioni.map((o) => `<li><span class="ess__box">\u2610</span> ${esc(o)}</li>`).join("") + "</ul>";
+  }
+
+  /* Sezione Fiori: mostra SOLO i fiori relativi alla posizione corrente.
+     posN = numero della posizione (row.posizione). Ogni fiore ha x.posizioni = [k, 15-k]. */
+  function fioreBlock(c, posN) {
+    let rows = (c.fiore || []).filter((x) => has(x.nome) || has(x.tipo));
     if (!rows.length) return PH;
-    return '<div class="ess__list">' + rows.map((x) => {
-      const sq = (x.squilibri || []).map((s) => `<li>${esc(s)}</li>`).join("");
+    // filtra per posizione se disponibile
+    if (posN != null) {
+      const f = rows.filter((x) => Array.isArray(x.posizioni) && x.posizioni.indexOf(Number(posN)) !== -1);
+      if (f.length) rows = f;
+    }
+    const head = posN != null
+      ? `<p class="ess__head-sec">Fiori per la <strong>posizione ${esc(posN)}</strong></p>`
+      : "";
+    return head + '<div class="ess__list">' + rows.map((x) => {
+      const sq = (x.squilibri || []).map((s) => `<li><span class="ess__box">\u2610</span> ${esc(s)}</li>`).join("");
+      const ref = Array.isArray(x.posizioni) && x.posizioni.length
+        ? `<span class="ess__ref">Pos. ${x.posizioni.join(", ")}</span>` : "";
       return `
       <div class="ess">
-        <div class="ess__head"><span class="ess__name">${esc(x.nome || "—")}</span><span class="ess__type">${esc(x.tipo || "")}</span></div>
-        ${sq ? `<ul class="ess__sq">${sq}</ul>` : ""}
+        <div class="ess__head"><span class="ess__name">${esc(x.nome || "—")}</span><span class="ess__type">${esc(x.tipo || "")}</span>${ref}</div>
+        ${essScelgoBlock()}
+        ${sq ? `<p class="ess__label">Il mio / La mia\u2026</p><ul class="ess__sq">${sq}</ul><p class="ess__label">\u2026 in amore senza limiti.</p>` : ""}
         ${has(x.frasi) ? `<div class="ess__imp">${esc(x.frasi)}</div>` : ""}
       </div>`;
     }).join("") + "</div>";
@@ -277,7 +297,7 @@
       { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: nvScheda + nvList + nvImg },
       { id: "modi", label: "Modi", html: pointsBlock(c1.modi) || PH },
       { id: "meridiani", label: "Meridiani coinvolti", html: merHtml },
-      { id: "fiore", label: "Fiori / essenze", html: fioreBlock(c1) },
+      { id: "fiore", label: "Fiori / essenze", html: fioreBlock(c1, row ? row.posizione : null) },
       { id: "reflessologia", label: "Reflessologia (Basket Weaver)", html: reflexHtml }
     ];
   }
