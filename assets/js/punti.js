@@ -13,6 +13,7 @@
   const listEl = document.getElementById("puntiList");
   const esc = (s) => String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const cssEsc = (s) => String(s == null ? "" : s).replace(/["\\\]]/g, "\\$&");
 
   let inited = false, THREE, renderer, scene, camera, raycaster, pointer;
   let bodyGroup, pointsGroup, markerMeshes = [], picked = null, hovered = null;
@@ -551,10 +552,7 @@
     renderInfo(p);
     // highlight list
     if (listEl) Array.from(listEl.children).forEach((li) => li.classList.toggle("active", li.dataset.id === p.id));
-    // gently rotate to face the point
-    const facingBack = p.pos.z < 0;
-    const goalYaw = facingBack ? Math.PI : 0;
-    animateYaw(goalYaw);
+    // NB: nessuna rotazione automatica — la camera resta nel punto di vista scelto dall'utente.
   }
 
   let yawAnim = null;
@@ -584,10 +582,11 @@
     const dotTxt = isLm ? "◇" : (idx + 1);
     let editHtml = "";
     if (editing) {
-      const fields = isLm ? "" :
+      const fields =
         '<label class="pinfo__field">Nome<input type="text" id="fOrgano" value="' + esc(p.organo) + '"></label>' +
-        '<label class="pinfo__field">Meridiano<input type="text" id="fMer" value="' + esc(p.meridiano || "") + '"></label>' +
-        '<label class="pinfo__field">Note<input type="text" id="fNote" value="' + esc(p.note || "") + '"></label>';
+        (isLm ? "" :
+          '<label class="pinfo__field">Meridiano<input type="text" id="fMer" value="' + esc(p.meridiano || "") + '"></label>' +
+          '<label class="pinfo__field">Note<input type="text" id="fNote" value="' + esc(p.note || "") + '"></label>');
       editHtml =
         fields +
         '<dl class="pinfo__dl pinfo__coords">' +
@@ -611,7 +610,13 @@
       if (mn) mn.addEventListener("click", () => nudgeDepth(-0.02));
       if (pl) pl.addEventListener("click", () => nudgeDepth(0.02));
       const fo = document.getElementById("fOrgano"), fm = document.getElementById("fMer"), fn = document.getElementById("fNote");
-      if (fo) fo.addEventListener("input", (e) => { p.organo = e.target.value; buildList(); });
+      if (fo) fo.addEventListener("input", (e) => {
+        p.organo = e.target.value;
+        // aggiorna il titolo del pannello e la voce di lista SENZA ricostruire (mantiene il focus)
+        const h = infoEl.querySelector(".pinfo__head h3"); if (h) h.textContent = p.organo;
+        const li = listEl && listEl.querySelector('[data-id="' + cssEsc(p.id) + '"] .punti__li-name');
+        if (li) li.textContent = p.organo;
+      });
       if (fm) fm.addEventListener("input", (e) => { p.meridiano = e.target.value; });
       if (fn) fn.addEventListener("input", (e) => { p.note = e.target.value; });
       const dp = document.getElementById("delPoint");
