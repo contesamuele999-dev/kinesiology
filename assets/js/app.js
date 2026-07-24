@@ -448,6 +448,20 @@
     if (addBtn) addBtn.addEventListener("click", () => {
       if (window.PuntiMap && window.PuntiMap.addPoint) window.PuntiMap.addPoint();
     });
+    const importBtn = el("editImport"), importFile = el("editImportFile");
+    if (importBtn && importFile) {
+      importBtn.addEventListener("click", () => importFile.click());
+      importFile.addEventListener("change", () => {
+        const f = importFile.files && importFile.files[0];
+        if (!f) return;
+        const r = new FileReader();
+        r.onload = () => {
+          if (window.PuntiMap && window.PuntiMap.importJSON) window.PuntiMap.importJSON(String(r.result));
+          importFile.value = "";
+        };
+        r.readAsText(f);
+      });
+    }
   })();
 
   /* ---------- Router (hash) ---------- */

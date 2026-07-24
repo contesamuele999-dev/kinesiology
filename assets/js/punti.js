@@ -773,6 +773,49 @@
     buildList();
   }
 
+  // ricostruisce tutti i marker 3D da ITEMS (dopo un import)
+  function rebuildMarkers() {
+    markerMeshes.forEach((m) => { if (m.parent) m.parent.remove(m); });
+    markerMeshes = [];
+    ITEMS.forEach((p) => addMarker(p));
+  }
+
+  /* ---------- Editor: importa JSON ---------- */
+  function importJSON(text) {
+    let obj;
+    try { obj = JSON.parse(text); } catch (e) { alert("File JSON non valido."); return false; }
+    const inPunti = Array.isArray(obj) ? obj : (obj && obj.punti);
+    if (!Array.isArray(inPunti)) { alert("JSON non riconosciuto: manca l'elenco 'punti'."); return false; }
+    // sostituisci i punti IN PLACE (mantiene il riferimento window.PUNTI_INDICATORI.punti)
+    DATA.length = 0;
+    inPunti.forEach((p) => {
+      if (!p || !p.pos) return;
+      DATA.push({
+        id: p.id || ("imp-" + Math.random().toString(36).slice(2, 8)),
+        organo: p.organo || "Punto", meridiano: p.meridiano || "",
+        vista: (p.pos.z < 0 ? "retro" : "fronte"),
+        lato: p.lato || "", regione: p.regione || "",
+        riferimento: p.riferimento || "", note: p.note || "",
+        pos: { x: +p.pos.x || 0, y: +p.pos.y || 0, z: +p.pos.z || 0 },
+        _added: !!p._added || /^(nuovo|imp)-/.test(p.id || "")
+      });
+    });
+    // applica eventuali landmark salvati
+    if (obj && Array.isArray(obj.landmarks)) {
+      obj.landmarks.forEach((l) => {
+        const lm = LANDMARKS.find((x) => x.id === l.id);
+        if (lm && l.pos) { lm.pos.x = +l.pos.x || 0; lm.pos.y = +l.pos.y || 0; lm.pos.z = +l.pos.z || 0; lm.vista = lm.pos.z < 0 ? "retro" : "fronte"; }
+      });
+    }
+    ITEMS = DATA.concat(LANDMARKS);
+    ORIGINAL = ITEMS.map((p) => ({ id: p.id, x: p.pos.x, y: p.pos.y, z: p.pos.z }));
+    picked = null; if (infoEl) infoEl.hidden = true;
+    if (pointsGroup) rebuildMarkers();
+    buildList();
+    if (DATA[0]) selectPoint(DATA[0]);
+    return true;
+  }
+
   // rinomina il punto selezionato (dai campi editabili del pannello)
   function updateField(field, value) {
     if (!picked) return;
@@ -803,6 +846,7 @@
     exportJSON: exportJSON,
     resetPositions: resetPositions,
     addPoint: addPoint,
-    removePoint: removePoint
+    removePoint: removePoint,
+    importJSON: importJSON
   };
 })();
