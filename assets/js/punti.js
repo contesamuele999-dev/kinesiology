@@ -35,34 +35,81 @@
     };
   }
 
+  // profilo (r,y) del tronco, rivoluzionato in un solido organico
+  function torsoLathe(THREE) {
+    const pts = [];
+    const P = (r, y) => pts.push(new THREE.Vector2(r, y));
+    P(0.02, 0.62);   // sotto il bacino
+    P(0.34, 0.70);   // bacino
+    P(0.40, 0.86);   // anche
+    P(0.34, 1.02);   // vita
+    P(0.30, 1.18);   // vita alta
+    P(0.36, 1.40);   // addome
+    P(0.44, 1.66);   // basso torace
+    P(0.50, 1.90);   // torace
+    P(0.46, 2.08);   // petto alto
+    P(0.30, 2.20);   // clavicole
+    P(0.14, 2.28);   // base collo
+    P(0.02, 2.30);
+    const geo = new THREE.LatheGeometry(pts, 40);
+    // schiaccia in profondità (z) per un tronco ellittico, non cilindrico
+    geo.scale(1, 1, 0.66);
+    return geo;
+  }
+
   function makeBody() {
     const g = new THREE.Group();
     const col = themeColors();
-    const mat = new THREE.MeshStandardMaterial({ color: col.body, roughness: 0.85, metalness: 0.05, emissive: col.bodyEmis });
+    const mat = new THREE.MeshStandardMaterial({ color: col.body, roughness: 0.8, metalness: 0.04, emissive: col.bodyEmis, flatShading: false });
     const add = (geo, x, y, z, rx, ry, rz, sx, sy, sz) => {
       const m = new THREE.Mesh(geo, mat);
       m.position.set(x, y, z);
       if (rx || ry || rz) m.rotation.set(rx || 0, ry || 0, rz || 0);
-      if (sx || sy || sz) m.scale.set(sx || 1, sy || 1, sz || 1);
+      if (sx != null || sy != null || sz != null) m.scale.set(sx == null ? 1 : sx, sy == null ? 1 : sy, sz == null ? 1 : sz);
       m.userData.bodyPart = true;
       g.add(m); return m;
     };
-    // Torso (petto + addome) — ellissoide via sfera scalata
-    add(new THREE.SphereGeometry(0.55, 32, 24), 0, 1.62, 0, 0,0,0, 1.05, 1.15, 0.62); // torace
-    add(new THREE.SphereGeometry(0.5, 32, 24), 0, 1.05, 0, 0,0,0, 0.98, 1.05, 0.58);  // addome
-    add(new THREE.SphereGeometry(0.46, 32, 24), 0, 0.72, 0, 0,0,0, 0.92, 0.7, 0.5);   // bacino
-    // Collo + testa
-    add(new THREE.CylinderGeometry(0.14, 0.17, 0.22, 20), 0, 2.18, 0);
-    add(new THREE.SphereGeometry(0.30, 32, 24), 0, 2.52, 0, 0,0,0, 1, 1.12, 1);
-    // Spalle
-    add(new THREE.SphereGeometry(0.20, 20, 16), 0.62, 1.95, 0);
-    add(new THREE.SphereGeometry(0.20, 20, 16), -0.62, 1.95, 0);
-    // Braccia (lungo i fianchi)
-    add(new THREE.CylinderGeometry(0.12, 0.10, 1.5, 16), 0.78, 1.25, 0, 0,0,0.06);
-    add(new THREE.CylinderGeometry(0.12, 0.10, 1.5, 16), -0.78, 1.25, 0, 0,0,-0.06);
-    // Gambe
-    add(new THREE.CylinderGeometry(0.19, 0.14, 1.7, 18), 0.24, -0.15, 0);
-    add(new THREE.CylinderGeometry(0.19, 0.14, 1.7, 18), -0.24, -0.15, 0);
+
+    // ----- Tronco (un unico solido organico) -----
+    add(torsoLathe(THREE), 0, 0, 0);
+
+    // ----- Collo + testa + viso -----
+    add(new THREE.CylinderGeometry(0.115, 0.14, 0.20, 20), 0, 2.34, 0);
+    add(new THREE.SphereGeometry(0.27, 32, 28), 0, 2.62, 0.01, 0,0,0, 1, 1.15, 1.02); // cranio
+    add(new THREE.SphereGeometry(0.20, 24, 20), 0, 2.50, 0.12, 0,0,0, 0.9, 1.0, 0.7); // volto/mascella
+    add(new THREE.SphereGeometry(0.05, 12, 10), 0, 2.53, 0.28); // naso
+    add(new THREE.SphereGeometry(0.035, 12, 10), 0.09, 2.60, 0.24); // occhio dx
+    add(new THREE.SphereGeometry(0.035, 12, 10), -0.09, 2.60, 0.24); // occhio sx
+    add(new THREE.SphereGeometry(0.05, 12, 10), 0.27, 2.60, 0.02, 0,0,0, 0.6,1,1); // orecchio dx
+    add(new THREE.SphereGeometry(0.05, 12, 10), -0.27, 2.60, 0.02, 0,0,0, 0.6,1,1); // orecchio sx
+
+    // ----- Spalle (deltoidi) -----
+    add(new THREE.SphereGeometry(0.19, 22, 18), 0.52, 2.02, 0, 0,0,0, 1,0.95,1);
+    add(new THREE.SphereGeometry(0.19, 22, 18), -0.52, 2.02, 0, 0,0,0, 1,0.95,1);
+
+    // ----- Braccia articolate (omero + gomito + avambraccio + mano) -----
+    const arm = (s) => {
+      add(new THREE.CylinderGeometry(0.115, 0.10, 0.62, 18), s*0.60, 1.66, 0, 0,0,s*0.06);   // braccio
+      add(new THREE.SphereGeometry(0.10, 16, 14), s*0.66, 1.34, 0);                            // gomito
+      add(new THREE.CylinderGeometry(0.095, 0.075, 0.58, 18), s*0.70, 1.04, 0.02, 0.12,0,s*0.05); // avambraccio
+      add(new THREE.SphereGeometry(0.09, 16, 14), s*0.74, 0.74, 0.05, 0,0,0, 0.8,1.1,0.5);     // mano
+    };
+    arm(1); arm(-1);
+
+    // ----- Glutei/bacino inferiore -----
+    add(new THREE.SphereGeometry(0.22, 22, 18), 0.16, 0.60, -0.06, 0,0,0, 1,0.8,1);
+    add(new THREE.SphereGeometry(0.22, 22, 18), -0.16, 0.60, -0.06, 0,0,0, 1,0.8,1);
+
+    // ----- Gambe articolate (coscia + ginocchio + polpaccio + piede) -----
+    const leg = (s) => {
+      add(new THREE.CylinderGeometry(0.175, 0.13, 0.90, 20), s*0.20, 0.18, 0);      // coscia
+      add(new THREE.SphereGeometry(0.135, 18, 16), s*0.21, -0.30, 0.01);            // ginocchio
+      add(new THREE.CylinderGeometry(0.125, 0.085, 0.86, 20), s*0.22, -0.74, 0);    // polpaccio
+      add(new THREE.SphereGeometry(0.10, 16, 14), s*0.22, -1.18, 0);                // caviglia
+      add(new THREE.BoxGeometry(0.16, 0.11, 0.34), s*0.22, -1.24, 0.10);            // piede
+    };
+    leg(1); leg(-1);
+
     return g;
   }
 
@@ -258,7 +305,10 @@
     renderer.setSize(w, h);
     camera.aspect = w / h; camera.updateProjectionMatrix();
   }
+  function resizeSoon() { resize(); setTimeout(resize, 250); setTimeout(resize, 600); }
   window.addEventListener("resize", resize);
+  window.addEventListener("orientationchange", resizeSoon);
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", resize);
 
   function retheme() {
     if (!scene) return;

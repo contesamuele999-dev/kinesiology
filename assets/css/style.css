@@ -327,3 +327,15 @@ body.installpop-open{ overflow:hidden; }
 .pinfo__dl{ display:grid; grid-template-columns:auto 1fr; gap:6px 14px; margin:12px 0 0; }
 .pinfo__dl dt{ color:var(--muted); font-weight:600; font-size:.85rem; }
 .pinfo__dl dd{ margin:0; font-size:.92rem; }
+
+/* ---- Punti: layout landscape / tablet ruotato ---- */
+@media (orientation: landscape) and (max-height: 640px) {
+  .punti__layout{ flex-wrap:nowrap; }
+  .punti__canvas{ height:min(78vh,520px); min-height:260px; }
+  .punti__side{ max-height:82vh; overflow-y:auto; }
+}
+@media (orientation: landscape) and (min-width: 760px) {
+  .punti__layout{ flex-wrap:nowrap; align-items:stretch; }
+  .punti__stage{ flex:2 1 0; }
+  .punti__side{ flex:1 1 0; }
+}

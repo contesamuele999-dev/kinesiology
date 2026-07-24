@@ -417,15 +417,17 @@
   if (macronav) {
     macronav.addEventListener("click", (e) => {
       const t = e.target.closest(".macronav__tab"); if (!t) return;
-      if (t.dataset.sec === "punti") location.hash = "#punti";
-      else location.hash = ""; // Coordinate = home
+      if (t.dataset.sec === "punti") location.hash = "";       // Punti = default
+      else location.hash = "#coordinate";                        // Coordinate
     });
   }
 
   /* ---------- Router (hash) ---------- */
   function route() {
     const h = location.hash;
-    if (h === "#punti" || h.indexOf("#punti") === 0) { firstMeridian = null; showPunti(); return; }
+    // Default (nessun hash) o esplicito #punti => sezione Punti Indicatori
+    if (h === "" || h === "#" || h === "#punti") { firstMeridian = null; showPunti(); return; }
+    // Da qui in poi siamo nella sezione Coordinate
     leavePunti(); setActiveTab("coordinate");
     const mPair = h.match(/^#\/([^+]+)\+(.+)$/);
     if (mPair) {
@@ -437,11 +439,11 @@
       const a = find(mOne[1]);
       if (a) { firstMeridian = a; showList(); return; }
     }
-    firstMeridian = null; showList();
+    firstMeridian = null; showList();  // "#coordinate" => home Coordinate
   }
   backBtn.addEventListener("click", () => {
     if (!coordView.hidden) location.hash = "#/" + pair[0].id;
-    else location.hash = "";
+    else location.hash = "#coordinate";
   });
   window.addEventListener("hashchange", route);
 

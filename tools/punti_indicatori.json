@@ -11,7 +11,11 @@
       "regione": "torace alto",
       "riferimento": "regione sotto-clavicolare, lato del torace (bilaterale)",
       "note": "",
-      "pos": { "x": 0.55, "y": 2.05, "z": 0.35 }
+      "pos": {
+        "x": 0.443,
+        "y": 2.05,
+        "z": 0.237
+      }
     },
     {
       "id": "maestro-del-cuore",
@@ -22,7 +26,11 @@
       "regione": "torace",
       "riferimento": "lato sinistro del torace, mediale rispetto al polmone",
       "note": "",
-      "pos": { "x": 0.30, "y": 1.90, "z": 0.36 }
+      "pos": {
+        "x": 0.3,
+        "y": 1.9,
+        "z": 0.294
+      }
     },
     {
       "id": "cuore",
@@ -33,7 +41,11 @@
       "regione": "sterno",
       "riferimento": "linea mediana dello sterno",
       "note": "",
-      "pos": { "x": 0.0, "y": 1.85, "z": 0.40 }
+      "pos": {
+        "x": 0.0,
+        "y": 1.85,
+        "z": 0.352
+      }
     },
     {
       "id": "stomaco",
@@ -44,7 +56,11 @@
       "regione": "epigastrio",
       "riferimento": "linea mediana, epigastrio (sotto lo sterno)",
       "note": "",
-      "pos": { "x": 0.0, "y": 1.55, "z": 0.42 }
+      "pos": {
+        "x": 0.0,
+        "y": 1.55,
+        "z": 0.298
+      }
     },
     {
       "id": "vescica-biliare",
@@ -55,7 +71,11 @@
       "regione": "ipocondrio destro",
       "riferimento": "sotto il coperchio (arcata costale), su cartilagine costale 6",
       "note": "sotto coperchio, su cartilag. costa 6",
-      "pos": { "x": -0.30, "y": 1.45, "z": 0.40 }
+      "pos": {
+        "x": -0.3,
+        "y": 1.45,
+        "z": 0.196
+      }
     },
     {
       "id": "fegato",
@@ -66,7 +86,11 @@
       "regione": "ipocondrio destro",
       "riferimento": "6° spazio intercostale, sotto il coperchio (arcata costale)",
       "note": "6° spazio intercostale, sotto coperchio",
-      "pos": { "x": -0.45, "y": 1.40, "z": 0.38 }
+      "pos": {
+        "x": -0.342,
+        "y": 1.4,
+        "z": 0.189
+      }
     },
     {
       "id": "triplice-riscaldatore",
@@ -77,7 +101,11 @@
       "regione": "addome",
       "riferimento": "linea mediana dell'addome, sotto l'ombelico",
       "note": "",
-      "pos": { "x": 0.0, "y": 1.20, "z": 0.42 }
+      "pos": {
+        "x": 0.0,
+        "y": 1.2,
+        "z": 0.232
+      }
     },
     {
       "id": "intestino-tenue",
@@ -88,7 +116,11 @@
       "regione": "basso addome",
       "riferimento": "linea mediana del basso addome",
       "note": "",
-      "pos": { "x": 0.0, "y": 1.00, "z": 0.42 }
+      "pos": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.259
+      }
     },
     {
       "id": "vescica",
@@ -99,7 +131,11 @@
       "regione": "ipogastrio",
       "riferimento": "linea mediana sovrapubica (ipogastrio)",
       "note": "",
-      "pos": { "x": 0.0, "y": 0.80, "z": 0.40 }
+      "pos": {
+        "x": 0.0,
+        "y": 0.8,
+        "z": 0.279
+      }
     },
     {
       "id": "intestino-crasso",
@@ -110,7 +146,11 @@
       "regione": "basso addome laterale",
       "riferimento": "basso addome, lateralmente alla linea mediana (bilaterale)",
       "note": "",
-      "pos": { "x": 0.35, "y": 0.90, "z": 0.40 }
+      "pos": {
+        "x": 0.35,
+        "y": 0.9,
+        "z": 0.2
+      }
     },
     {
       "id": "rene",
@@ -121,7 +161,11 @@
       "regione": "regione lombare",
       "riferimento": "sull'ultima costa (12ª costa), regione lombare posteriore (bilaterale)",
       "note": "ultima costa",
-      "pos": { "x": 0.28, "y": 1.35, "z": -0.35 }
+      "pos": {
+        "x": 0.28,
+        "y": 1.35,
+        "z": -0.183
+      }
     },
     {
       "id": "milza",
@@ -132,7 +176,11 @@
       "regione": "regione costale posteriore sinistra",
       "riferimento": "sulla penultima costa (11ª costa), lato sinistro posteriore",
       "note": "penultima costa",
-      "pos": { "x": 0.50, "y": 1.45, "z": -0.33 }
+      "pos": {
+        "x": 0.357,
+        "y": 1.45,
+        "z": -0.196
+      }
     }
   ]
 }

@@ -14,9 +14,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "regione sotto-clavicolare, lato del torace (bilaterale)",
       "note": "",
       "pos": {
-        "x": 0.55,
+        "x": 0.443,
         "y": 2.05,
-        "z": 0.35
+        "z": 0.237
       }
     },
     {
@@ -31,7 +31,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.3,
         "y": 1.9,
-        "z": 0.36
+        "z": 0.294
       }
     },
     {
@@ -46,7 +46,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.0,
         "y": 1.85,
-        "z": 0.4
+        "z": 0.352
       }
     },
     {
@@ -61,7 +61,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.0,
         "y": 1.55,
-        "z": 0.42
+        "z": 0.298
       }
     },
     {
@@ -76,7 +76,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": -0.3,
         "y": 1.45,
-        "z": 0.4
+        "z": 0.196
       }
     },
     {
@@ -89,9 +89,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "6° spazio intercostale, sotto il coperchio (arcata costale)",
       "note": "6° spazio intercostale, sotto coperchio",
       "pos": {
-        "x": -0.45,
+        "x": -0.342,
         "y": 1.4,
-        "z": 0.38
+        "z": 0.189
       }
     },
     {
@@ -106,7 +106,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.0,
         "y": 1.2,
-        "z": 0.42
+        "z": 0.232
       }
     },
     {
@@ -121,7 +121,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.0,
         "y": 1.0,
-        "z": 0.42
+        "z": 0.259
       }
     },
     {
@@ -136,7 +136,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.0,
         "y": 0.8,
-        "z": 0.4
+        "z": 0.279
       }
     },
     {
@@ -151,7 +151,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.35,
         "y": 0.9,
-        "z": 0.4
+        "z": 0.2
       }
     },
     {
@@ -166,7 +166,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.28,
         "y": 1.35,
-        "z": -0.35
+        "z": -0.183
       }
     },
     {
@@ -179,9 +179,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "sulla penultima costa (11ª costa), lato sinistro posteriore",
       "note": "penultima costa",
       "pos": {
-        "x": 0.5,
+        "x": 0.357,
         "y": 1.45,
-        "z": -0.33
+        "z": -0.196
       }
     }
   ]
