@@ -375,3 +375,9 @@ body.editing .punti__canvas{ cursor:crosshair; outline:2px solid color-mix(in sr
   border:1px solid var(--line); border-radius:8px; background:var(--card); }
 .pinfo__field input:focus{ border-color:var(--brand); outline:none; }
 .pinfo__coords{ margin-top:10px; }
+
+/* ---- Editor: toggle Vista fronte/retro ---- */
+.pinfo__vista{ display:flex; align-items:center; gap:8px; margin-top:10px; }
+.pinfo__vista span{ color:var(--muted); font-size:.82rem; margin-right:2px; }
+.ebtn--seg{ padding:6px 12px; font-size:.85rem; }
+.ebtn--seg.is-on{ background:var(--brand); color:#fff; border-color:var(--brand); }

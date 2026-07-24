@@ -555,18 +555,15 @@
     // NB: nessuna rotazione automatica — la camera resta nel punto di vista scelto dall'utente.
   }
 
-  let yawAnim = null;
-  function animateYaw(goal) {
-    if (yawAnim) cancelAnimationFrame(yawAnim);
-    // normalize current yaw near goal
-    while (yaw - goal > Math.PI) yaw -= 2 * Math.PI;
-    while (goal - yaw > Math.PI) yaw += 2 * Math.PI;
-    const step = () => {
-      yaw += (goal - yaw) * 0.15;
-      updateCamera();
-      if (Math.abs(goal - yaw) > 0.005) yawAnim = requestAnimationFrame(step);
-    };
-    step();
+  // cambia fronte/retro del punto: lo riproietta sulla superficie corrispondente (NON tocca la camera)
+  function setVista(p, vista) {
+    if (!p) return;
+    const front = vista !== "retro";
+    p.vista = front ? "fronte" : "retro";
+    p.pos.z = round3(surfaceZ(p.pos.x, p.pos.y, front) + (front ? 0.005 : -0.005));
+    const m = markerMeshes.find((mm) => mm.userData.punto.id === p.id);
+    if (m) m.position.set(p.pos.x, p.pos.y, p.pos.z);
+    renderInfo(p);
   }
 
   function renderInfo(p) {
@@ -596,6 +593,9 @@
         '<div class="pinfo__depth"><button type="button" id="depthMinus" aria-label="Meno profondità">−</button>' +
         '<span>profondità</span>' +
         '<button type="button" id="depthPlus" aria-label="Più profondità">+</button></div>' +
+        '<div class="pinfo__vista"><span>Vista</span>' +
+        '<button type="button" id="vFronte" class="ebtn ebtn--seg' + (p.vista !== "retro" ? " is-on" : "") + '">Fronte</button>' +
+        '<button type="button" id="vRetro" class="ebtn ebtn--seg' + (p.vista === "retro" ? " is-on" : "") + '">Retro</button></div>' +
         (!isLm && p._added ? '<button type="button" id="delPoint" class="ebtn ebtn--danger">🗑 Elimina punto</button>' : '');
     }
     infoEl.innerHTML =
@@ -621,6 +621,9 @@
       if (fn) fn.addEventListener("input", (e) => { p.note = e.target.value; });
       const dp = document.getElementById("delPoint");
       if (dp) dp.addEventListener("click", () => removePoint(p.id));
+      const vf = document.getElementById("vFronte"), vr = document.getElementById("vRetro");
+      if (vf) vf.addEventListener("click", () => setVista(p, "fronte"));
+      if (vr) vr.addEventListener("click", () => setVista(p, "retro"));
     }
   }
 
