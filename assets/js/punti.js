@@ -25,6 +25,31 @@
   let editing = false, draggingPoint = null;
   let ORIGINAL = [];
 
+  /* ---------- Persistenza locale (modifiche permanenti sul dispositivo) ----------
+     Le posizioni/nomi modificati nell'editor sono salvati in localStorage e
+     ricaricati all'avvio, così restano permanenti senza esportare/importare. */
+  const STORE_KEY = "kapp-punti-v1";
+  function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+  function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+  function lsDel(k){ try { localStorage.removeItem(k); } catch(e){} }
+
+  // default "di fabbrica" (dal file punti_data.js) — servono per il Reset
+  const FACTORY = JSON.parse(JSON.stringify(window.PUNTI_INDICATORI || { punti: [], landmarks: [] }));
+
+  // se esiste una versione salvata, la applico come sorgente corrente
+  (function loadSaved(){
+    const raw = lsGet(STORE_KEY);
+    if (!raw) return;
+    try {
+      const saved = JSON.parse(raw);
+      if (saved && Array.isArray(saved.punti)) {
+        window.PUNTI_INDICATORI = window.PUNTI_INDICATORI || {};
+        window.PUNTI_INDICATORI.punti = saved.punti;
+        window.PUNTI_INDICATORI.landmarks = saved.landmarks || window.PUNTI_INDICATORI.landmarks;
+      }
+    } catch(e){ /* JSON corrotto: ignoro e uso i default */ }
+  })();
+
   const DATA = (window.PUNTI_INDICATORI && window.PUNTI_INDICATORI.punti) || [];
 
   /* Landmark editabili: riferimenti anatomici che l'utente può spostare.
@@ -513,6 +538,7 @@
       p.vista = pt.z < 0 ? "retro" : "fronte";
       marker.position.set(p.pos.x, p.pos.y, p.pos.z);
       renderInfo(p);
+      persist();
     }
   }
 
@@ -528,6 +554,7 @@
     const m = markerMeshes.find((mm) => mm.userData.punto.id === picked.id);
     if (m) m.position.set(picked.pos.x, picked.pos.y, picked.pos.z);
     renderInfo(picked);
+    persist();
   }
   function hover(cx, cy) {
     if (dragging) return;
@@ -564,6 +591,7 @@
     const m = markerMeshes.find((mm) => mm.userData.punto.id === p.id);
     if (m) m.position.set(p.pos.x, p.pos.y, p.pos.z);
     renderInfo(p);
+    persist();
   }
 
   function renderInfo(p) {
@@ -616,9 +644,10 @@
         const h = infoEl.querySelector(".pinfo__head h3"); if (h) h.textContent = p.organo;
         const li = listEl && listEl.querySelector('[data-id="' + cssEsc(p.id) + '"] .punti__li-name');
         if (li) li.textContent = p.organo;
+        persist();
       });
-      if (fm) fm.addEventListener("input", (e) => { p.meridiano = e.target.value; });
-      if (fn) fn.addEventListener("input", (e) => { p.note = e.target.value; });
+      if (fm) fm.addEventListener("input", (e) => { p.meridiano = e.target.value; persist(); });
+      if (fn) fn.addEventListener("input", (e) => { p.note = e.target.value; persist(); });
       const dp = document.getElementById("delPoint");
       if (dp) dp.addEventListener("click", () => removePoint(p.id));
       const vf = document.getElementById("vFronte"), vr = document.getElementById("vRetro");
@@ -703,15 +732,15 @@
     if (picked) renderInfo(picked);
   }
 
-  function exportJSON() {
-    // ricostruisce il file completo con le posizioni correnti
+  function buildExport() {
     const src = window.PUNTI_INDICATORI || {};
-    const out = {
+    return {
       titolo: src.titolo || "Punti d'Allarme",
       descrizione: src.descrizione || "",
       punti: DATA.map((p) => ({
         id: p.id, organo: p.organo, meridiano: p.meridiano, vista: p.vista,
         lato: p.lato, regione: p.regione, riferimento: p.riferimento, note: p.note,
+        _added: !!p._added,
         pos: { x: round3(p.pos.x), y: round3(p.pos.y), z: round3(p.pos.z) }
       })),
       landmarks: LANDMARKS.map((p) => ({
@@ -719,6 +748,16 @@
         pos: { x: round3(p.pos.x), y: round3(p.pos.y), z: round3(p.pos.z) }
       }))
     };
+  }
+
+  // salva lo stato corrente in localStorage (modifiche permanenti sul dispositivo)
+  function persist() {
+    try { lsSet(STORE_KEY, JSON.stringify(buildExport())); } catch(e){}
+  }
+
+  function exportJSON() {
+    // ricostruisce il file completo con le posizioni correnti
+    const out = buildExport();
     const text = JSON.stringify(out, null, 2);
     try {
       const blob = new Blob([text], { type: "application/json" });
@@ -736,15 +775,10 @@
   }
 
   function resetPositions() {
-    ORIGINAL.forEach((orig) => {
-      const p = ITEMS.find((it) => it.id === orig.id);
-      if (!p) return;
-      p.pos.x = orig.x; p.pos.y = orig.y; p.pos.z = orig.z;
-      p.vista = p.pos.z < 0 ? "retro" : "fronte";
-      const m = markerMeshes.find((mm) => mm.userData.punto.id === p.id);
-      if (m) m.position.set(p.pos.x, p.pos.y, p.pos.z);
-    });
-    if (picked) renderInfo(picked);
+    // ripristina i default "di fabbrica" e cancella le modifiche salvate
+    if (!window.confirm("Ripristinare i punti ai valori iniziali? Le modifiche salvate su questo dispositivo verranno cancellate.")) return;
+    lsDel(STORE_KEY);
+    applyData(FACTORY);
   }
 
   /* ---------- Editor: aggiungi / elimina punto ---------- */
@@ -764,6 +798,7 @@
     if (pointsGroup) addMarker(p);
     buildList();
     selectPoint(p);
+    persist();
     return p;
   }
   function removePoint(id) {
@@ -779,6 +814,7 @@
     ITEMS = DATA.concat(LANDMARKS);
     if (picked && picked.id === id) { picked = null; if (infoEl) infoEl.hidden = true; }
     buildList();
+    persist();
   }
 
   // ricostruisce tutti i marker 3D da ITEMS (dopo un import)
@@ -788,13 +824,9 @@
     ITEMS.forEach((p) => addMarker(p));
   }
 
-  /* ---------- Editor: importa JSON ---------- */
-  function importJSON(text) {
-    let obj;
-    try { obj = JSON.parse(text); } catch (e) { alert("File JSON non valido."); return false; }
-    const inPunti = Array.isArray(obj) ? obj : (obj && obj.punti);
-    if (!Array.isArray(inPunti)) { alert("JSON non riconosciuto: manca l'elenco 'punti'."); return false; }
-    // sostituisci i punti IN PLACE (mantiene il riferimento window.PUNTI_INDICATORI.punti)
+  // applica un oggetto {punti, landmarks} allo stato corrente (import o reset)
+  function applyData(obj) {
+    const inPunti = Array.isArray(obj) ? obj : (obj && obj.punti) || [];
     DATA.length = 0;
     inPunti.forEach((p) => {
       if (!p || !p.pos) return;
@@ -808,7 +840,6 @@
         _added: !!p._added || /^(nuovo|imp)-/.test(p.id || "")
       });
     });
-    // applica eventuali landmark salvati
     if (obj && Array.isArray(obj.landmarks)) {
       obj.landmarks.forEach((l) => {
         const lm = LANDMARKS.find((x) => x.id === l.id);
@@ -821,6 +852,16 @@
     if (pointsGroup) rebuildMarkers();
     buildList();
     if (DATA[0]) selectPoint(DATA[0]);
+  }
+
+  /* ---------- Editor: importa JSON ---------- */
+  function importJSON(text) {
+    let obj;
+    try { obj = JSON.parse(text); } catch (e) { alert("File JSON non valido."); return false; }
+    const inPunti = Array.isArray(obj) ? obj : (obj && obj.punti);
+    if (!Array.isArray(inPunti)) { alert("JSON non riconosciuto: manca l'elenco 'punti'."); return false; }
+    applyData(obj);
+    persist();   // le modifiche importate diventano permanenti
     return true;
   }
 
