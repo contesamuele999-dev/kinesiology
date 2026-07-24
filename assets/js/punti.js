@@ -28,7 +28,7 @@
   /* ---------- Persistenza locale (modifiche permanenti sul dispositivo) ----------
      Le posizioni/nomi modificati nell'editor sono salvati in localStorage e
      ricaricati all'avvio, così restano permanenti senza esportare/importare. */
-  const STORE_KEY = "kapp-punti-v1";
+  const STORE_KEY = "kapp-punti-v2";
   function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
   function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
   function lsDel(k){ try { localStorage.removeItem(k); } catch(e){} }
@@ -898,4 +898,12 @@
     removePoint: removePoint,
     importJSON: importJSON
   };
+
+  /* Se la pagina viene aperta DIRETTAMENTE sulla sezione Punti, app.js ha già
+     chiamato route()/showPunti() PRIMA che questo script (e quindi PuntiMap)
+     esistesse: la sezione risulta visibile ma la mappa non è mai stata attivata.
+     Qui recuperiamo attivandola noi se #puntiView è visibile. */
+  if (mount && !mount.hidden) {
+    try { window.PuntiMap.activate(); } catch (e) {}
+  }
 })();

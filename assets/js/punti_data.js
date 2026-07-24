@@ -15,7 +15,7 @@ window.PUNTI_INDICATORI = {
       "note": "punto bilaterale (uno per lato)",
       "pos": {
         "x": -0.3,
-        "y": 2.0,
+        "y": 2,
         "z": 0.287
       }
     },
@@ -30,7 +30,7 @@ window.PUNTI_INDICATORI = {
       "note": "punto bilaterale (uno per lato)",
       "pos": {
         "x": 0.3,
-        "y": 2.0,
+        "y": 2,
         "z": 0.287
       }
     },
@@ -44,9 +44,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "lato destro del torace, mediale rispetto al polmone destro",
       "note": "",
       "pos": {
-        "x": -0.15,
-        "y": 1.8,
-        "z": 0.315
+        "x": 0.006,
+        "y": 1.809,
+        "z": 0.302
       }
     },
     {
@@ -59,9 +59,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "linea mediana, corpo dello sterno",
       "note": "",
       "pos": {
-        "x": 0.0,
-        "y": 1.8,
-        "z": 0.33
+        "x": -0.006,
+        "y": 1.541,
+        "z": 0.254
       }
     },
     {
@@ -74,9 +74,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "linea mediana, epigastrio (subito sotto il processo xifoideo)",
       "note": "",
       "pos": {
-        "x": 0.0,
-        "y": 1.53,
-        "z": 0.284
+        "x": 0.002,
+        "y": 1.315,
+        "z": 0.226
       }
     },
     {
@@ -89,9 +89,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "sotto il coperchio (arcata costale), su cartilagine della 6ª costa",
       "note": "sotto coperchio, su cartilag. costa 6",
       "pos": {
-        "x": 0.26,
-        "y": 1.52,
-        "z": 0.22
+        "x": 0.279,
+        "y": 1.367,
+        "z": 0.152
       }
     },
     {
@@ -104,9 +104,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "6° spazio intercostale, sotto il coperchio (arcata costale)",
       "note": "6° spazio intercostale, sotto coperchio",
       "pos": {
-        "x": 0.3,
-        "y": 1.44,
-        "z": 0.184
+        "x": 0.31,
+        "y": 1.511,
+        "z": 0.156
       }
     },
     {
@@ -119,9 +119,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "linea mediana dell'addome, sotto l'ombelico",
       "note": "",
       "pos": {
-        "x": 0.0,
-        "y": 1.16,
-        "z": 0.232
+        "x": -0.002,
+        "y": 1.003,
+        "z": 0.235
       }
     },
     {
@@ -134,9 +134,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "linea mediana del basso addome (tra ombelico e pube)",
       "note": "",
       "pos": {
-        "x": 0.0,
-        "y": 1.02,
-        "z": 0.26
+        "x": 0.001,
+        "y": 0.806,
+        "z": 0.27
       }
     },
     {
@@ -149,9 +149,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "basso addome, lateralmente alla mediana (bilaterale)",
       "note": "punto bilaterale (uno per lato)",
       "pos": {
-        "x": -0.26,
-        "y": 1.02,
-        "z": 0.189
+        "x": -0.169,
+        "y": 1.158,
+        "z": 0.17
       }
     },
     {
@@ -164,9 +164,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "basso addome, lateralmente alla mediana (bilaterale)",
       "note": "punto bilaterale (uno per lato)",
       "pos": {
-        "x": 0.26,
-        "y": 1.02,
-        "z": 0.189
+        "x": 0.165,
+        "y": 1.159,
+        "z": 0.171
       }
     },
     {
@@ -179,9 +179,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "linea mediana sovrapubica (appena sopra il pube)",
       "note": "",
       "pos": {
-        "x": 0.0,
-        "y": 0.85,
-        "z": 0.287
+        "x": 0.001,
+        "y": 0.671,
+        "z": 0.201
       }
     },
     {
@@ -194,9 +194,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "sull'ultima costa (12ª), regione lombare destra",
       "note": "ultima costa · bilaterale",
       "pos": {
-        "x": -0.2,
-        "y": 1.37,
-        "z": -0.227
+        "x": -0.17,
+        "y": 1.336,
+        "z": -0.202
       }
     },
     {
@@ -209,14 +209,14 @@ window.PUNTI_INDICATORI = {
       "riferimento": "sull'ultima costa (12ª), regione lombare sinistra",
       "note": "ultima costa · bilaterale",
       "pos": {
-        "x": 0.2,
-        "y": 1.37,
-        "z": -0.227
+        "x": 0.18,
+        "y": 1.332,
+        "z": -0.198
       }
     },
     {
       "id": "milza",
-      "organo": "Milza",
+      "organo": "Milza (sx)",
       "meridiano": "Milza",
       "vista": "retro",
       "lato": "sinistra soggetto",
@@ -224,9 +224,101 @@ window.PUNTI_INDICATORI = {
       "riferimento": "sulla penultima costa (11ª), lato sinistro posteriore",
       "note": "penultima costa",
       "pos": {
-        "x": 0.34,
-        "y": 1.49,
-        "z": -0.178
+        "x": 0.27,
+        "y": 1.221,
+        "z": -0.112
+      }
+    },
+    {
+      "id": "fegato-dx",
+      "organo": "Fegato (dx)",
+      "meridiano": "",
+      "vista": "fronte",
+      "lato": "",
+      "regione": "",
+      "riferimento": "",
+      "note": "",
+      "pos": {
+        "x": -0.305,
+        "y": 1.495,
+        "z": 0.157
+      }
+    },
+    {
+      "id": "vescica-biliare-dx",
+      "organo": "Vescica biliare (dx)",
+      "meridiano": "",
+      "vista": "fronte",
+      "lato": "",
+      "regione": "",
+      "riferimento": "",
+      "note": "",
+      "pos": {
+        "x": -0.256,
+        "y": 1.35,
+        "z": 0.164
+      }
+    },
+    {
+      "id": "milza-dx",
+      "organo": "Milza (dx)",
+      "meridiano": "",
+      "vista": "retro",
+      "lato": "",
+      "regione": "",
+      "riferimento": "",
+      "note": "Penultima costa",
+      "pos": {
+        "x": -0.254,
+        "y": 1.209,
+        "z": -0.122
+      }
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "lm-ombelico",
+      "organo": "Ombelico",
+      "pos": {
+        "x": -0.005,
+        "y": 1.161,
+        "z": 0.201
+      }
+    },
+    {
+      "id": "lm-capezzolo-dx",
+      "organo": "Capezzolo (dx)",
+      "pos": {
+        "x": -0.24,
+        "y": 1.82,
+        "z": 0.297
+      }
+    },
+    {
+      "id": "lm-capezzolo-sx",
+      "organo": "Capezzolo (sx)",
+      "pos": {
+        "x": 0.24,
+        "y": 1.82,
+        "z": 0.297
+      }
+    },
+    {
+      "id": "lm-pube",
+      "organo": "Pube / pavimento pelvico",
+      "pos": {
+        "x": 0,
+        "y": 0.8,
+        "z": 0.212
+      }
+    },
+    {
+      "id": "lm-giugulo",
+      "organo": "Giugulo",
+      "pos": {
+        "x": -0.002,
+        "y": 2.15,
+        "z": 0.272
       }
     }
   ]
