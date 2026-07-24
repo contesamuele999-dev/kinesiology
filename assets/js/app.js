@@ -444,6 +444,10 @@
     if (resetBtn) resetBtn.addEventListener("click", () => {
       if (window.PuntiMap && window.PuntiMap.resetPositions) window.PuntiMap.resetPositions();
     });
+    const addBtn = el("editAdd");
+    if (addBtn) addBtn.addEventListener("click", () => {
+      if (window.PuntiMap && window.PuntiMap.addPoint) window.PuntiMap.addPoint();
+    });
   })();
 
   /* ---------- Router (hash) ---------- */

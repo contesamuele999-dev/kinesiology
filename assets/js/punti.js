@@ -22,10 +22,31 @@
   let dragging = false, lastX = 0, lastY = 0, dragMoved = false;
   // editor
   let editing = false, draggingPoint = null;
+  let ORIGINAL = [];
 
   const DATA = (window.PUNTI_INDICATORI && window.PUNTI_INDICATORI.punti) || [];
-  // posizioni originali (per il Reset dell'editor)
-  const ORIGINAL = DATA.map((p) => ({ x: p.pos.x, y: p.pos.y, z: p.pos.z }));
+
+  /* Landmark editabili: riferimenti anatomici che l'utente può spostare.
+     Vengono dalle quote LAND ma, una volta mossi, si esportano a parte.
+     Sorgente override opzionale: window.PUNTI_INDICATORI.landmarks */
+  const LAND_SAVED = (window.PUNTI_INDICATORI && window.PUNTI_INDICATORI.landmarks) || null;
+  function mkLand(id, nome, x, y, front) {
+    const saved = LAND_SAVED && LAND_SAVED.find && LAND_SAVED.find((l)=>l.id===id);
+    const pos = saved ? { x:saved.pos.x, y:saved.pos.y, z:saved.pos.z }
+                      : { x:x, y:y, z:0 }; // z calcolato dopo initScene via surfaceZ
+    return { id:id, organo:nome, kind:"landmark", vista: front?"fronte":"retro",
+             meridiano:"", lato:"", regione:"", riferimento:"riferimento anatomico", note:"",
+             pos: pos, _front: front, _lx: x, _ly: y };
+  }
+  const LANDMARKS = [
+    mkLand("lm-ombelico","Ombelico", 0, 1.28, true),
+    mkLand("lm-capezzolo-dx","Capezzolo (dx)", -0.24, 1.82, true),
+    mkLand("lm-capezzolo-sx","Capezzolo (sx)", 0.24, 1.82, true),
+    mkLand("lm-pube","Pube / pavimento pelvico", 0, 0.80, true),
+    mkLand("lm-giugulo","Giugulo", 0, 2.12, true)
+  ];
+  // ITEMS = tutti i marker cliccabili/trascinabili
+  let ITEMS = DATA.concat(LANDMARKS);
 
   /* ---------- Riferimenti anatomici condivisi ----------
      Quote y (corpo normalizzato) usate SIA per disegnare i landmark SIA per
@@ -75,6 +96,9 @@
       pointHi: 0xffd23f,
       landmark: dark ? 0x2a3a4a : 0xaab8c6,
       landmarkHi: dark ? 0x5b7286 : 0x8aa0b4,
+      brief: dark ? 0x2b4d7a : 0x3f6ea8,
+      lmMarker: dark ? 0x4fc3e0 : 0x1499c7,
+      lmMarkerHi: dark ? 0x9fe8ff : 0x63c8ec,
       grid: dark ? 0x1c2836 : 0xdae2e8
     };
   }
@@ -225,6 +249,63 @@
       }
     })();
 
+    // ===== RETRO: colonna vertebrale + costole posteriori =====
+    const zb = (x,y) => surfaceZ(x, y, false);   // superficie posteriore
+
+    // --- Colonna vertebrale (serie di vertebre lungo la mediana posteriore) ---
+    (function spine(){
+      const yTop = LAND.giugulo + 0.06, yBot = LAND.pube + 0.02;
+      const n = 17;
+      for (let i=0;i<n;i++){
+        const t=i/(n-1);
+        const y=yTop - t*(yTop-yBot);
+        const r = 0.026 - 0.006*Math.sin(t*Math.PI);      // leggermente affusolata
+        lm(new THREE.SphereGeometry(r, 10, 8), 0, y, zb(0,y)-0.004, 0,0,0, 1,0.85,1);
+      }
+    })();
+
+    // --- Costole posteriori: archi che partono dalla colonna verso i fianchi ---
+    (function backRibs(){
+      const levels = [LAND.arcata+0.02, LAND.arcata+0.16, LAND.arcata+0.30, LAND.capezzoli+0.06, LAND.capezzoli+0.20];
+      levels.forEach((yBase) => {
+        const seg=7, spread=0.34;
+        for (let side=-1; side<=1; side+=2){
+          for (let i=1;i<seg;i++){        // parte da i=1 per non sovrapporsi alla colonna
+            const t=i/(seg-1);
+            const x=side*(t*spread);
+            const y=yBase - t*0.10;       // gli archi scendono verso i lati
+            lm(new THREE.SphereGeometry(0.013, 8, 6), x, y, zb(x,y)-0.003);
+          }
+        }
+      });
+    })();
+
+    // --- Scapole (accenno, per orientarsi sul retro alto) ---
+    (function scapole(){
+      for (let side=-1; side<=1; side+=2){
+        const x=side*0.24, y=LAND.capezzoli+0.14;
+        lm(new THREE.SphereGeometry(0.05, 12, 10), x, y, zb(x,y)-0.01, 0,0,0, 1,1.3,0.5);
+      }
+    })();
+
+    // ===== MUTANDE / SLIP (copre la zona pelvica, fronte + retro) =====
+    (function slip(){
+      const col2 = themeColors();
+      const briefMat = new THREE.MeshStandardMaterial({ color: col2.brief, roughness: 0.7, metalness: 0.02, emissive: col2.bodyEmis });
+      const brief = (geo, x, y, z, rx, ry, rz, sx, sy, sz) => {
+        const m = new THREE.Mesh(geo, briefMat);
+        m.position.set(x, y, z);
+        if (rx||ry||rz) m.rotation.set(rx||0, ry||0, rz||0);
+        if (sx!=null||sy!=null||sz!=null) m.scale.set(sx==null?1:sx, sy==null?1:sy, sz==null?1:sz);
+        m.userData.bodyPart = true; m.userData.brief = true; g.add(m); return m;
+      };
+      // fascia in vita (anello attorno al bacino, appena sopra il pube)
+      brief(new THREE.CylinderGeometry(torsoR(LAND.pube+0.10)+0.015, torsoR(LAND.pube+0.02)+0.02, 0.30, 40, 1, true),
+            0, LAND.pube+0.02, 0, 0,0,0, 1,1,TORSO_ZSCALE);
+      // fondo/cavallo (chiude sotto tra le gambe)
+      brief(new THREE.SphereGeometry(0.30, 28, 20), 0, LAND.pube-0.14, 0, 0,0,0, 1,0.6,TORSO_ZSCALE);
+    })();
+
     // ----- Glutei/bacino inferiore -----
     add(new THREE.SphereGeometry(0.22, 22, 18), 0.16, 0.60, -0.06, 0,0,0, 1,0.8,1);
     add(new THREE.SphereGeometry(0.22, 22, 18), -0.16, 0.60, -0.06, 0,0,0, 1,0.8,1);
@@ -263,29 +344,36 @@
     return sp;
   }
 
-  function makeMarkers() {
-    const g = new THREE.Group();
+  function markerColorFor(p) {
     const col = themeColors();
+    return p.kind === "landmark" ? col.lmMarker : col.point;
+  }
+  function addMarker(p) {
+    const col = themeColors();
+    const isLm = p.kind === "landmark";
+    const geo = new THREE.SphereGeometry(isLm ? 0.05 : 0.062, 24, 18);
+    const m = new THREE.MeshStandardMaterial({ color: markerColorFor(p), emissive: isLm ? 0x102028 : 0x7a1810, emissiveIntensity: 0.5, roughness: 0.4 });
+    const mesh = new THREE.Mesh(geo, m);
+    mesh.position.set(p.pos.x, p.pos.y, p.pos.z);
+    mesh.userData.punto = p;
+    const halo = new THREE.Mesh(
+      new THREE.SphereGeometry(isLm ? 0.08 : 0.10, 18, 14),
+      new THREE.MeshBasicMaterial({ color: isLm ? col.lmMarkerHi : col.pointHi, transparent: true, opacity: 0.16 })
+    );
+    mesh.add(halo);
+    if (!isLm && THREE.CanvasTexture && THREE.Sprite) {
+      const n = DATA.indexOf(p) + 1;
+      if (n > 0) mesh.add(numberSprite(n));
+    }
+    pointsGroup.add(mesh);
+    markerMeshes.push(mesh);
+    return mesh;
+  }
+  function makeMarkers() {
+    pointsGroup = new THREE.Group();
     markerMeshes = [];
-    DATA.forEach((p, i) => {
-      const geo = new THREE.SphereGeometry(0.062, 24, 18);
-      const m = new THREE.MeshStandardMaterial({ color: col.point, emissive: 0x7a1810, emissiveIntensity: 0.5, roughness: 0.4 });
-      const mesh = new THREE.Mesh(geo, m);
-      mesh.position.set(p.pos.x, p.pos.y, p.pos.z);
-      mesh.userData.punto = p;
-      mesh.userData.index = i;
-      // alone
-      const halo = new THREE.Mesh(
-        new THREE.SphereGeometry(0.10, 18, 14),
-        new THREE.MeshBasicMaterial({ color: col.pointHi, transparent: true, opacity: 0.16 })
-      );
-      mesh.add(halo);
-      // etichetta numerica
-      if (THREE.CanvasTexture && THREE.Sprite) mesh.add(numberSprite(i + 1));
-      g.add(mesh);
-      markerMeshes.push(mesh);
-    });
-    return g;
+    ITEMS.forEach((p) => addMarker(p));
+    return pointsGroup;
   }
 
   function initScene() {
@@ -309,6 +397,13 @@
     scene.add(new THREE.HemisphereLight(0xffffff, 0x404050, 0.9));
     const key = new THREE.DirectionalLight(0xffffff, 0.8); key.position.set(3, 6, 5); scene.add(key);
     const fill = new THREE.DirectionalLight(0xffffff, 0.35); fill.position.set(-4, 2, -3); scene.add(fill);
+
+    // fissa z dei landmark editabili sulla superficie (se non già salvato)
+    LANDMARKS.forEach((p) => {
+      if (!p.pos.z) p.pos.z = round3(surfaceZ(p.pos.x, p.pos.y, p._front) + (p._front ? 0.005 : -0.005));
+    });
+    // snapshot per il Reset
+    ORIGINAL = ITEMS.map((p) => ({ id: p.id, x: p.pos.x, y: p.pos.y, z: p.pos.z }));
 
     bodyGroup = makeBody(); scene.add(bodyGroup);
     pointsGroup = makeMarkers(); scene.add(pointsGroup);
@@ -444,9 +539,13 @@
 
   function selectPoint(p) {
     picked = p;
+    const col = themeColors();
     markerMeshes.forEach((m) => {
-      const on = m.userData.punto.id === p.id;
-      m.material.color.set(on ? themeColors().pointHi : themeColors().point);
+      const q = m.userData.punto;
+      const on = q.id === p.id;
+      const base = q.kind === "landmark" ? col.lmMarker : col.point;
+      const hi = q.kind === "landmark" ? col.lmMarkerHi : col.pointHi;
+      m.material.color.set(on ? hi : base);
       m.scale.setScalar(on ? 1.5 : 1);
     });
     renderInfo(p);
@@ -480,20 +579,28 @@
     rows.push(["Vista", p.vista === "retro" ? "Posteriore (retro)" : "Anteriore (fronte)"]);
     if (p.lato) rows.push(["Lato", p.lato]);
     if (p.meridiano) rows.push(["Meridiano", p.meridiano]);
-    const num = DATA.indexOf(p) + 1;
+    const isLm = p.kind === "landmark";
+    const idx = DATA.indexOf(p);
+    const dotTxt = isLm ? "◇" : (idx + 1);
     let editHtml = "";
     if (editing) {
+      const fields = isLm ? "" :
+        '<label class="pinfo__field">Nome<input type="text" id="fOrgano" value="' + esc(p.organo) + '"></label>' +
+        '<label class="pinfo__field">Meridiano<input type="text" id="fMer" value="' + esc(p.meridiano || "") + '"></label>' +
+        '<label class="pinfo__field">Note<input type="text" id="fNote" value="' + esc(p.note || "") + '"></label>';
       editHtml =
-        '<dl class="pinfo__dl">' +
+        fields +
+        '<dl class="pinfo__dl pinfo__coords">' +
         '<dt>x</dt><dd>' + p.pos.x.toFixed(3) + '</dd>' +
         '<dt>y</dt><dd>' + p.pos.y.toFixed(3) + '</dd>' +
         '<dt>z</dt><dd>' + p.pos.z.toFixed(3) + '</dd></dl>' +
         '<div class="pinfo__depth"><button type="button" id="depthMinus" aria-label="Meno profondità">−</button>' +
         '<span>profondità</span>' +
-        '<button type="button" id="depthPlus" aria-label="Più profondità">+</button></div>';
+        '<button type="button" id="depthPlus" aria-label="Più profondità">+</button></div>' +
+        (!isLm && p._added ? '<button type="button" id="delPoint" class="ebtn ebtn--danger">🗑 Elimina punto</button>' : '');
     }
     infoEl.innerHTML =
-      '<div class="pinfo__head"><span class="pinfo__dot">' + num + '</span><h3>' + esc(p.organo) + '</h3></div>' +
+      '<div class="pinfo__head"><span class="pinfo__dot' + (isLm ? ' pinfo__dot--lm' : '') + '">' + dotTxt + '</span><h3>' + esc(p.organo) + '</h3></div>' +
       (p.note ? '<p class="pinfo__note">' + esc(p.note) + '</p>' : '') +
       '<dl class="pinfo__dl">' +
       rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join("") +
@@ -503,24 +610,45 @@
       const mn = document.getElementById("depthMinus"), pl = document.getElementById("depthPlus");
       if (mn) mn.addEventListener("click", () => nudgeDepth(-0.02));
       if (pl) pl.addEventListener("click", () => nudgeDepth(0.02));
+      const fo = document.getElementById("fOrgano"), fm = document.getElementById("fMer"), fn = document.getElementById("fNote");
+      if (fo) fo.addEventListener("input", (e) => { p.organo = e.target.value; buildList(); });
+      if (fm) fm.addEventListener("input", (e) => { p.meridiano = e.target.value; });
+      if (fn) fn.addEventListener("input", (e) => { p.note = e.target.value; });
+      const dp = document.getElementById("delPoint");
+      if (dp) dp.addEventListener("click", () => removePoint(p.id));
     }
   }
 
+  function rowFor(p, num) {
+    const li = document.createElement("button");
+    li.className = "punti__li" + (p.kind === "landmark" ? " punti__li--lm" : "");
+    li.type = "button";
+    li.dataset.id = p.id;
+    const dot = p.kind === "landmark"
+      ? '<span class="punti__li-dot punti__li-dot--lm" aria-hidden="true">◇</span>'
+      : '<span class="punti__li-dot" aria-hidden="true">' + num + '</span>';
+    let del = "";
+    if (editing && p.kind !== "landmark" && p._added)
+      del = '<span class="punti__li-del" data-del="' + esc(p.id) + '" title="Elimina">🗑</span>';
+    li.innerHTML = dot +
+      '<span class="punti__li-name">' + esc(p.organo) + '</span>' +
+      '<span class="punti__li-tag">' + (p.vista === "retro" ? "retro" : "fronte") + '</span>' + del;
+    li.addEventListener("click", (e) => {
+      if (e.target && e.target.dataset && e.target.dataset.del) { removePoint(e.target.dataset.del); return; }
+      selectPoint(p);
+    });
+    return li;
+  }
   function buildList() {
     if (!listEl) return;
     listEl.innerHTML = "";
-    DATA.forEach((p) => {
-      const li = document.createElement("button");
-      li.className = "punti__li";
-      li.type = "button";
-      li.dataset.id = p.id;
-      const num = DATA.indexOf(p) + 1;
-      li.innerHTML = '<span class="punti__li-dot" aria-hidden="true">' + num + '</span>' +
-        '<span class="punti__li-name">' + esc(p.organo) + '</span>' +
-        '<span class="punti__li-tag">' + (p.vista === "retro" ? "retro" : "fronte") + '</span>';
-      li.addEventListener("click", () => selectPoint(p));
-      listEl.appendChild(li);
-    });
+    DATA.forEach((p, i) => listEl.appendChild(rowFor(p, i + 1)));
+    // separatore + landmark
+    const h = document.createElement("div");
+    h.className = "punti__listsub";
+    h.textContent = "Riferimenti anatomici";
+    listEl.appendChild(h);
+    LANDMARKS.forEach((p) => listEl.appendChild(rowFor(p)));
   }
 
   function loop() {
@@ -546,11 +674,18 @@
     scene.background = new THREE.Color(col.bg);
     bodyGroup.traverse((o) => {
       if (o.isMesh && o.userData.bodyPart) {
-        o.material.color.set(o.userData.landmarkHi ? col.landmarkHi : (o.userData.landmark ? col.landmark : col.body));
+        o.material.color.set(
+          o.userData.brief ? col.brief :
+          o.userData.landmarkHi ? col.landmarkHi :
+          o.userData.landmark ? col.landmark : col.body
+        );
         o.material.emissive.set(col.bodyEmis);
       }
     });
-    markerMeshes.forEach((m) => { if (!picked || m.userData.punto.id !== picked.id) m.material.color.set(col.point); });
+    markerMeshes.forEach((m) => {
+      if (picked && m.userData.punto.id === picked.id) return;
+      m.material.color.set(m.userData.punto.kind === "landmark" ? col.lmMarker : col.point);
+    });
   }
 
   /* ---------- Editor: attiva/disattiva, export, reset ---------- */
@@ -569,6 +704,10 @@
       punti: DATA.map((p) => ({
         id: p.id, organo: p.organo, meridiano: p.meridiano, vista: p.vista,
         lato: p.lato, regione: p.regione, riferimento: p.riferimento, note: p.note,
+        pos: { x: round3(p.pos.x), y: round3(p.pos.y), z: round3(p.pos.z) }
+      })),
+      landmarks: LANDMARKS.map((p) => ({
+        id: p.id, organo: p.organo,
         pos: { x: round3(p.pos.x), y: round3(p.pos.y), z: round3(p.pos.z) }
       }))
     };
@@ -589,13 +728,56 @@
   }
 
   function resetPositions() {
-    DATA.forEach((p, i) => {
-      p.pos.x = ORIGINAL[i].x; p.pos.y = ORIGINAL[i].y; p.pos.z = ORIGINAL[i].z;
+    ORIGINAL.forEach((orig) => {
+      const p = ITEMS.find((it) => it.id === orig.id);
+      if (!p) return;
+      p.pos.x = orig.x; p.pos.y = orig.y; p.pos.z = orig.z;
       p.vista = p.pos.z < 0 ? "retro" : "fronte";
-      const m = markerMeshes[i];
+      const m = markerMeshes.find((mm) => mm.userData.punto.id === p.id);
       if (m) m.position.set(p.pos.x, p.pos.y, p.pos.z);
     });
     if (picked) renderInfo(picked);
+  }
+
+  /* ---------- Editor: aggiungi / elimina punto ---------- */
+  let addSeq = 0;
+  function addPoint() {
+    addSeq++;
+    const id = "nuovo-" + Date.now() + "-" + addSeq;
+    const y = 1.4, x = 0;
+    const p = {
+      id: id, organo: "Nuovo punto " + addSeq, meridiano: "", vista: "fronte",
+      lato: "", regione: "", riferimento: "", note: "",
+      pos: { x: x, y: y, z: round3(surfaceZ(x, y, true)) }, _added: true
+    };
+    DATA.push(p);
+    ITEMS = DATA.concat(LANDMARKS);
+    ORIGINAL.push({ id: id, x: p.pos.x, y: p.pos.y, z: p.pos.z });
+    if (pointsGroup) addMarker(p);
+    buildList();
+    selectPoint(p);
+    return p;
+  }
+  function removePoint(id) {
+    const idx = DATA.findIndex((p) => p.id === id);
+    if (idx < 0) return;
+    const mi = markerMeshes.findIndex((m) => m.userData.punto.id === id);
+    if (mi >= 0) {
+      const m = markerMeshes[mi];
+      if (pointsGroup && m.parent) m.parent.remove(m);
+      markerMeshes.splice(mi, 1);
+    }
+    DATA.splice(idx, 1);
+    ITEMS = DATA.concat(LANDMARKS);
+    if (picked && picked.id === id) { picked = null; if (infoEl) infoEl.hidden = true; }
+    buildList();
+  }
+
+  // rinomina il punto selezionato (dai campi editabili del pannello)
+  function updateField(field, value) {
+    if (!picked) return;
+    picked[field] = value;
+    if (field === "organo") buildList();
   }
 
   // API pubblica usata dal router in app.js
@@ -619,6 +801,8 @@
     setEditing: setEditing,
     isEditing: () => editing,
     exportJSON: exportJSON,
-    resetPositions: resetPositions
+    resetPositions: resetPositions,
+    addPoint: addPoint,
+    removePoint: removePoint
   };
 })();

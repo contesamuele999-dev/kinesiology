@@ -1,0 +1,231 @@
+{
+  "titolo": "Punti d'Allarme",
+  "descrizione": "Punti Mu (allarme) di riferimento. Trascritti dalla tavola cliente (figura fronte + figura retro). Convenzione soggetto: x<0 = lato DESTRO del soggetto, x>0 = lato SINISTRO; y: 0=pube … ~2.6=vertice; z>0 fronte, z<0 retro. Coordinate su manichino normalizzato, calibrate sul profilo del torso.",
+  "punti": [
+    {
+      "id": "polmone-dx",
+      "organo": "Polmone (dx)",
+      "meridiano": "Polmone",
+      "vista": "fronte",
+      "lato": "destra soggetto",
+      "regione": "torace alto, sotto-clavicolare",
+      "riferimento": "regione sotto-clavicolare destra (1°-2° spazio intercostale, vicino alla spalla)",
+      "note": "punto bilaterale (uno per lato)",
+      "pos": {
+        "x": -0.3,
+        "y": 2,
+        "z": 0.287
+      }
+    },
+    {
+      "id": "polmone-sx",
+      "organo": "Polmone (sx)",
+      "meridiano": "Polmone",
+      "vista": "fronte",
+      "lato": "sinistra soggetto",
+      "regione": "torace alto, sotto-clavicolare",
+      "riferimento": "regione sotto-clavicolare sinistra (1°-2° spazio intercostale, vicino alla spalla)",
+      "note": "punto bilaterale (uno per lato)",
+      "pos": {
+        "x": 0.3,
+        "y": 2,
+        "z": 0.287
+      }
+    },
+    {
+      "id": "maestro-del-cuore",
+      "organo": "Maestro del Cuore",
+      "meridiano": "Maestro del Cuore (Pericardio)",
+      "vista": "fronte",
+      "lato": "destra soggetto",
+      "regione": "torace medio",
+      "riferimento": "lato destro del torace, mediale rispetto al polmone destro",
+      "note": "",
+      "pos": {
+        "x": 0.001,
+        "y": 1.878,
+        "z": 0.312
+      }
+    },
+    {
+      "id": "cuore",
+      "organo": "Cuore",
+      "meridiano": "Cuore",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "sterno",
+      "riferimento": "linea mediana, corpo dello sterno",
+      "note": "",
+      "pos": {
+        "x": -0.002,
+        "y": 1.685,
+        "z": 0.279
+      }
+    },
+    {
+      "id": "stomaco",
+      "organo": "Stomaco",
+      "meridiano": "Stomaco",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "epigastrio",
+      "riferimento": "linea mediana, epigastrio (subito sotto il processo xifoideo)",
+      "note": "",
+      "pos": {
+        "x": -0.002,
+        "y": 1.457,
+        "z": 0.248
+      }
+    },
+    {
+      "id": "vescica-biliare",
+      "organo": "Vescica Biliare",
+      "meridiano": "Vescica Biliare",
+      "vista": "fronte",
+      "lato": "sinistra soggetto",
+      "regione": "arcata costale sinistra",
+      "riferimento": "sotto il coperchio (arcata costale), su cartilagine della 6ª costa",
+      "note": "sotto coperchio, su cartilag. costa 6",
+      "pos": {
+        "x": 0.28,
+        "y": 1.487,
+        "z": 0.174
+      }
+    },
+    {
+      "id": "fegato",
+      "organo": "Fegato",
+      "meridiano": "Fegato",
+      "vista": "fronte",
+      "lato": "sinistra soggetto",
+      "regione": "arcata costale sinistra, sotto la vescica biliare",
+      "riferimento": "6° spazio intercostale, sotto il coperchio (arcata costale)",
+      "note": "6° spazio intercostale, sotto coperchio",
+      "pos": {
+        "x": 0.282,
+        "y": 1.614,
+        "z": 0.195
+      }
+    },
+    {
+      "id": "triplice-riscaldatore",
+      "organo": "Triplice Riscaldatore",
+      "meridiano": "Triplice Riscaldatore",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "addome, sotto l'ombelico",
+      "riferimento": "linea mediana dell'addome, sotto l'ombelico",
+      "note": "",
+      "pos": {
+        "x": -0.006,
+        "y": 0.955,
+        "z": 0.249
+      }
+    },
+    {
+      "id": "intestino-tenue",
+      "organo": "Intestino Tenue",
+      "meridiano": "Intestino Tenue",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "basso addome",
+      "riferimento": "linea mediana del basso addome (tra ombelico e pube)",
+      "note": "",
+      "pos": {
+        "x": 0.001,
+        "y": 0.806,
+        "z": 0.25
+      }
+    },
+    {
+      "id": "intestino-crasso-dx",
+      "organo": "Intestino Crasso (dx)",
+      "meridiano": "Intestino Crasso",
+      "vista": "fronte",
+      "lato": "destra soggetto",
+      "regione": "basso addome laterale",
+      "riferimento": "basso addome, lateralmente alla mediana (bilaterale)",
+      "note": "punto bilaterale (uno per lato)",
+      "pos": {
+        "x": -0.182,
+        "y": 1.156,
+        "z": 0.164
+      }
+    },
+    {
+      "id": "intestino-crasso-sx",
+      "organo": "Intestino Crasso (sx)",
+      "meridiano": "Intestino Crasso",
+      "vista": "fronte",
+      "lato": "sinistra soggetto",
+      "regione": "basso addome laterale",
+      "riferimento": "basso addome, lateralmente alla mediana (bilaterale)",
+      "note": "punto bilaterale (uno per lato)",
+      "pos": {
+        "x": 0.173,
+        "y": 1.152,
+        "z": 0.168
+      }
+    },
+    {
+      "id": "vescica",
+      "organo": "Vescica",
+      "meridiano": "Vescica",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "ipogastrio sovrapubico",
+      "riferimento": "linea mediana sovrapubica (appena sopra il pube)",
+      "note": "",
+      "pos": {
+        "x": 0.001,
+        "y": 0.671,
+        "z": 0.161
+      }
+    },
+    {
+      "id": "rene-dx",
+      "organo": "Rene (dx)",
+      "meridiano": "Rene",
+      "vista": "retro",
+      "lato": "destra soggetto",
+      "regione": "regione lombare posteriore",
+      "riferimento": "sull'ultima costa (12ª), regione lombare destra",
+      "note": "ultima costa · bilaterale",
+      "pos": {
+        "x": -0.2,
+        "y": 1.37,
+        "z": -0.227
+      }
+    },
+    {
+      "id": "rene-sx",
+      "organo": "Rene (sx)",
+      "meridiano": "Rene",
+      "vista": "retro",
+      "lato": "sinistra soggetto",
+      "regione": "regione lombare posteriore",
+      "riferimento": "sull'ultima costa (12ª), regione lombare sinistra",
+      "note": "ultima costa · bilaterale",
+      "pos": {
+        "x": 0.194,
+        "y": 1.356,
+        "z": -0.197
+      }
+    },
+    {
+      "id": "milza",
+      "organo": "Milza",
+      "meridiano": "Milza",
+      "vista": "retro",
+      "lato": "sinistra soggetto",
+      "regione": "regione costale posteriore sinistra",
+      "riferimento": "sulla penultima costa (11ª), lato sinistro posteriore",
+      "note": "penultima costa",
+      "pos": {
+        "x": 0.243,
+        "y": 1.226,
+        "z": -0.137
+      }
+    }
+  ]
+}
