@@ -22,20 +22,40 @@
       <span class="topbar__sub">consultazione rapida</span>
       <button id="themeBtn" class="themebtn" type="button" aria-label="Cambia tema">🌙</button>
     </div>
+    <!-- ===== NAV MACROSEZIONI (sempre visibile) ===== -->
+    <nav class="macronav" id="macronav" aria-label="Sezioni">
+      <button class="macronav__tab" data-sec="coordinate" type="button">Coordinate</button>
+      <button class="macronav__tab" data-sec="punti" type="button">Punti Indicatori</button>
+    </nav>
     <div class="search" id="searchWrap">
       <input id="search" type="search" inputmode="search" autocomplete="off"
              placeholder="Cerca meridiano, muscolo o contenuto…" aria-label="Cerca" />
     </div>
   </header>
 
-  <!-- ============ VISTA ELENCO (meridiani / scelta 2° meridiano) ============ -->
+  <!-- ============ SEZIONE: PUNTI INDICATORI (mappa 3D) ============ -->
+  <main id="puntiView" class="puntiview" hidden>
+    <div class="punti__layout">
+      <div class="punti__stage">
+        <div id="punti3d" class="punti__canvas" role="img" aria-label="Mappa 3D del corpo con i punti d'allarme"></div>
+        <p class="punti__hint">Trascina per ruotare · rotella/pinch per zoom · tocca un punto per i dettagli</p>
+      </div>
+      <aside class="punti__side">
+        <div id="puntiInfo" class="pinfo" hidden></div>
+        <h2 class="punti__listtitle">Punti d'Allarme</h2>
+        <div id="puntiList" class="punti__list"></div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ============ SEZIONE: COORDINATE — VISTA ELENCO ============ -->
   <main id="listView" class="listview">
     <div id="listHead" class="listhead"></div>
     <div id="grid" class="grid"></div>
     <p id="noResults" class="noresults" hidden>Nessun meridiano trovato.</p>
   </main>
 
-  <!-- ============ VISTA COORDINATA (coppia di meridiani) ============ -->
+  <!-- ============ SEZIONE: COORDINATE — VISTA COORDINATA ============ -->
   <main id="coordView" class="detailview" hidden>
     <div class="coord__head" id="coordHead"></div>
     <nav class="coordtabs" id="coordTabs" aria-label="Meridiani della coordinata"></nav>
@@ -67,7 +87,10 @@
     </div>
   </div>
 
+  <script src="assets/vendor/three.min.js"></script>
   <script src="assets/js/data.js"></script>
+  <script src="assets/js/punti_data.js"></script>
   <script src="assets/js/app.js"></script>
+  <script src="assets/js/punti.js"></script>
 </body>
 </html>

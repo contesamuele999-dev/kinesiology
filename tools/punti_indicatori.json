@@ -1,0 +1,138 @@
+{
+  "titolo": "Punti d'Allarme",
+  "descrizione": "Punti Mu (allarme) di riferimento sugli organi. Coordinate approssimate su modello corporeo normalizzato (x: -1 destra soggetto … +1 sinistra soggetto; y: 0 pube … ~2.6 testa; vista F=fronte, R=retro).",
+  "punti": [
+    {
+      "id": "polmone",
+      "organo": "Polmone",
+      "meridiano": "Polmone",
+      "vista": "fronte",
+      "lato": "bilaterale",
+      "regione": "torace alto",
+      "riferimento": "regione sotto-clavicolare, lato del torace (bilaterale)",
+      "note": "",
+      "pos": { "x": 0.55, "y": 2.05, "z": 0.35 }
+    },
+    {
+      "id": "maestro-del-cuore",
+      "organo": "Maestro del Cuore",
+      "meridiano": "Maestro del Cuore (Pericardio)",
+      "vista": "fronte",
+      "lato": "sinistra",
+      "regione": "torace",
+      "riferimento": "lato sinistro del torace, mediale rispetto al polmone",
+      "note": "",
+      "pos": { "x": 0.30, "y": 1.90, "z": 0.36 }
+    },
+    {
+      "id": "cuore",
+      "organo": "Cuore",
+      "meridiano": "Cuore",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "sterno",
+      "riferimento": "linea mediana dello sterno",
+      "note": "",
+      "pos": { "x": 0.0, "y": 1.85, "z": 0.40 }
+    },
+    {
+      "id": "stomaco",
+      "organo": "Stomaco",
+      "meridiano": "Stomaco",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "epigastrio",
+      "riferimento": "linea mediana, epigastrio (sotto lo sterno)",
+      "note": "",
+      "pos": { "x": 0.0, "y": 1.55, "z": 0.42 }
+    },
+    {
+      "id": "vescica-biliare",
+      "organo": "Vescica Biliare",
+      "meridiano": "Vescica Biliare",
+      "vista": "fronte",
+      "lato": "destra",
+      "regione": "ipocondrio destro",
+      "riferimento": "sotto il coperchio (arcata costale), su cartilagine costale 6",
+      "note": "sotto coperchio, su cartilag. costa 6",
+      "pos": { "x": -0.30, "y": 1.45, "z": 0.40 }
+    },
+    {
+      "id": "fegato",
+      "organo": "Fegato",
+      "meridiano": "Fegato",
+      "vista": "fronte",
+      "lato": "destra",
+      "regione": "ipocondrio destro",
+      "riferimento": "6° spazio intercostale, sotto il coperchio (arcata costale)",
+      "note": "6° spazio intercostale, sotto coperchio",
+      "pos": { "x": -0.45, "y": 1.40, "z": 0.38 }
+    },
+    {
+      "id": "triplice-riscaldatore",
+      "organo": "Triplice Riscaldatore",
+      "meridiano": "Triplice Riscaldatore",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "addome",
+      "riferimento": "linea mediana dell'addome, sotto l'ombelico",
+      "note": "",
+      "pos": { "x": 0.0, "y": 1.20, "z": 0.42 }
+    },
+    {
+      "id": "intestino-tenue",
+      "organo": "Intestino Tenue",
+      "meridiano": "Intestino Tenue",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "basso addome",
+      "riferimento": "linea mediana del basso addome",
+      "note": "",
+      "pos": { "x": 0.0, "y": 1.00, "z": 0.42 }
+    },
+    {
+      "id": "vescica",
+      "organo": "Vescica",
+      "meridiano": "Vescica",
+      "vista": "fronte",
+      "lato": "mediana",
+      "regione": "ipogastrio",
+      "riferimento": "linea mediana sovrapubica (ipogastrio)",
+      "note": "",
+      "pos": { "x": 0.0, "y": 0.80, "z": 0.40 }
+    },
+    {
+      "id": "intestino-crasso",
+      "organo": "Intestino Crasso",
+      "meridiano": "Intestino Crasso",
+      "vista": "fronte",
+      "lato": "bilaterale",
+      "regione": "basso addome laterale",
+      "riferimento": "basso addome, lateralmente alla linea mediana (bilaterale)",
+      "note": "",
+      "pos": { "x": 0.35, "y": 0.90, "z": 0.40 }
+    },
+    {
+      "id": "rene",
+      "organo": "Rene",
+      "meridiano": "Rene",
+      "vista": "retro",
+      "lato": "bilaterale",
+      "regione": "regione lombare",
+      "riferimento": "sull'ultima costa (12ª costa), regione lombare posteriore (bilaterale)",
+      "note": "ultima costa",
+      "pos": { "x": 0.28, "y": 1.35, "z": -0.35 }
+    },
+    {
+      "id": "milza",
+      "organo": "Milza",
+      "meridiano": "Milza",
+      "vista": "retro",
+      "lato": "sinistra",
+      "regione": "regione costale posteriore sinistra",
+      "riferimento": "sulla penultima costa (11ª costa), lato sinistro posteriore",
+      "note": "penultima costa",
+      "pos": { "x": 0.50, "y": 1.45, "z": -0.33 }
+    }
+  ]
+}

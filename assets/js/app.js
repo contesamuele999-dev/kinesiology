@@ -14,6 +14,7 @@
   const searchInput = el("search"), searchWrap = el("searchWrap");
   const backBtn = el("backBtn"), themeBtn = el("themeBtn");
   const coordHead = el("coordHead"), coordTabs = el("coordTabs"), sections = el("sections");
+  const puntiView = el("puntiView"), macronav = el("macronav");
 
   const esc = (s) => String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -47,6 +48,7 @@
   if (themeBtn) themeBtn.addEventListener("click", () => {
     theme = document.body.classList.contains("dark") ? "light" : "dark";
     applyTheme(theme); safeSet("kapp-theme", theme);
+    if (window.PuntiMap && window.PuntiMap.retheme) window.PuntiMap.retheme();
   });
 
   /* ---------- Header sticky (scroll-margin sezioni) ---------- */
@@ -395,9 +397,36 @@
     else if (e.key === "ArrowRight") lbShow(lbIdx + 1);
   });
 
+  /* ---------- Macrosezioni (Coordinate / Punti Indicatori) ---------- */
+  function setActiveTab(sec) {
+    if (!macronav) return;
+    Array.from(macronav.querySelectorAll(".macronav__tab"))
+      .forEach((b) => b.classList.toggle("active", b.dataset.sec === sec));
+  }
+  function showPunti() {
+    setActiveTab("punti");
+    listView.hidden = true; coordView.hidden = true; puntiView.hidden = false;
+    searchWrap.hidden = true; backBtn.hidden = true;
+    if (window.PuntiMap) window.PuntiMap.activate();
+    window.scrollTo(0, 0); updateStick();
+  }
+  function leavePunti() {
+    puntiView.hidden = true;
+    if (window.PuntiMap) window.PuntiMap.deactivate();
+  }
+  if (macronav) {
+    macronav.addEventListener("click", (e) => {
+      const t = e.target.closest(".macronav__tab"); if (!t) return;
+      if (t.dataset.sec === "punti") location.hash = "#punti";
+      else location.hash = ""; // Coordinate = home
+    });
+  }
+
   /* ---------- Router (hash) ---------- */
   function route() {
     const h = location.hash;
+    if (h === "#punti" || h.indexOf("#punti") === 0) { firstMeridian = null; showPunti(); return; }
+    leavePunti(); setActiveTab("coordinate");
     const mPair = h.match(/^#\/([^+]+)\+(.+)$/);
     if (mPair) {
       const a = find(mPair[1]), b = find(mPair[2]);
