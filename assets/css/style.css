@@ -312,7 +312,7 @@ body.installpop-open{ overflow:hidden; }
   background:var(--card); color:var(--ink); cursor:pointer; }
 .punti__li:hover{ border-color:var(--brand); }
 .punti__li.active{ border-color:var(--brand); background:color-mix(in srgb, var(--brand) 12%, var(--card)); }
-.punti__li-dot{ width:12px; height:12px; border-radius:50%; background:#ff5a4d; flex:0 0 auto; box-shadow:0 0 0 3px color-mix(in srgb,#ff5a4d 22%, transparent); }
+.punti__li-dot{ width:24px; height:24px; border-radius:50%; background:#ff5a4d; color:#fff; flex:0 0 auto; display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:800; box-shadow:0 0 0 3px color-mix(in srgb,#ff5a4d 20%, transparent); }
 .punti__li-name{ font-weight:600; flex:1 1 auto; }
 .punti__li-tag{ font-size:.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
 
@@ -321,7 +321,7 @@ body.installpop-open{ overflow:hidden; }
   padding:14px 16px; margin-bottom:16px; box-shadow:var(--shadow); }
 .pinfo__head{ display:flex; align-items:center; gap:10px; }
 .pinfo__head h3{ margin:0; font-size:1.15rem; }
-.pinfo__dot{ width:14px; height:14px; border-radius:50%; background:#ff5a4d; box-shadow:0 0 0 4px color-mix(in srgb,#ff5a4d 22%, transparent); }
+.pinfo__dot{ width:28px; height:28px; border-radius:50%; background:#ff5a4d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:800; flex:0 0 auto; box-shadow:0 0 0 4px color-mix(in srgb,#ff5a4d 20%, transparent); }
 .pinfo__note{ margin:8px 0 0; padding:8px 12px; border-left:3px solid var(--brand);
   background:color-mix(in srgb, var(--brand) 8%, var(--card)); border-radius:0 8px 8px 0; font-size:.92rem; }
 .pinfo__dl{ display:grid; grid-template-columns:auto 1fr; gap:6px 14px; margin:12px 0 0; }

@@ -31,6 +31,7 @@
       bodyEmis: dark ? 0x0a1016 : 0x000000,
       point: 0xff5a4d,
       pointHi: 0xffd23f,
+      landmark: dark ? 0x223140 : 0xb8c6d2,
       grid: dark ? 0x1c2836 : 0xdae2e8
     };
   }
@@ -39,21 +40,27 @@
   function torsoLathe(THREE) {
     const pts = [];
     const P = (r, y) => pts.push(new THREE.Vector2(r, y));
-    P(0.02, 0.62);   // sotto il bacino
-    P(0.34, 0.70);   // bacino
-    P(0.40, 0.86);   // anche
-    P(0.34, 1.02);   // vita
-    P(0.30, 1.18);   // vita alta
-    P(0.36, 1.40);   // addome
-    P(0.44, 1.66);   // basso torace
-    P(0.50, 1.90);   // torace
-    P(0.46, 2.08);   // petto alto
-    P(0.30, 2.20);   // clavicole
-    P(0.14, 2.28);   // base collo
-    P(0.02, 2.30);
-    const geo = new THREE.LatheGeometry(pts, 40);
-    // schiaccia in profondità (z) per un tronco ellittico, non cilindrico
-    geo.scale(1, 1, 0.66);
+    P(0.02, 0.60);
+    P(0.20, 0.64);
+    P(0.33, 0.72);   // bacino
+    P(0.40, 0.82);   // creste iliache
+    P(0.405, 0.92);  // anche
+    P(0.36, 1.02);   // vita
+    P(0.315, 1.14);  // punto vita (più stretto)
+    P(0.315, 1.20);
+    P(0.35, 1.30);   // addome basso
+    P(0.385, 1.44);  // addome (livello ombelico)
+    P(0.40, 1.56);   // arcata costale
+    P(0.435, 1.68);  // margine costale
+    P(0.475, 1.82);  // basso torace
+    P(0.505, 1.96);  // torace (max ampiezza pettorale)
+    P(0.495, 2.06);  // petto alto
+    P(0.44, 2.14);   // clavicole
+    P(0.32, 2.22);   // trapezio/base collo
+    P(0.17, 2.28);   // base collo
+    P(0.04, 2.31);
+    const geo = new THREE.LatheGeometry(pts, 64);
+    geo.scale(1, 1, 0.64);   // sezione ellittica (profondità < larghezza)
     return geo;
   }
 
@@ -74,8 +81,8 @@
     add(torsoLathe(THREE), 0, 0, 0);
 
     // ----- Collo + testa + viso -----
-    add(new THREE.CylinderGeometry(0.115, 0.14, 0.20, 20), 0, 2.34, 0);
-    add(new THREE.SphereGeometry(0.27, 32, 28), 0, 2.62, 0.01, 0,0,0, 1, 1.15, 1.02); // cranio
+    add(new THREE.CylinderGeometry(0.115, 0.14, 0.20, 28), 0, 2.34, 0);
+    add(new THREE.SphereGeometry(0.27, 48, 40), 0, 2.62, 0.01, 0,0,0, 1, 1.15, 1.02); // cranio
     add(new THREE.SphereGeometry(0.20, 24, 20), 0, 2.50, 0.12, 0,0,0, 0.9, 1.0, 0.7); // volto/mascella
     add(new THREE.SphereGeometry(0.05, 12, 10), 0, 2.53, 0.28); // naso
     add(new THREE.SphereGeometry(0.035, 12, 10), 0.09, 2.60, 0.24); // occhio dx
@@ -96,6 +103,22 @@
     };
     arm(1); arm(-1);
 
+    // ----- Landmark anatomici di riferimento (aiutano a localizzare i punti) -----
+    const lmMat = new THREE.MeshStandardMaterial({ color: col.landmark, roughness: 0.9, metalness: 0, emissive: col.bodyEmis });
+    const lm = (geo, x, y, z, rx, ry, rz, sx, sy, sz) => {
+      const m = new THREE.Mesh(geo, lmMat);
+      m.position.set(x, y, z);
+      if (rx || ry || rz) m.rotation.set(rx||0, ry||0, rz||0);
+      if (sx != null || sy != null || sz != null) m.scale.set(sx==null?1:sx, sy==null?1:sy, sz==null?1:sz);
+      m.userData.bodyPart = true; m.userData.landmark = true; g.add(m); return m;
+    };
+    // ombelico
+    lm(new THREE.SphereGeometry(0.03, 14, 12), 0, 1.30, 0.245);
+    // giugulo / incavo clavicolare
+    lm(new THREE.SphereGeometry(0.028, 14, 12), 0, 2.14, 0.20);
+    // linea mediana sterno-ombelico (sottile solco)
+    lm(new THREE.CylinderGeometry(0.006, 0.006, 0.78, 8), 0, 1.66, 0.30, 0.06,0,0);
+
     // ----- Glutei/bacino inferiore -----
     add(new THREE.SphereGeometry(0.22, 22, 18), 0.16, 0.60, -0.06, 0,0,0, 1,0.8,1);
     add(new THREE.SphereGeometry(0.22, 22, 18), -0.16, 0.60, -0.06, 0,0,0, 1,0.8,1);
@@ -113,22 +136,46 @@
     return g;
   }
 
+  function numberSprite(n) {
+    const s = 128;
+    const cv = document.createElement("canvas"); cv.width = cv.height = s;
+    const ctx = cv.getContext("2d");
+    if (ctx) {
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 84px system-ui, Arial, sans-serif";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.lineWidth = 10; ctx.strokeStyle = "rgba(0,0,0,0.55)";
+      ctx.strokeText(String(n), s/2, s/2 + 4);
+      ctx.fillText(String(n), s/2, s/2 + 4);
+    }
+    const tex = new THREE.CanvasTexture(cv);
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+    const sp = new THREE.Sprite(mat);
+    sp.scale.set(0.17, 0.17, 0.17);
+    sp.position.set(0, 0.14, 0);      // sopra il pallino
+    sp.userData.numberSprite = true;
+    return sp;
+  }
+
   function makeMarkers() {
     const g = new THREE.Group();
     const col = themeColors();
     markerMeshes = [];
-    DATA.forEach((p) => {
-      const geo = new THREE.SphereGeometry(0.075, 20, 16);
+    DATA.forEach((p, i) => {
+      const geo = new THREE.SphereGeometry(0.062, 24, 18);
       const m = new THREE.MeshStandardMaterial({ color: col.point, emissive: 0x7a1810, emissiveIntensity: 0.5, roughness: 0.4 });
       const mesh = new THREE.Mesh(geo, m);
       mesh.position.set(p.pos.x, p.pos.y, p.pos.z);
       mesh.userData.punto = p;
+      mesh.userData.index = i;
       // alone
       const halo = new THREE.Mesh(
-        new THREE.SphereGeometry(0.12, 16, 12),
-        new THREE.MeshBasicMaterial({ color: col.pointHi, transparent: true, opacity: 0.14 })
+        new THREE.SphereGeometry(0.10, 18, 14),
+        new THREE.MeshBasicMaterial({ color: col.pointHi, transparent: true, opacity: 0.16 })
       );
       mesh.add(halo);
+      // etichetta numerica
+      if (THREE.CanvasTexture && THREE.Sprite) mesh.add(numberSprite(i + 1));
       g.add(mesh);
       markerMeshes.push(mesh);
     });
@@ -268,8 +315,9 @@
     rows.push(["Vista", p.vista === "retro" ? "Posteriore (retro)" : "Anteriore (fronte)"]);
     if (p.lato) rows.push(["Lato", p.lato]);
     if (p.meridiano) rows.push(["Meridiano", p.meridiano]);
+    const num = DATA.indexOf(p) + 1;
     infoEl.innerHTML =
-      '<div class="pinfo__head"><span class="pinfo__dot"></span><h3>' + esc(p.organo) + '</h3></div>' +
+      '<div class="pinfo__head"><span class="pinfo__dot">' + num + '</span><h3>' + esc(p.organo) + '</h3></div>' +
       (p.note ? '<p class="pinfo__note">' + esc(p.note) + '</p>' : '') +
       '<dl class="pinfo__dl">' +
       rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join("") +
@@ -285,7 +333,8 @@
       li.className = "punti__li";
       li.type = "button";
       li.dataset.id = p.id;
-      li.innerHTML = '<span class="punti__li-dot" aria-hidden="true"></span>' +
+      const num = DATA.indexOf(p) + 1;
+      li.innerHTML = '<span class="punti__li-dot" aria-hidden="true">' + num + '</span>' +
         '<span class="punti__li-name">' + esc(p.organo) + '</span>' +
         '<span class="punti__li-tag">' + (p.vista === "retro" ? "retro" : "fronte") + '</span>';
       li.addEventListener("click", () => selectPoint(p));
@@ -314,7 +363,12 @@
     if (!scene) return;
     const col = themeColors();
     scene.background = new THREE.Color(col.bg);
-    bodyGroup.traverse((o) => { if (o.isMesh && o.userData.bodyPart) { o.material.color.set(col.body); o.material.emissive.set(col.bodyEmis); } });
+    bodyGroup.traverse((o) => {
+      if (o.isMesh && o.userData.bodyPart) {
+        o.material.color.set(o.userData.landmark ? col.landmark : col.body);
+        o.material.emissive.set(col.bodyEmis);
+      }
+    });
     markerMeshes.forEach((m) => { if (!picked || m.userData.punto.id !== picked.id) m.material.color.set(col.point); });
   }
 
