@@ -422,6 +422,30 @@
     });
   }
 
+  /* ---------- Editor punti (wiring UI) ---------- */
+  (function initEditorUI() {
+    const toggle = el("editToggle"), tools = el("editTools"), hint = el("editHint");
+    const exportBtn = el("editExport"), resetBtn = el("editReset");
+    if (!toggle) return;
+    function setOn(on) {
+      toggle.setAttribute("aria-pressed", on ? "true" : "false");
+      toggle.textContent = on ? "✓ Fine modifica" : "✎ Modifica punti";
+      if (tools) tools.hidden = !on;
+      if (hint) hint.hidden = !on;
+      if (window.PuntiMap && window.PuntiMap.setEditing) window.PuntiMap.setEditing(on);
+    }
+    toggle.addEventListener("click", () => {
+      const on = toggle.getAttribute("aria-pressed") !== "true";
+      setOn(on);
+    });
+    if (exportBtn) exportBtn.addEventListener("click", () => {
+      if (window.PuntiMap && window.PuntiMap.exportJSON) window.PuntiMap.exportJSON();
+    });
+    if (resetBtn) resetBtn.addEventListener("click", () => {
+      if (window.PuntiMap && window.PuntiMap.resetPositions) window.PuntiMap.resetPositions();
+    });
+  })();
+
   /* ---------- Router (hash) ---------- */
   function route() {
     const h = location.hash;

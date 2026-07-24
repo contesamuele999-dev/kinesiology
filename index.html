@@ -41,6 +41,18 @@
         <p class="punti__hint">Trascina per ruotare · rotella/pinch per zoom · tocca un punto per i dettagli</p>
       </div>
       <aside class="punti__side">
+        <div class="punti__toolbar">
+          <button id="editToggle" class="ebtn" type="button" aria-pressed="false">✎ Modifica punti</button>
+          <div id="editTools" class="edittools" hidden>
+            <button id="editExport" class="ebtn ebtn--primary" type="button">⬇ Esporta JSON</button>
+            <button id="editReset" class="ebtn" type="button" title="Ripristina le posizioni iniziali">↺ Reset</button>
+          </div>
+        </div>
+        <p id="editHint" class="edithint" hidden>
+          Modalità modifica attiva. <strong>Trascina un punto</strong> sul corpo per spostarlo;
+          usa la <strong>rotella</strong> (o i pulsanti +/−) mentre un punto è selezionato per regolare la profondità.
+          Poi premi <strong>Esporta JSON</strong> e caricami il file.
+        </p>
         <div id="puntiInfo" class="pinfo" hidden></div>
         <h2 class="punti__listtitle">Punti d'Allarme</h2>
         <div id="puntiList" class="punti__list"></div>

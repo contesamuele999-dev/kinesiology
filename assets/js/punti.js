@@ -20,8 +20,12 @@
   // orbit state
   let yaw = 0.5, pitch = 0.05, dist = 6.2, target;
   let dragging = false, lastX = 0, lastY = 0, dragMoved = false;
+  // editor
+  let editing = false, draggingPoint = null;
 
   const DATA = (window.PUNTI_INDICATORI && window.PUNTI_INDICATORI.punti) || [];
+  // posizioni originali (per il Reset dell'editor)
+  const ORIGINAL = DATA.map((p) => ({ x: p.pos.x, y: p.pos.y, z: p.pos.z }));
 
   /* ---------- Riferimenti anatomici condivisi ----------
      Quote y (corpo normalizzato) usate SIA per disegnare i landmark SIA per
@@ -329,22 +333,34 @@
 
   function bindControls() {
     const dom = renderer.domElement;
-    const down = (x, y) => { dragging = true; dragMoved = false; lastX = x; lastY = y; };
+    const down = (x, y) => {
+      // In modalità editor: se premo su un marker, inizio a trascinare IL PUNTO
+      if (editing) {
+        const m = markerAt(x, y);
+        if (m) { draggingPoint = m; dragMoved = false; selectPoint(m.userData.punto); return; }
+      }
+      dragging = true; dragMoved = false; lastX = x; lastY = y;
+    };
     const move = (x, y) => {
+      if (draggingPoint) { dragMoved = true; movePointTo(draggingPoint, x, y); return; }
       if (!dragging) return;
       const dx = x - lastX, dy = y - lastY;
       if (Math.abs(dx) + Math.abs(dy) > 3) dragMoved = true;
       yaw -= dx * 0.008; pitch += dy * 0.006;
       lastX = x; lastY = y; updateCamera();
     };
-    const up = () => { dragging = false; };
+    const up = () => { dragging = false; draggingPoint = null; };
     dom.addEventListener("mousedown", (e) => down(e.clientX, e.clientY));
     window.addEventListener("mousemove", (e) => move(e.clientX, e.clientY));
     window.addEventListener("mouseup", up);
     dom.addEventListener("touchstart", (e) => { const t = e.touches[0]; down(t.clientX, t.clientY); }, { passive: true });
     dom.addEventListener("touchmove", (e) => { const t = e.touches[0]; move(t.clientX, t.clientY); }, { passive: true });
     dom.addEventListener("touchend", up);
-    dom.addEventListener("wheel", (e) => { e.preventDefault(); dist = Math.max(3.2, Math.min(11, dist + e.deltaY * 0.01)); updateCamera(); }, { passive: false });
+    dom.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      if (editing && picked) { nudgeDepth(e.deltaY < 0 ? 0.01 : -0.01); return; }  // regola profondità
+      dist = Math.max(3.2, Math.min(11, dist + e.deltaY * 0.01)); updateCamera();
+    }, { passive: false });
     // pinch zoom
     let pinch0 = null;
     dom.addEventListener("touchstart", (e) => { if (e.touches.length === 2) pinch0 = pdist(e); }, { passive: true });
@@ -369,6 +385,53 @@
     raycaster.setFromCamera(pointer, camera);
     const hit = raycaster.intersectObjects(markerMeshes, false)[0];
     if (hit) selectPoint(hit.object.userData.punto);
+  }
+
+  /* ---------- Editor: helper ---------- */
+  function markerAt(cx, cy) {
+    ndc(cx, cy);
+    raycaster.setFromCamera(pointer, camera);
+    const hit = raycaster.intersectObjects(markerMeshes, true)[0];
+    if (!hit) return null;
+    let o = hit.object;
+    while (o && !o.userData.punto) o = o.parent;   // il colpo può essere l'alone/sprite figlio
+    return o && o.userData.punto ? o : null;
+  }
+
+  // sposta il punto trascinato sulla superficie del corpo sotto il cursore
+  function movePointTo(marker, cx, cy) {
+    ndc(cx, cy);
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(bodyGroup.children, true);
+    // scarta i landmark/marker: prendo il primo pezzo di CORPO
+    let hit = null;
+    for (const h of hits) {
+      let o = h.object;
+      if (o.userData && o.userData.landmark) continue;
+      hit = h; break;
+    }
+    const p = marker.userData.punto;
+    if (hit) {
+      const pt = hit.point;
+      p.pos.x = round3(pt.x); p.pos.y = round3(pt.y); p.pos.z = round3(pt.z);
+      p.vista = pt.z < 0 ? "retro" : "fronte";
+      marker.position.set(p.pos.x, p.pos.y, p.pos.z);
+      renderInfo(p);
+    }
+  }
+
+  function round3(v) { return Math.round(v * 1000) / 1000; }
+
+  // regola la profondità (|z|) del punto selezionato mantenendo x,y
+  function nudgeDepth(delta) {
+    if (!picked) return;
+    const sign = picked.pos.z < 0 ? -1 : 1;
+    let mag = Math.abs(picked.pos.z) + delta;
+    mag = Math.max(0.02, Math.min(0.7, mag));
+    picked.pos.z = round3(sign * mag);
+    const m = markerMeshes.find((mm) => mm.userData.punto.id === picked.id);
+    if (m) m.position.set(picked.pos.x, picked.pos.y, picked.pos.z);
+    renderInfo(picked);
   }
   function hover(cx, cy) {
     if (dragging) return;
@@ -418,13 +481,29 @@
     if (p.lato) rows.push(["Lato", p.lato]);
     if (p.meridiano) rows.push(["Meridiano", p.meridiano]);
     const num = DATA.indexOf(p) + 1;
+    let editHtml = "";
+    if (editing) {
+      editHtml =
+        '<dl class="pinfo__dl">' +
+        '<dt>x</dt><dd>' + p.pos.x.toFixed(3) + '</dd>' +
+        '<dt>y</dt><dd>' + p.pos.y.toFixed(3) + '</dd>' +
+        '<dt>z</dt><dd>' + p.pos.z.toFixed(3) + '</dd></dl>' +
+        '<div class="pinfo__depth"><button type="button" id="depthMinus" aria-label="Meno profondità">−</button>' +
+        '<span>profondità</span>' +
+        '<button type="button" id="depthPlus" aria-label="Più profondità">+</button></div>';
+    }
     infoEl.innerHTML =
       '<div class="pinfo__head"><span class="pinfo__dot">' + num + '</span><h3>' + esc(p.organo) + '</h3></div>' +
       (p.note ? '<p class="pinfo__note">' + esc(p.note) + '</p>' : '') +
       '<dl class="pinfo__dl">' +
       rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join("") +
-      '</dl>';
+      '</dl>' + editHtml;
     infoEl.hidden = false;
+    if (editing) {
+      const mn = document.getElementById("depthMinus"), pl = document.getElementById("depthPlus");
+      if (mn) mn.addEventListener("click", () => nudgeDepth(-0.02));
+      if (pl) pl.addEventListener("click", () => nudgeDepth(0.02));
+    }
   }
 
   function buildList() {
@@ -474,6 +553,51 @@
     markerMeshes.forEach((m) => { if (!picked || m.userData.punto.id !== picked.id) m.material.color.set(col.point); });
   }
 
+  /* ---------- Editor: attiva/disattiva, export, reset ---------- */
+  function setEditing(on) {
+    editing = !!on;
+    document.body.classList.toggle("editing", editing);
+    if (picked) renderInfo(picked);
+  }
+
+  function exportJSON() {
+    // ricostruisce il file completo con le posizioni correnti
+    const src = window.PUNTI_INDICATORI || {};
+    const out = {
+      titolo: src.titolo || "Punti d'Allarme",
+      descrizione: src.descrizione || "",
+      punti: DATA.map((p) => ({
+        id: p.id, organo: p.organo, meridiano: p.meridiano, vista: p.vista,
+        lato: p.lato, regione: p.regione, riferimento: p.riferimento, note: p.note,
+        pos: { x: round3(p.pos.x), y: round3(p.pos.y), z: round3(p.pos.z) }
+      }))
+    };
+    const text = JSON.stringify(out, null, 2);
+    try {
+      const blob = new Blob([text], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "punti_indicatori.json";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) {
+      // fallback: apri il JSON in una nuova finestra
+      const w = window.open("", "_blank");
+      if (w) { w.document.write("<pre>" + esc(text) + "</pre>"); }
+    }
+    return text;
+  }
+
+  function resetPositions() {
+    DATA.forEach((p, i) => {
+      p.pos.x = ORIGINAL[i].x; p.pos.y = ORIGINAL[i].y; p.pos.z = ORIGINAL[i].z;
+      p.vista = p.pos.z < 0 ? "retro" : "fronte";
+      const m = markerMeshes[i];
+      if (m) m.position.set(p.pos.x, p.pos.y, p.pos.z);
+    });
+    if (picked) renderInfo(picked);
+  }
+
   // API pubblica usata dal router in app.js
   window.PuntiMap = {
     activate() {
@@ -491,6 +615,10 @@
     },
     deactivate() { running = false; if (rafId) cancelAnimationFrame(rafId); },
     retheme: retheme,
-    resize: resize
+    resize: resize,
+    setEditing: setEditing,
+    isEditing: () => editing,
+    exportJSON: exportJSON,
+    resetPositions: resetPositions
   };
 })();
