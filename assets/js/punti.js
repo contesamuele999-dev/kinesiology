@@ -23,6 +23,44 @@
 
   const DATA = (window.PUNTI_INDICATORI && window.PUNTI_INDICATORI.punti) || [];
 
+  /* ---------- Riferimenti anatomici condivisi ----------
+     Quote y (corpo normalizzato) usate SIA per disegnare i landmark SIA per
+     ancorare i punti d'allarme: così i punti non risultano mai sfasati. */
+  const LAND = {
+    pube: 0.80,        // pavimento pelvico / sinfisi pubica
+    cresta: 0.96,      // creste iliache
+    ombelico: 1.28,    // ombelico
+    arcata: 1.55,      // margine costale (arcata) — apice epigastrio
+    capezzoli: 1.82,   // linea mammillare (~4° spazio intercostale)
+    capX: 0.24,        // semi-distanza orizzontale capezzoli
+    giugulo: 2.12      // incisura giugulare (base del collo)
+  };
+
+  // profilo (r,y) del torso, condiviso tra mesh e calcolo superficie
+  const TORSO_PROFILE = [
+    [0.60,0.02],[0.64,0.20],[0.72,0.33],[0.82,0.40],[0.92,0.405],[1.02,0.36],
+    [1.14,0.315],[1.20,0.315],[1.30,0.35],[1.44,0.385],[1.56,0.40],[1.68,0.435],
+    [1.82,0.475],[1.96,0.505],[2.06,0.495],[2.14,0.44],[2.22,0.32],[2.28,0.17]
+  ]; // [y, r]
+  const TORSO_ZSCALE = 0.64;
+  function torsoR(y) {
+    const p = TORSO_PROFILE;
+    if (y <= p[0][0]) return p[0][1];
+    if (y >= p[p.length-1][0]) return p[p.length-1][1];
+    for (let i=0;i<p.length-1;i++){
+      const [y0,r0]=p[i],[y1,r1]=p[i+1];
+      if (y>=y0 && y<=y1){ const t=(y-y0)/(y1-y0); return r0+(r1-r0)*t; }
+    }
+    return 0.4;
+  }
+  // z sulla superficie del torso a (x,y); front=true fronte, false retro
+  function surfaceZ(x, y, front) {
+    const rx = torsoR(y), rz = rx * TORSO_ZSCALE;
+    const frac = rx > 0 ? Math.min(1, Math.abs(x)/rx) : 0;
+    const z = rz * Math.sqrt(Math.max(0.35, 1 - frac*frac));
+    return front ? z + 0.03 : -(z + 0.03);
+  }
+
   function themeColors() {
     const dark = document.body.classList.contains("dark");
     return {
@@ -31,7 +69,8 @@
       bodyEmis: dark ? 0x0a1016 : 0x000000,
       point: 0xff5a4d,
       pointHi: 0xffd23f,
-      landmark: dark ? 0x223140 : 0xb8c6d2,
+      landmark: dark ? 0x2a3a4a : 0xaab8c6,
+      landmarkHi: dark ? 0x5b7286 : 0x8aa0b4,
       grid: dark ? 0x1c2836 : 0xdae2e8
     };
   }
@@ -105,19 +144,82 @@
 
     // ----- Landmark anatomici di riferimento (aiutano a localizzare i punti) -----
     const lmMat = new THREE.MeshStandardMaterial({ color: col.landmark, roughness: 0.9, metalness: 0, emissive: col.bodyEmis });
-    const lm = (geo, x, y, z, rx, ry, rz, sx, sy, sz) => {
-      const m = new THREE.Mesh(geo, lmMat);
+    const lmMatHi = new THREE.MeshStandardMaterial({ color: col.landmarkHi, roughness: 0.8, metalness: 0, emissive: col.bodyEmis });
+    const lm = (geo, x, y, z, rx, ry, rz, sx, sy, sz, hi) => {
+      const m = new THREE.Mesh(geo, hi ? lmMatHi : lmMat);
       m.position.set(x, y, z);
       if (rx || ry || rz) m.rotation.set(rx||0, ry||0, rz||0);
       if (sx != null || sy != null || sz != null) m.scale.set(sx==null?1:sx, sy==null?1:sy, sz==null?1:sz);
-      m.userData.bodyPart = true; m.userData.landmark = true; g.add(m); return m;
+      m.userData.bodyPart = true; m.userData.landmark = true; m.userData.landmarkHi = !!hi; g.add(m); return m;
     };
-    // ombelico
-    lm(new THREE.SphereGeometry(0.03, 14, 12), 0, 1.30, 0.245);
-    // giugulo / incavo clavicolare
-    lm(new THREE.SphereGeometry(0.028, 14, 12), 0, 2.14, 0.20);
-    // linea mediana sterno-ombelico (sottile solco)
-    lm(new THREE.CylinderGeometry(0.006, 0.006, 0.78, 8), 0, 1.66, 0.30, 0.06,0,0);
+    const zf = (x,y) => surfaceZ(x, y, true);
+
+    // --- Capezzoli (linea mammillare) ---
+    lm(new THREE.SphereGeometry(0.028, 16, 14),  LAND.capX, LAND.capezzoli, zf( LAND.capX, LAND.capezzoli)+0.005, 0,0,0, 1,1,1, true);
+    lm(new THREE.SphereGeometry(0.028, 16, 14), -LAND.capX, LAND.capezzoli, zf(-LAND.capX, LAND.capezzoli)+0.005, 0,0,0, 1,1,1, true);
+
+    // --- Ombelico (fossetta) ---
+    lm(new THREE.SphereGeometry(0.032, 16, 14), 0, LAND.ombelico, zf(0, LAND.ombelico)-0.01, 0,0,0, 1,1,0.6, true);
+
+    // --- Incisura giugulare (base collo) ---
+    lm(new THREE.SphereGeometry(0.026, 14, 12), 0, LAND.giugulo, zf(0, LAND.giugulo)-0.01);
+
+    // --- Linea mediana (sterno → pube): sottile solco di riferimento ---
+    lm(new THREE.CylinderGeometry(0.006, 0.006, LAND.giugulo - LAND.pube, 10),
+       0, (LAND.giugulo + LAND.pube)/2, zf(0, (LAND.giugulo+LAND.pube)/2)+0.01, 0.05,0,0);
+
+    // --- Arcata costale (margine costale): due archi obliqui a V dal centro verso i fianchi ---
+    (function ribArc(){
+      const seg = 7;
+      for (let side = -1; side <= 1; side += 2) {
+        for (let i = 0; i < seg; i++) {
+          const t = i / (seg - 1);                 // 0=centro(alto) .. 1=fianco(basso)
+          const x = side * (0.02 + t * 0.36);
+          const y = LAND.arcata + 0.10 - t * 0.30; // scende verso i lati
+          lm(new THREE.SphereGeometry(0.016, 10, 8), x, y, zf(x, y)+0.004);
+        }
+      }
+    })();
+
+    // --- Gabbia toracica: 3 coppie di archi costali brevi sopra l\'arcata ---
+    (function ribs(){
+      const levels = [LAND.arcata + 0.14, LAND.arcata + 0.28, LAND.capezzoli + 0.02];
+      levels.forEach((yBase, li) => {
+        const seg = 6, spread = 0.30 + li*0.03;
+        for (let side=-1; side<=1; side+=2){
+          for (let i=0;i<seg;i++){
+            const t=i/(seg-1);
+            const x=side*(0.06 + t*spread);
+            const y=yBase + Math.sin(t*Math.PI)*0.05 - t*0.02;
+            lm(new THREE.SphereGeometry(0.012, 8, 6), x, y, zf(x,y)+0.003);
+          }
+        }
+      });
+    })();
+
+    // --- Creste iliache (bacino) ---
+    (function iliac(){
+      const seg=5;
+      for (let side=-1; side<=1; side+=2){
+        for (let i=0;i<seg;i++){
+          const t=i/(seg-1);
+          const x=side*(0.10 + t*0.26);
+          const y=LAND.cresta + t*0.05;
+          lm(new THREE.SphereGeometry(0.013, 8, 6), x, y, zf(x,y)+0.003);
+        }
+      }
+    })();
+
+    // --- Pavimento pelvico / sinfisi pubica (arco basso) ---
+    (function pube(){
+      const seg=7;
+      for (let i=0;i<seg;i++){
+        const t=i/(seg-1);
+        const x=(t-0.5)*0.30;
+        const y=LAND.pube - Math.cos((t-0.5)*Math.PI)*0.03;
+        lm(new THREE.SphereGeometry(0.014, 8, 6), x, y, zf(x,y)+0.003, 0,0,0, 1,1,1, true);
+      }
+    })();
 
     // ----- Glutei/bacino inferiore -----
     add(new THREE.SphereGeometry(0.22, 22, 18), 0.16, 0.60, -0.06, 0,0,0, 1,0.8,1);
@@ -365,7 +467,7 @@
     scene.background = new THREE.Color(col.bg);
     bodyGroup.traverse((o) => {
       if (o.isMesh && o.userData.bodyPart) {
-        o.material.color.set(o.userData.landmark ? col.landmark : col.body);
+        o.material.color.set(o.userData.landmarkHi ? col.landmarkHi : (o.userData.landmark ? col.landmark : col.body));
         o.material.emissive.set(col.bodyEmis);
       }
     });

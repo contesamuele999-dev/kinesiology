@@ -15,8 +15,8 @@ window.PUNTI_INDICATORI = {
       "note": "punto bilaterale (uno per lato)",
       "pos": {
         "x": -0.3,
-        "y": 2.02,
-        "z": 0.272
+        "y": 2.0,
+        "z": 0.287
       }
     },
     {
@@ -30,8 +30,8 @@ window.PUNTI_INDICATORI = {
       "note": "punto bilaterale (uno per lato)",
       "pos": {
         "x": 0.3,
-        "y": 2.02,
-        "z": 0.272
+        "y": 2.0,
+        "z": 0.287
       }
     },
     {
@@ -44,9 +44,9 @@ window.PUNTI_INDICATORI = {
       "riferimento": "lato destro del torace, mediale rispetto al polmone destro",
       "note": "",
       "pos": {
-        "x": -0.24,
-        "y": 1.82,
-        "z": 0.304
+        "x": -0.15,
+        "y": 1.8,
+        "z": 0.315
       }
     },
     {
@@ -61,7 +61,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.0,
         "y": 1.8,
-        "z": 0.344
+        "z": 0.33
       }
     },
     {
@@ -75,8 +75,8 @@ window.PUNTI_INDICATORI = {
       "note": "",
       "pos": {
         "x": 0.0,
-        "y": 1.58,
-        "z": 0.304
+        "y": 1.53,
+        "z": 0.284
       }
     },
     {
@@ -91,7 +91,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.26,
         "y": 1.52,
-        "z": 0.228
+        "z": 0.22
       }
     },
     {
@@ -105,8 +105,8 @@ window.PUNTI_INDICATORI = {
       "note": "6° spazio intercostale, sotto coperchio",
       "pos": {
         "x": 0.3,
-        "y": 1.42,
-        "z": 0.183
+        "y": 1.44,
+        "z": 0.184
       }
     },
     {
@@ -121,7 +121,7 @@ window.PUNTI_INDICATORI = {
       "pos": {
         "x": 0.0,
         "y": 1.16,
-        "z": 0.231
+        "z": 0.232
       }
     },
     {
@@ -135,8 +135,8 @@ window.PUNTI_INDICATORI = {
       "note": "",
       "pos": {
         "x": 0.0,
-        "y": 1.0,
-        "z": 0.259
+        "y": 1.02,
+        "z": 0.26
       }
     },
     {
@@ -150,8 +150,8 @@ window.PUNTI_INDICATORI = {
       "note": "punto bilaterale (uno per lato)",
       "pos": {
         "x": -0.26,
-        "y": 0.94,
-        "z": 0.204
+        "y": 1.02,
+        "z": 0.189
       }
     },
     {
@@ -165,8 +165,8 @@ window.PUNTI_INDICATORI = {
       "note": "punto bilaterale (uno per lato)",
       "pos": {
         "x": 0.26,
-        "y": 0.94,
-        "z": 0.204
+        "y": 1.02,
+        "z": 0.189
       }
     },
     {
@@ -180,8 +180,8 @@ window.PUNTI_INDICATORI = {
       "note": "",
       "pos": {
         "x": 0.0,
-        "y": 0.82,
-        "z": 0.284
+        "y": 0.85,
+        "z": 0.287
       }
     },
     {
@@ -195,8 +195,8 @@ window.PUNTI_INDICATORI = {
       "note": "ultima costa · bilaterale",
       "pos": {
         "x": -0.2,
-        "y": 1.34,
-        "z": -0.214
+        "y": 1.37,
+        "z": -0.227
       }
     },
     {
@@ -210,8 +210,8 @@ window.PUNTI_INDICATORI = {
       "note": "ultima costa · bilaterale",
       "pos": {
         "x": 0.2,
-        "y": 1.34,
-        "z": -0.214
+        "y": 1.37,
+        "z": -0.227
       }
     },
     {
@@ -225,8 +225,8 @@ window.PUNTI_INDICATORI = {
       "note": "penultima costa",
       "pos": {
         "x": 0.34,
-        "y": 1.46,
-        "z": -0.188
+        "y": 1.49,
+        "z": -0.178
       }
     }
   ]
