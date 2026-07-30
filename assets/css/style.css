@@ -510,3 +510,7 @@ body.editing .punti__canvas{ cursor:crosshair; outline:2px solid color-mix(in sr
 .tav__tools .ebtn.is-on{ background:var(--brand); color:#fff; border-color:var(--brand); }
 .tav__op{ display:inline-flex; align-items:center; gap:6px; font-size:.8rem; font-weight:700; color:var(--muted); }
 .tav__op input{ width:110px; accent-color:var(--brand); }
+.viewbar{ display:flex; flex-direction:column; gap:6px; }
+.viewbar__row{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.viewbar__lb{ font-size:.74rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--muted); min-width:44px; }

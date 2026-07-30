@@ -171,44 +171,61 @@
     var zf = function (x, y) { return surfaceZ(x, y, true); };
     var zb = function (x, y) { return surfaceZ(x, y, false); };
 
-    /* rilievi muscolari del tronco (colore corpo, non landmark) */
+    /* rilievi muscolari del tronco.
+       IMPORTANTE: la profondità si calcola dalla superficie (zf/zb) meno il
+       semi-spessore del rilievo, così il muscolo SPORGE di ~1 cm invece di
+       restare sepolto dentro il tronco. */
+    function bombaFronte(r, x, y, sx, sy, sz, sporgenza) {
+        var half = r * (sz == null ? 1 : sz);
+        return zf(x, y) - half + (sporgenza == null ? 0.012 : sporgenza);
+    }
+    function bombaRetro(r, x, y, sz, sporgenza) {
+        var half = r * (sz == null ? 1 : sz);
+        return zb(x, y) + half - (sporgenza == null ? 0.012 : sporgenza);
+    }
     (function rilievi() {
       // grandi pettorali
       [-1, 1].forEach(function (s) {
-        add(new THREE.SphereGeometry(0.17, 24, 18), s * 0.22, 1.88, zf(s * 0.22, 1.88) - 0.10,
+        add(new THREE.SphereGeometry(0.17, 26, 20), s * 0.22, 1.88,
+            bombaFronte(0.17, s * 0.22, 1.88, 1.05, 0.75, 0.55, 0.016),
             0, 0, 0, 1.05, 0.75, 0.55);
       });
-      // retto dell'addome (tre coppie di fasci)
-      [1.52, 1.42, 1.32].forEach(function (y, i) {
+      // retto dell'addome: 4 coppie di fasci = 8 ellissoidi ("tartaruga")
+      [1.500, 1.380, 1.262, 1.130].forEach(function (y, i) {
+        var rr = 0.082 - i * 0.004;
         [-1, 1].forEach(function (s) {
-          add(new THREE.SphereGeometry(0.085, 16, 12), s * 0.085, y, zf(s * 0.085, y) - 0.055,
-              0, 0, 0, 1.0, 0.85, 0.45);
+          add(new THREE.SphereGeometry(rr, 20, 16), s * 0.082, y,
+              bombaFronte(rr, s * 0.082, y, 1, 0.80, 0.46, 0.014),
+              0, 0, 0, 1.0, 0.80, 0.46);
         });
       });
       // obliqui / fianchi
       [-1, 1].forEach(function (s) {
-        add(new THREE.SphereGeometry(0.13, 18, 14), s * 0.30, 1.30, zf(s * 0.30, 1.30) - 0.12,
+        add(new THREE.SphereGeometry(0.13, 20, 16), s * 0.28, 1.30,
+            bombaFronte(0.13, s * 0.28, 1.30, 0.8, 1.1, 0.5, 0.010),
             0, 0, s * 0.3, 0.8, 1.1, 0.5);
       });
       // clavicole
       [-1, 1].forEach(function (s) {
-        var p = [V(s * 0.02, 2.15, zf(0.02, 2.15) - 0.01), V(s * 0.20, 2.16, zf(s * 0.20, 2.16) - 0.01),
-                 V(s * 0.38, 2.11, zf(s * 0.38, 2.11) - 0.02), V(s * 0.48, 2.04, 0.03)];
-        tube(p, [0.022, 0.020, 0.020, 0.024], 24, 10);
+        var p = [V(s * 0.02, 2.15, zf(0.02, 2.15) + 0.004), V(s * 0.20, 2.16, zf(s * 0.20, 2.16) + 0.004),
+                 V(s * 0.38, 2.11, zf(s * 0.38, 2.11) + 0.002), V(s * 0.48, 2.04, 0.05)];
+        tube(p, [0.020, 0.019, 0.019, 0.022], 24, 10);
       });
       // trapezio (dal collo alla spalla)
       [-1, 1].forEach(function (s) {
-        var p = [V(s * 0.05, 2.34, -0.03), V(s * 0.22, 2.24, -0.06), V(s * 0.42, 2.10, -0.03)];
-        tube(p, [0.055, 0.070, 0.060], 20, 12);
+        var p = [V(s * 0.05, 2.34, -0.02), V(s * 0.22, 2.24, -0.05), V(s * 0.42, 2.10, -0.02)];
+        tube(p, [0.052, 0.066, 0.056], 20, 12);
       });
-      // gran dorsale (accenno, fianchi posteriori)
+      // gran dorsale
       [-1, 1].forEach(function (s) {
-        add(new THREE.SphereGeometry(0.16, 18, 14), s * 0.30, 1.62, zb(s * 0.30, 1.62) + 0.10,
+        add(new THREE.SphereGeometry(0.16, 20, 16), s * 0.30, 1.62,
+            bombaRetro(0.16, s * 0.30, 1.62, 0.5, 0.010),
             0, 0, 0, 0.9, 1.5, 0.5);
       });
       // scapole
       [-1, 1].forEach(function (s) {
-        add(new THREE.SphereGeometry(0.10, 16, 12), s * 0.25, 1.98, zb(s * 0.25, 1.98) + 0.03,
+        add(new THREE.SphereGeometry(0.10, 18, 14), s * 0.25, 1.98,
+            bombaRetro(0.10, s * 0.25, 1.98, 0.35, 0.012),
             0, 0, s * 0.25, 1.0, 1.5, 0.35);
       });
       // glutei
@@ -223,10 +240,15 @@
       var F = (C.testa && C.testa.viso) || {};
       var ipd = F.ipd || 0.078, oy = F.orecchioY || 2.62, ox = F.orecchioX || 0.176,
           oz = F.orecchioZ || -0.03, yocchi = F.occhi || 2.658, ynaso = F.naso || 2.545,
-          ybocca = F.bocca || 2.462, ymento = F.mento || 2.400;
+          ybocca = F.bocca || 2.462, ymento = F.mento || 2.400, zig = F.zigomo || 0.150;
+      // profondità della superficie del cranio alla quota (x,y): serve per appoggiarci
+      // occhi, sopracciglia, naso e bocca invece di lasciarli sprofondati dentro la testa
+      function fz(x, y) {
+        var t = 1 - Math.pow(x / hr[0], 2) - Math.pow((y - hc[1]) / hr[1], 2);
+        return hc[2] + hr[2] * Math.sqrt(Math.max(0.04, t));
+      }
       // collo
       tube([V(0, 2.24, -0.01), V(0, 2.34, 0.0), V(0, 2.44, 0.01)], [0.150, 0.130, 0.120], 18, 22);
-      // sternocleidomastoidei
       [-1, 1].forEach(function (s) {
         tube([V(s * 0.045, 2.44, 0.085), V(s * 0.095, 2.34, 0.068), V(s * 0.150, 2.24, 0.02)],
              [0.016, 0.024, 0.030], 16, 10);
@@ -234,17 +256,26 @@
       // cranio — semiassi presi da corpo_data.js (misure umane reali)
       add(new THREE.SphereGeometry(hr[0], 56, 44), hc[0], hc[1], hc[2], 0, 0, 0,
           1, hr[1] / hr[0], hr[2] / hr[0]);
-      // volto e mandibola
-      add(new THREE.SphereGeometry(0.150, 34, 28), 0, 2.505, 0.042, 0, 0, 0, 1.00, 0.83, 1.20);
-      add(new THREE.SphereGeometry(0.075, 22, 18), 0, ymento + 0.022, 0.140, 0, 0, 0, 1.10, 0.85, 0.95);
+      // volto, mandibola, mento
+      add(new THREE.SphereGeometry(0.150, 34, 28), 0, 2.505, 0.030, 0, 0, 0, 1.00, 0.84, 1.18);
+      add(new THREE.SphereGeometry(0.072, 22, 18), 0, ymento + 0.024, 0.128, 0, 0, 0, 1.10, 0.88, 0.95);
+
       [-1, 1].forEach(function (s) {
-        add(new THREE.SphereGeometry(0.058, 18, 14), s * 0.128, 2.500, 0.058, 0, 0, 0, 0.9, 1.25, 0.9);  // ganascia
-        add(new THREE.SphereGeometry(0.048, 16, 14), s * 0.124, 2.588, 0.135, 0, 0, 0, 1.0, 0.75, 0.8);  // zigomo
-        // arcata sopraccigliare
-        tube([V(s * 0.015, yocchi + 0.046, 0.208), V(s * 0.070, yocchi + 0.050, 0.192),
-              V(s * 0.122, yocchi + 0.036, 0.140)], [0.014, 0.016, 0.012], 14, 8);
-        // occhio
-        add(new THREE.SphereGeometry(0.030, 18, 14), s * ipd, yocchi, 0.170, 0, 0, 0, 1.25, 0.85, 0.7);
+        add(new THREE.SphereGeometry(0.056, 18, 14), s * 0.126, 2.498, 0.052, 0, 0, 0, 0.9, 1.25, 0.9);   // ganascia
+        add(new THREE.SphereGeometry(0.044, 16, 14), s * zig, 2.588, fz(zig, 2.588) - 0.030, 0, 0, 0, 1.0, 0.8, 0.8); // zigomo
+        // arcata sopraccigliare, appoggiata sulla fronte
+        tube([V(s * 0.014, yocchi + 0.050, fz(0.014, yocchi + 0.050) - 0.012),
+              V(s * 0.068, yocchi + 0.052, fz(0.068, yocchi + 0.052) - 0.012),
+              V(s * 0.120, yocchi + 0.036, fz(0.120, yocchi + 0.036) - 0.014)],
+             [0.013, 0.015, 0.011], 14, 8);
+        // occhio: bulbo a filo della superficie + iride scura (colore landmark)
+        var ez = fz(s * ipd, yocchi) - 0.014;
+        add(new THREE.SphereGeometry(0.031, 20, 16), s * ipd, yocchi, ez, 0, 0, 0, 1.18, 0.82, 0.62);
+        lm(new THREE.SphereGeometry(0.0125, 14, 12), s * ipd, yocchi, ez + 0.014, 0, 0, 0, 1, 1, 0.55, true);
+        // palpebra superiore
+        tube([V(s * (ipd - 0.034), yocchi + 0.004, ez - 0.004),
+              V(s * ipd, yocchi + 0.019, ez + 0.002),
+              V(s * (ipd + 0.034), yocchi + 0.002, ez - 0.006)], [0.006, 0.008, 0.006], 12, 8);
         // orecchio: elica + conca + lobo
         var e = [];
         for (var i = 0; i <= 12; i++) {
@@ -253,31 +284,38 @@
         }
         tube(e, e.map(function () { return 0.013; }), 20, 8);
         add(new THREE.SphereGeometry(0.034, 16, 12), s * (ox - 0.008), oy, oz + 0.006, 0, 0, 0, 0.45, 1.15, 0.9);
-        add(new THREE.SphereGeometry(0.024, 14, 12), s * (ox - 0.004), oy - 0.058, oz + 0.004, 0, 0, 0, 0.55, 1.0, 0.9);
+        add(new THREE.SphereGeometry(0.023, 14, 12), s * (ox - 0.004), oy - 0.058, oz + 0.004, 0, 0, 0, 0.55, 1.0, 0.9);
         // narice
-        add(new THREE.SphereGeometry(0.016, 12, 10), s * 0.026, ynaso - 0.026, 0.236);
+        add(new THREE.SphereGeometry(0.015, 12, 10), s * 0.024, ynaso - 0.024, fz(0.024, ynaso - 0.024) + 0.014);
       });
-      // naso
-      tube([V(0, yocchi + 0.030, 0.196), V(0, yocchi - 0.045, 0.225), V(0, ynaso + 0.008, 0.248)],
-           [0.014, 0.020, 0.026], 16, 12);
-      add(new THREE.SphereGeometry(0.028, 18, 14), 0, ynaso - 0.004, 0.256, 0, 0, 0, 1.1, 0.95, 1.0);
+
+      // naso: dorso dalla glabella alla punta
+      tube([V(0, yocchi + 0.034, fz(0, yocchi + 0.034) - 0.006),
+            V(0, yocchi - 0.040, fz(0, yocchi - 0.040) + 0.006),
+            V(0, ynaso + 0.010, fz(0, ynaso + 0.010) + 0.028)],
+           [0.013, 0.019, 0.024], 18, 12);
+      add(new THREE.SphereGeometry(0.026, 18, 14), 0, ynaso - 0.002, fz(0, ynaso) + 0.038, 0, 0, 0, 1.1, 0.95, 1.0);
       // labbra
-      add(new THREE.SphereGeometry(0.046, 20, 12), 0, ybocca + 0.011, 0.212, 0, 0, 0, 1.15, 0.30, 0.42);
-      add(new THREE.SphereGeometry(0.044, 20, 12), 0, ybocca - 0.011, 0.210, 0, 0, 0, 1.10, 0.28, 0.42);
+      add(new THREE.SphereGeometry(0.044, 20, 12), 0, ybocca + 0.011, fz(0, ybocca) + 0.010, 0, 0, 0, 1.15, 0.30, 0.42);
+      add(new THREE.SphereGeometry(0.042, 20, 12), 0, ybocca - 0.012, fz(0, ybocca) + 0.008, 0, 0, 0, 1.10, 0.28, 0.42);
     })();
 
     /* ============================ BRACCIA + MANI ============================ */
     function braccio(s) {
       var ax = C.braccio;
       tube(axisPts(THREE, ax, s), axisRad(ax), 64, 20);
-      // deltoide, bicipite, tricipite
-      add(new THREE.SphereGeometry(0.115, 20, 16), s * 0.505, 1.96, 0.0, 0, 0, 0, 1.0, 1.15, 1.0);
-      add(new THREE.SphereGeometry(0.075, 18, 14), s * 0.53, 1.73, 0.055, 0, 0, 0, 0.8, 1.5, 0.7);
-      add(new THREE.SphereGeometry(0.070, 18, 14), s * 0.53, 1.72, -0.055, 0, 0, 0, 0.8, 1.4, 0.7);
+      // deltoide, bicipite, tricipite — appoggiati sulla superficie del braccio
+      function bA(y, r, sz, avanti, sporg) {
+        var a = axisAt(ax, y), half = r * (sz == null ? 1 : sz);
+        return avanti ? a.z + a.r - half + (sporg || 0.010) : a.z - a.r + half - (sporg || 0.010);
+      }
+      add(new THREE.SphereGeometry(0.112, 22, 18), s * 0.505, 1.96, 0.0, 0, 0, 0, 1.0, 1.15, 1.0);
+      add(new THREE.SphereGeometry(0.070, 20, 16), s * 0.525, 1.73, bA(1.73, 0.070, 0.7, true), 0, 0, 0, 0.8, 1.5, 0.7);
+      add(new THREE.SphereGeometry(0.066, 20, 16), s * 0.525, 1.72, bA(1.72, 0.066, 0.7, false), 0, 0, 0, 0.8, 1.4, 0.7);
       // massa dei flessori dell'avambraccio
-      add(new THREE.SphereGeometry(0.070, 18, 14), s * 0.532, 1.20, 0.02, 0, 0, 0, 0.9, 1.7, 0.9);
+      add(new THREE.SphereGeometry(0.062, 20, 16), s * 0.528, 1.20, bA(1.20, 0.062, 0.9, true), 0, 0, 0, 0.9, 1.7, 0.9);
       // olecrano
-      add(new THREE.SphereGeometry(0.045, 14, 12), s * 0.525, 1.315, -0.065);
+      add(new THREE.SphereGeometry(0.042, 14, 12), s * 0.525, 1.315, bA(1.315, 0.042, 1, false, 0.014));
 
       // ---- mano ----
       var H = C.mano;
@@ -310,24 +348,29 @@
     function gamba(s) {
       var ax = C.gamba;
       tube(axisPts(THREE, ax, s), axisRad(ax), 64, 22);
-      // quadricipite e vasto mediale
-      add(new THREE.SphereGeometry(0.115, 20, 16), s * 0.205, 0.18, 0.075, 0, 0, 0, 0.9, 2.4, 0.7);
-      add(new THREE.SphereGeometry(0.075, 18, 14), s * 0.155, -0.05, 0.06, 0, 0, 0, 0.8, 1.3, 0.7);
-      // ischio-crurali
-      add(new THREE.SphereGeometry(0.105, 18, 14), s * 0.205, 0.20, -0.075, 0, 0, 0, 0.95, 2.2, 0.7);
-      // rotula
-      add(new THREE.SphereGeometry(0.058, 16, 14), s * 0.212, -0.135, 0.105, 0, 0, 0, 1.0, 1.15, 0.5);
-      // gemelli
-      [-1, 1].forEach(function (k) {
-        add(new THREE.SphereGeometry(0.070, 18, 14), s * (0.218 + k * 0.045), -0.48, -0.045,
-            0, 0, 0, 0.85, 2.0, 0.85);
+      // quadricipite, vasto mediale, ischio-crurali, rotula e gemelli
+      function bL(y, r, sz, avanti, sporg) {
+        var a = axisAt(ax, y), half = r * (sz == null ? 1 : sz);
+        return avanti ? a.z + a.r - half + (sporg || 0.012) : a.z - a.r + half - (sporg || 0.012);
+      }
+      add(new THREE.SphereGeometry(0.110, 22, 18), s * 0.205, 0.18, bL(0.18, 0.110, 0.7, true), 0, 0, 0, 0.9, 2.4, 0.7);
+      add(new THREE.SphereGeometry(0.070, 20, 16), s * 0.150, -0.05, bL(-0.05, 0.070, 0.7, true), 0, 0, 0, 0.8, 1.3, 0.7);
+      add(new THREE.SphereGeometry(0.100, 20, 16), s * 0.205, 0.20, bL(0.20, 0.100, 0.7, false), 0, 0, 0, 0.95, 2.2, 0.7);
+      add(new THREE.SphereGeometry(0.055, 18, 14), s * 0.212, -0.135, bL(-0.135, 0.055, 0.5, true, 0.016), 0, 0, 0, 1.0, 1.15, 0.5);
+      [-1, 1].forEach(function (kk) {
+        add(new THREE.SphereGeometry(0.066, 20, 16), s * (0.218 + kk * 0.042), -0.48,
+            bL(-0.48, 0.066, 0.85, false), 0, 0, 0, 0.85, 2.0, 0.85);
       });
       // cresta tibiale
-      tube([V(s * 0.205, -0.24, 0.10), V(s * 0.210, -0.60, 0.085), V(s * 0.212, -1.00, 0.065)],
-           [0.018, 0.016, 0.013], 22, 8);
+      tube([V(s * 0.205, -0.24, axisAt(ax, -0.24).r + axisAt(ax, -0.24).z - 0.006),
+            V(s * 0.210, -0.60, axisAt(ax, -0.60).r + axisAt(ax, -0.60).z - 0.006),
+            V(s * 0.212, -1.00, axisAt(ax, -1.00).r + axisAt(ax, -1.00).z - 0.006)],
+           [0.016, 0.014, 0.012], 22, 8);
       // tendine d'Achille
-      tube([V(s * 0.216, -0.90, -0.075), V(s * 0.215, -1.05, -0.062), V(s * 0.215, -1.18, -0.055)],
-           [0.030, 0.024, 0.022], 16, 10);
+      tube([V(s * 0.216, -0.90, -(axisAt(ax, -0.90).r) + axisAt(ax, -0.90).z + 0.012),
+            V(s * 0.215, -1.05, -(axisAt(ax, -1.05).r) + axisAt(ax, -1.05).z + 0.010),
+            V(s * 0.215, -1.18, -(axisAt(ax, -1.18).r) + axisAt(ax, -1.18).z + 0.008)],
+           [0.028, 0.022, 0.020], 16, 10);
       // malleoli
       add(new THREE.SphereGeometry(0.036, 14, 12), s * 0.163, -1.155, 0.005, 0, 0, 0, 0.8, 1, 1);
       add(new THREE.SphereGeometry(0.034, 14, 12), s * 0.272, -1.165, -0.005, 0, 0, 0, 0.8, 1, 1);

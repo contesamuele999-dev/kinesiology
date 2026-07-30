@@ -518,50 +518,50 @@
         },
         {
           "x": 0.22,
-          "y": 1.62,
-          "z": 0.269,
+          "y": 1.485,
+          "z": 0.249,
           "sigla": "S19",
           "nome": "Burong"
         },
         {
           "x": 0.217,
-          "y": 1.563,
-          "z": 0.258,
+          "y": 1.438,
+          "z": 0.245,
           "sigla": "S20",
           "nome": "Chengman"
         },
         {
           "x": 0.213,
-          "y": 1.507,
-          "z": 0.253,
+          "y": 1.39,
+          "z": 0.237,
           "sigla": "S21",
           "nome": "Liangmen"
         },
         {
           "x": 0.21,
-          "y": 1.45,
-          "z": 0.249,
+          "y": 1.343,
+          "z": 0.23,
           "sigla": "S22",
           "nome": "Guanmen"
         },
         {
           "x": 0.207,
-          "y": 1.393,
-          "z": 0.241,
+          "y": 1.295,
+          "z": 0.221,
           "sigla": "S23",
           "nome": "Taiyi"
         },
         {
           "x": 0.203,
-          "y": 1.337,
-          "z": 0.231,
+          "y": 1.248,
+          "z": 0.21,
           "sigla": "S24",
           "nome": "Huaroumen"
         },
         {
           "x": 0.2,
-          "y": 1.28,
-          "z": 0.22,
+          "y": 1.2,
+          "z": 0.198,
           "sigla": "S25",
           "nome": "Tianshu",
           "ruolo": "Mu del Grosso Intestino",
@@ -570,36 +570,36 @@
         },
         {
           "x": 0.205,
-          "y": 1.185,
-          "z": 0.195,
+          "y": 1.136,
+          "z": 0.196,
           "sigla": "S26",
           "nome": "Wailing"
         },
         {
           "x": 0.21,
-          "y": 1.09,
-          "z": 0.208,
+          "y": 1.072,
+          "z": 0.214,
           "sigla": "S27",
           "nome": "Daju"
         },
         {
           "x": 0.215,
-          "y": 0.995,
-          "z": 0.236,
+          "y": 1.008,
+          "z": 0.231,
           "sigla": "S28",
           "nome": "Shuidao"
         },
         {
           "x": 0.22,
-          "y": 0.9,
-          "z": 0.259,
+          "y": 0.944,
+          "z": 0.251,
           "sigla": "S29",
           "nome": "Guilai"
         },
         {
           "x": 0.24,
-          "y": 0.82,
-          "z": 0.247,
+          "y": 0.88,
+          "z": 0.249,
           "sigla": "S30",
           "nome": "Qichong"
         },
@@ -885,23 +885,23 @@
           "nome": "Fushe"
         },
         {
-          "x": 0.28,
-          "y": 1.12,
-          "z": 0.164,
+          "x": 0.256,
+          "y": 1.115,
+          "z": 0.169,
           "sigla": "MP14",
           "nome": "Fujie"
         },
         {
-          "x": 0.3,
-          "y": 1.28,
-          "z": 0.172,
+          "x": 0.256,
+          "y": 1.2,
+          "z": 0.161,
           "sigla": "MP15",
           "nome": "Daheng"
         },
         {
-          "x": 0.3,
-          "y": 1.44,
-          "z": 0.196,
+          "x": 0.262,
+          "y": 1.34,
+          "z": 0.2,
           "sigla": "MP16",
           "nome": "Fuai"
         },
@@ -1896,78 +1896,78 @@
         },
         {
           "x": 0.07,
-          "y": 0.9,
-          "z": 0.297,
+          "y": 0.888,
+          "z": 0.296,
           "sigla": "R11",
           "nome": "Henggu"
         },
         {
           "x": 0.07,
-          "y": 1.0,
-          "z": 0.274,
+          "y": 0.944,
+          "z": 0.29,
           "sigla": "R12",
           "nome": "Dahe"
         },
         {
           "x": 0.07,
-          "y": 1.08,
-          "z": 0.253,
+          "y": 1.008,
+          "z": 0.272,
           "sigla": "R13",
           "nome": "Qixue"
         },
         {
           "x": 0.07,
-          "y": 1.16,
-          "z": 0.239,
+          "y": 1.072,
+          "z": 0.255,
           "sigla": "R14",
           "nome": "Siman"
         },
         {
           "x": 0.07,
-          "y": 1.22,
-          "z": 0.243,
+          "y": 1.136,
+          "z": 0.24,
           "sigla": "R15",
           "nome": "Zhongzhu"
         },
         {
           "x": 0.08,
-          "y": 1.28,
-          "z": 0.255,
+          "y": 1.2,
+          "z": 0.237,
           "sigla": "R16",
           "nome": "Huangshu"
         },
         {
           "x": 0.08,
-          "y": 1.34,
-          "z": 0.267,
+          "y": 1.295,
+          "z": 0.259,
           "sigla": "R17",
           "nome": "Shangqu"
         },
         {
           "x": 0.08,
-          "y": 1.4,
-          "z": 0.276,
+          "y": 1.343,
+          "z": 0.267,
           "sigla": "R18",
           "nome": "Shiguan"
         },
         {
           "x": 0.08,
-          "y": 1.46,
-          "z": 0.285,
+          "y": 1.39,
+          "z": 0.275,
           "sigla": "R19",
           "nome": "Yindu"
         },
         {
           "x": 0.08,
-          "y": 1.52,
-          "z": 0.29,
+          "y": 1.438,
+          "z": 0.283,
           "sigla": "R20",
           "nome": "Futonggu"
         },
         {
           "x": 0.08,
-          "y": 1.58,
-          "z": 0.297,
+          "y": 1.485,
+          "z": 0.287,
           "sigla": "R21",
           "nome": "Youmen"
         },
@@ -2538,7 +2538,7 @@
         },
         {
           "x": 0.4,
-          "y": 1.24,
+          "y": 1.2,
           "z": 0.02,
           "sigla": "VB26",
           "nome": "Daimai",
@@ -2876,8 +2876,8 @@
         },
         {
           "x": 0.0,
-          "y": 0.94,
-          "z": 0.295,
+          "y": 0.944,
+          "z": 0.294,
           "sigla": "VC3",
           "nome": "Zhongji",
           "ruolo": "Mu della Vescica",
@@ -2886,8 +2886,8 @@
         },
         {
           "x": 0.0,
-          "y": 1.04,
-          "z": 0.268,
+          "y": 1.008,
+          "z": 0.276,
           "sigla": "VC4",
           "nome": "Guanyuan",
           "ruolo": "Mu dell'Intestino Tenue",
@@ -2896,8 +2896,8 @@
         },
         {
           "x": 0.0,
-          "y": 1.1,
-          "z": 0.253,
+          "y": 1.072,
+          "z": 0.26,
           "sigla": "VC5",
           "nome": "Shimen",
           "ruolo": "Mu del Triplice Riscaldatore",
@@ -2906,8 +2906,8 @@
         },
         {
           "x": 0.0,
-          "y": 1.15,
-          "z": 0.244,
+          "y": 1.104,
+          "z": 0.252,
           "sigla": "VC6",
           "nome": "Qihai",
           "ruolo": "mare del Qi",
@@ -2916,46 +2916,46 @@
         },
         {
           "x": 0.0,
-          "y": 1.22,
-          "z": 0.248,
+          "y": 1.136,
+          "z": 0.245,
           "sigla": "VC7",
           "nome": "Yinjiao"
         },
         {
           "x": 0.0,
-          "y": 1.28,
-          "z": 0.262,
+          "y": 1.2,
+          "z": 0.244,
           "sigla": "VC8",
           "nome": "Shenque",
           "ruolo": "",
-          "note": "centro dell'ombelico (non si punge)",
+          "note": "centro dell'ombelico (non si punge) — 5 cun sopra il pube, 8 sotto l'apofisi xifoidea",
           "chiave": true
         },
         {
           "x": 0.0,
-          "y": 1.32,
-          "z": 0.269,
+          "y": 1.248,
+          "z": 0.254,
           "sigla": "VC9",
           "nome": "Shuifen"
         },
         {
           "x": 0.0,
-          "y": 1.36,
-          "z": 0.276,
+          "y": 1.295,
+          "z": 0.265,
           "sigla": "VC10",
           "nome": "Xiawan"
         },
         {
           "x": 0.0,
-          "y": 1.4,
-          "z": 0.282,
+          "y": 1.343,
+          "z": 0.273,
           "sigla": "VC11",
           "nome": "Jianli"
         },
         {
           "x": 0.0,
-          "y": 1.44,
-          "z": 0.288,
+          "y": 1.39,
+          "z": 0.28,
           "sigla": "VC12",
           "nome": "Zhongwan",
           "ruolo": "Mu dello Stomaco · riunione dei visceri",
@@ -2964,15 +2964,15 @@
         },
         {
           "x": 0.0,
-          "y": 1.49,
-          "z": 0.292,
+          "y": 1.438,
+          "z": 0.288,
           "sigla": "VC13",
           "nome": "Shangwan"
         },
         {
           "x": 0.0,
-          "y": 1.545,
-          "z": 0.297,
+          "y": 1.485,
+          "z": 0.292,
           "sigla": "VC14",
           "nome": "Juque",
           "ruolo": "Mu del Cuore",
@@ -2981,8 +2981,8 @@
         },
         {
           "x": 0.0,
-          "y": 1.59,
-          "z": 0.304,
+          "y": 1.533,
+          "z": 0.296,
           "sigla": "VC15",
           "nome": "Jiuwei",
           "ruolo": "Luo di passaggio",
@@ -2991,46 +2991,46 @@
         },
         {
           "x": 0.0,
-          "y": 1.64,
-          "z": 0.313,
+          "y": 1.63,
+          "z": 0.311,
           "sigla": "VC16",
           "nome": "Zhongting"
         },
         {
           "x": 0.0,
-          "y": 1.7,
-          "z": 0.324,
+          "y": 1.8,
+          "z": 0.342,
           "sigla": "VC17",
           "nome": "Shanzhong",
           "ruolo": "Mu del Maestro del Cuore · mare del Qi",
-          "note": "centro dello sterno, a livello del 4° spazio intercostale",
+          "note": "centro dello sterno, sulla linea dei capezzoli (4° spazio intercostale)",
           "chiave": true
         },
         {
           "x": 0.0,
-          "y": 1.77,
-          "z": 0.337,
+          "y": 1.88,
+          "z": 0.354,
           "sigla": "VC18",
           "nome": "Yutang"
         },
         {
           "x": 0.0,
-          "y": 1.83,
-          "z": 0.347,
+          "y": 1.95,
+          "z": 0.364,
           "sigla": "VC19",
           "nome": "Zigong"
         },
         {
           "x": 0.0,
-          "y": 1.89,
-          "z": 0.356,
+          "y": 2.015,
+          "z": 0.362,
           "sigla": "VC20",
           "nome": "Huagai"
         },
         {
           "x": 0.0,
-          "y": 1.96,
-          "z": 0.365,
+          "y": 2.075,
+          "z": 0.352,
           "sigla": "VC21",
           "nome": "Xuanji"
         },
@@ -3113,7 +3113,7 @@
           "sigla": "VG4",
           "nome": "Mingmen",
           "ruolo": "porta della vita (Mingmen)",
-          "note": "sotto l'apofisi di L2, di fronte all'ombelico",
+          "note": "sotto l'apofisi di L2, all'altezza dell'ultima costa",
           "chiave": true
         },
         {

@@ -69,7 +69,7 @@
              pos: pos, _front: front, _lx: x, _ly: y };
   }
   const LANDMARKS = [
-    mkLand("lm-ombelico","Ombelico", 0, 1.28, true),
+    mkLand("lm-ombelico","Ombelico", 0, 1.20, true),
     mkLand("lm-capezzolo-dx","Capezzolo (dx)", -0.24, 1.82, true),
     mkLand("lm-capezzolo-sx","Capezzolo (sx)", 0.24, 1.82, true),
     mkLand("lm-pube","Pube / pavimento pelvico", 0, 0.80, true),
@@ -84,7 +84,7 @@
   const LAND = {
     pube: 0.80,        // pavimento pelvico / sinfisi pubica
     cresta: 0.96,      // creste iliache
-    ombelico: 1.28,    // ombelico
+    ombelico: 1.20,    // ombelico (5 cun sopra il pube, 8 sotto l'apofisi xifoidea)
     arcata: 1.55,      // margine costale (arcata) — apice epigastrio
     capezzoli: 1.82,   // linea mammillare (~4° spazio intercostale)
     capX: 0.24,        // semi-distanza orizzontale capezzoli
@@ -269,36 +269,76 @@
     camera.lookAt(target);
   }
 
-  /* ---------- viste preimpostate della camera ---------- */
+  /* ---------- orientamento della camera (non tocca zoom e inquadratura) ---------- */
   const VISTE = {
-    fronte:   { yaw: 0,             pitch: 0.05, dist: 6.2, target: [0, 1.20, 0] },
-    retro:    { yaw: Math.PI,       pitch: 0.05, dist: 6.2, target: [0, 1.20, 0] },
-    sinistra: { yaw: Math.PI / 2,   pitch: 0.05, dist: 6.2, target: [0, 1.20, 0] },
-    destra:   { yaw: -Math.PI / 2,  pitch: 0.05, dist: 6.2, target: [0, 1.20, 0] },
-    testa:    { pitch: 0.05,        dist: 1.55,  target: [0, 2.62, 0] },
-    corpo:    { pitch: 0.05,        dist: 6.2,   target: [0, 1.20, 0] }
+    fronte:   { yaw: 0,            pitch: 0.05 },
+    retro:    { yaw: Math.PI,      pitch: 0.05 },
+    sinistra: { yaw: Math.PI / 2,  pitch: 0.05 },
+    destra:   { yaw: -Math.PI / 2, pitch: 0.05 }
   };
-  function setView(nome) {
-    const v = VISTE[nome]; if (!v || !camera) return;
-    if (v.yaw != null) yaw = v.yaw;
-    if (v.pitch != null) pitch = v.pitch;
-    if (v.dist != null) dist = v.dist;
-    if (v.target) target.set(v.target[0], v.target[1], v.target[2]);
-    updateCamera();
+  /* ---------- zone del corpo (spostano il centro e lo zoom) ---------- */
+  const ZONE = {
+    corpo:  { y: 1.20, d: 6.20 },
+    testa:  { y: 2.66, d: 1.45 },
+    collo:  { y: 2.20, d: 2.10 },
+    tronco: { y: 1.72, d: 2.90 },
+    addome: { y: 1.20, d: 2.60 },
+    bacino: { y: 0.86, d: 2.60 },
+    mani:   { y: 0.52, d: 2.20 },
+    gambe:  { y: -0.35, d: 3.40 },
+    piedi:  { y: -1.20, d: 1.35 }
+  };
+  let zonaAttiva = "corpo", vistaAttiva = "fronte";
+
+  function syncBar() {
     const bar = document.getElementById("viewBar");
-    if (bar) Array.from(bar.querySelectorAll("[data-view]")).forEach((b) => b.classList.toggle("is-on", b.dataset.view === nome));
+    if (!bar) return;
+    Array.from(bar.querySelectorAll("[data-view]")).forEach((b) => b.classList.toggle("is-on", b.dataset.view === vistaAttiva));
+    Array.from(bar.querySelectorAll("[data-zona]")).forEach((b) => b.classList.toggle("is-on", b.dataset.zona === zonaAttiva));
+  }
+  function setView(nome) {
+    const v = VISTE[nome];
+    if (!v) { if (ZONE[nome]) return setZona(nome); return; }
+    if (!camera) return;
+    vistaAttiva = nome;
+    yaw = v.yaw; pitch = v.pitch;
+    updateCamera(); syncBar();
+  }
+  function setZona(nome) {
+    const z = ZONE[nome]; if (!z || !camera) return;
+    zonaAttiva = nome;
+    target.set(0, z.y, 0); dist = z.d;
+    updateCamera(); syncBar();
   }
   // inquadra da vicino un punto senza cambiare l'angolo di vista
   function focusOn(pos, d) {
     if (!camera || !pos) return;
     target.set(pos.x, pos.y, pos.z);
-    dist = d || 1.5;
+    dist = d || 1.4;
+    zonaAttiva = ""; syncBar();
+    updateCamera();
+  }
+  /* ---------- spostamento dell'inquadratura (pan) ---------- */
+  function panBy(dxPx, dyPx) {
+    if (!camera) return;
+    const h = (renderer && renderer.domElement.clientHeight) || 480;
+    const k = (2 * dist * Math.tan((camera.fov * Math.PI / 180) / 2)) / h;   // unità per pixel
+    // assi destra/alto della camera
+    const rx = Math.cos(yaw), rz = -Math.sin(yaw);
+    const ux = -Math.sin(yaw) * Math.sin(pitch), uy = Math.cos(pitch), uz = -Math.cos(yaw) * Math.sin(pitch);
+    target.x += -dxPx * k * rx + dyPx * k * ux;
+    target.y += dyPx * k * uy;
+    target.z += -dxPx * k * rz + dyPx * k * uz;
+    target.y = Math.max(-1.6, Math.min(3.4, target.y));
+    zonaAttiva = ""; syncBar();
     updateCamera();
   }
 
   function bindControls() {
     const dom = renderer.domElement;
-    const down = (x, y) => {
+    let panning = false;
+    const down = (x, y, pan) => {
+      if (pan) { panning = true; dragging = false; dragMoved = false; lastX = x; lastY = y; return; }
       // In modalità editor: se premo su un marker, inizio a trascinare IL PUNTO
       if (editing) {
         const m = markerAt(x, y);
@@ -310,14 +350,32 @@
     };
     const move = (x, y) => {
       if (draggingPoint) { dragMoved = true; movePointTo(draggingPoint, x, y); return; }
+      if (panning) {
+        const dx = x - lastX, dy = y - lastY;
+        if (Math.abs(dx) + Math.abs(dy) > 2) dragMoved = true;
+        panBy(dx, dy); lastX = x; lastY = y; return;
+      }
       if (!dragging) return;
       const dx = x - lastX, dy = y - lastY;
       if (Math.abs(dx) + Math.abs(dy) > 3) dragMoved = true;
       yaw -= dx * 0.008; pitch += dy * 0.006;
       lastX = x; lastY = y; updateCamera();
     };
-    const up = () => { dragging = false; draggingPoint = null; };
-    dom.addEventListener("mousedown", (e) => down(e.clientX, e.clientY));
+    const up = () => { dragging = false; panning = false; draggingPoint = null; };
+    dom.addEventListener("contextmenu", (e) => e.preventDefault());
+    dom.addEventListener("mousedown", (e) => {
+      // tasto destro, tasto centrale o Shift = sposta l'inquadratura
+      const pan = e.button === 2 || e.button === 1 || e.shiftKey;
+      if (pan) e.preventDefault();
+      down(e.clientX, e.clientY, pan);
+    });
+    // doppio clic sul corpo: lo mette al centro dell'inquadratura
+    dom.addEventListener("dblclick", (e) => {
+      ndc(e.clientX, e.clientY);
+      raycaster.setFromCamera(pointer, camera);
+      const h = bodyGroup ? raycaster.intersectObjects(bodyGroup.children, true)[0] : null;
+      if (h) focusOn(h.point, Math.max(1.1, dist * 0.65));
+    });
     window.addEventListener("mousemove", (e) => move(e.clientX, e.clientY));
     window.addEventListener("mouseup", up);
     dom.addEventListener("touchstart", (e) => { const t = e.touches[0]; down(t.clientX, t.clientY); }, { passive: true });
@@ -329,12 +387,21 @@
       dist = Math.max(1.0, Math.min(11, dist + e.deltaY * 0.01 * Math.max(0.35, dist / 6))); updateCamera();
     }, { passive: false });
     // pinch zoom
-    let pinch0 = null;
-    dom.addEventListener("touchstart", (e) => { if (e.touches.length === 2) pinch0 = pdist(e); }, { passive: true });
-    dom.addEventListener("touchmove", (e) => {
-      if (e.touches.length === 2 && pinch0) { const d = pdist(e); dist = Math.max(1.0, Math.min(11, dist * pinch0 / d)); pinch0 = d; updateCamera(); }
+    let pinch0 = null, mid0 = null;
+    const pmid = (e) => ({ x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+                           y: (e.touches[0].clientY + e.touches[1].clientY) / 2 });
+    dom.addEventListener("touchstart", (e) => {
+      if (e.touches.length === 2) { pinch0 = pdist(e); mid0 = pmid(e); dragging = false; }
     }, { passive: true });
-    dom.addEventListener("touchend", () => { pinch0 = null; });
+    dom.addEventListener("touchmove", (e) => {
+      if (e.touches.length === 2 && pinch0) {
+        const d = pdist(e); dist = Math.max(1.0, Math.min(11, dist * pinch0 / d)); pinch0 = d;
+        const m = pmid(e);                       // due dita trascinate = sposta l'inquadratura
+        if (mid0) panBy(m.x - mid0.x, m.y - mid0.y);
+        mid0 = m; updateCamera();
+      }
+    }, { passive: true });
+    dom.addEventListener("touchend", () => { pinch0 = null; mid0 = null; });
     // click / tap to pick
     dom.addEventListener("click", (e) => { if (!dragMoved) pick(e.clientX, e.clientY); });
     dom.addEventListener("mousemove", (e) => hover(e.clientX, e.clientY));
@@ -1162,9 +1229,10 @@
     }
     const bar = document.getElementById("viewBar");
     if (bar) bar.addEventListener("click", (e) => {
-      const b = e.target.closest("[data-view]"); if (!b) return;
-      setView(b.dataset.view);
+      const b = e.target.closest("[data-view],[data-zona]"); if (!b) return;
+      if (b.dataset.zona) setZona(b.dataset.zona); else setView(b.dataset.view);
     });
+    syncBar();
     const bAll = document.getElementById("merAll");
     if (bAll) bAll.addEventListener("click", () => { mm.setAllVisible(true); mm.highlight(null); syncChips(); });
     const bNone = document.getElementById("merNone");
@@ -1205,6 +1273,9 @@
     selectMerPoint: selectMerPoint,
     probeAt: probeAt,
     setView: setView,
+    setZona: setZona,
+    panBy: panBy,
+    zona: () => zonaAttiva,
     focusOn: focusOn,
     setPuntiVisible: setPuntiVisible,
     puntiVisible: puntiVisible,

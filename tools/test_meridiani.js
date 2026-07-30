@@ -278,17 +278,17 @@ console.log("\n=== 6. Click libero sul corpo (probe) ===");
   const { w } = boot();
   const info = w.document.getElementById("puntiInfo");
   // punto sull'addome, a lato dell'ombelico → dovrebbe cadere vicino a Stomaco/Rene/VC
-  w.PuntiMap.probeAt({ x: 0.2, y: 1.28, z: 0.22 });
+  w.PuntiMap.probeAt({ x: 0.2, y: 1.20, z: 0.21 });
   ok(/Punto sul corpo/.test(info.innerHTML), "pannello «Punto sul corpo»");
   ok(/Sei sul meridiano|Meridiano più vicino/.test(info.innerHTML), "indica il meridiano su cui ci si trova");
   ok(/Punto MTC più vicino/.test(info.innerHTML), "mostra il punto MTC più vicino");
   ok(info.querySelectorAll(".merpt--near").length === 3, "elenco dei 3 meridiani più vicini",
      info.querySelectorAll(".merpt--near").length);
-  const near = w.MeridianiMap.nearest({ x: 0.2, y: 1.28, z: 0.22 });
+  const near = w.MeridianiMap.nearest({ x: 0.2, y: 1.20, z: 0.21 });
   ok(near.mer.id === "stomaco", "vicino all'ombelico +2cun → Stomaco (S25)", near.mer.id + " " + near.dist.toFixed(3));
   ok(near.punto && near.punto.sigla === "S25", "punto più vicino = S25 Tianshu", near.punto && near.punto.sigla);
   // mediana bassa → Vaso Concezione
-  const vc = w.MeridianiMap.nearest({ x: 0, y: 1.05, z: 0.27 });
+  const vc = w.MeridianiMap.nearest({ x: 0, y: 1.02, z: 0.26 });
   ok(vc.mer.id === "vaso-concezione", "mediana anteriore → Vaso Concezione", vc.mer.id);
   // schiena mediana → Vaso Governatore
   const vg = w.MeridianiMap.nearest({ x: 0, y: 1.37, z: -0.28 });

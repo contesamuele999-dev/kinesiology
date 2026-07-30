@@ -44,14 +44,28 @@
         <div id="stage3d">
         <div id="punti3d" class="punti__canvas" role="img" aria-label="Mappa 3D del corpo con i punti d'allarme"></div>
         <div class="viewbar" id="viewBar">
-          <button class="ebtn ebtn--mini is-on" type="button" data-view="fronte">Fronte</button>
-          <button class="ebtn ebtn--mini" type="button" data-view="retro">Retro</button>
-          <button class="ebtn ebtn--mini" type="button" data-view="sinistra">Lato sx</button>
-          <button class="ebtn ebtn--mini" type="button" data-view="destra">Lato dx</button>
-          <button class="ebtn ebtn--mini" type="button" data-view="testa">Testa</button>
-          <button class="ebtn ebtn--mini" type="button" data-view="corpo">Corpo intero</button>
+          <div class="viewbar__row">
+            <span class="viewbar__lb">Vista</span>
+            <button class="ebtn ebtn--mini is-on" type="button" data-view="fronte">Fronte</button>
+            <button class="ebtn ebtn--mini" type="button" data-view="retro">Retro</button>
+            <button class="ebtn ebtn--mini" type="button" data-view="sinistra">Lato sx</button>
+            <button class="ebtn ebtn--mini" type="button" data-view="destra">Lato dx</button>
+          </div>
+          <div class="viewbar__row">
+            <span class="viewbar__lb">Zona</span>
+            <button class="ebtn ebtn--mini is-on" type="button" data-zona="corpo">Corpo</button>
+            <button class="ebtn ebtn--mini" type="button" data-zona="testa">Testa</button>
+            <button class="ebtn ebtn--mini" type="button" data-zona="collo">Collo</button>
+            <button class="ebtn ebtn--mini" type="button" data-zona="tronco">Torace</button>
+            <button class="ebtn ebtn--mini" type="button" data-zona="addome">Addome</button>
+            <button class="ebtn ebtn--mini" type="button" data-zona="bacino">Bacino</button>
+            <button class="ebtn ebtn--mini" type="button" data-zona="mani">Mani</button>
+            <button class="ebtn ebtn--mini" type="button" data-zona="gambe">Gambe</button>
+            <button class="ebtn ebtn--mini" type="button" data-zona="piedi">Piedi</button>
+          </div>
         </div>
-        <p class="punti__hint">Trascina per ruotare · rotella/pinch per zoom · tocca un punto per i dettagli</p>
+        <p class="punti__hint">Trascina per ruotare · <strong>tasto destro</strong> (o Shift + trascina, o due dita) per spostare l'inquadratura ·
+          rotella/pinch per zoom · <strong>doppio clic</strong> sul corpo per centrarlo · tocca un punto per i dettagli</p>
         </div>
 
         <!-- ===== Tavole 2D ===== -->
