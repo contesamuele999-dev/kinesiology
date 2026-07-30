@@ -41,11 +41,30 @@
       box: [-0.42, -2.98, 0.84, 0.92], vis: function (p) { return p.z <= 0.02 && p.y > 2.05; } },
     { id: "mano",    label: "Mano",     tav: "fronte", proj: "xy", mir: 1,
       box: [0.36, -0.82, 0.42, 0.62], vis: function (p) { return p.x > 0.30 && p.y < 0.90; } },
-    { id: "piede",   label: "Piede",    tav: "piede",  proj: "xz", mir: 1,
-      box: [0.06, -0.50, 0.32, 0.66], vis: function (p) { return p.y < -1.05 && p.x > 0; } },
+    { id: "piede-su", label: "Piede sopra", tav: "piede", proj: "xz", mir: 1,
+      box: [0.06, -0.50, 0.32, 0.66],
+      vis: function (p) { return p.y < -1.05 && p.x > 0; },
+      soft: function (p) { return p.y <= -1.288; } },            // la pianta, attenuata
+    { id: "piede-giu", label: "Piede sotto", tav: "piede-pianta", proj: "xz", mir: -1,
+      box: [-0.38, -0.50, 0.32, 0.66],
+      vis: function (p) { return p.y < -1.05 && p.x > 0; },
+      soft: function (p) { return p.y > -1.252; } },             // il dorso, attenuato
   ];
 
-  function proj(p, pl) {
+  /* Sulla testa i punti dei meridiani sono staccati dallo scalpo (per essere
+     visibili nel 3D): in 2D li riportiamo sul profilo del cranio, altrimenti
+     cadono fuori dalla sagoma. */
+  function snapTesta(p) {
+    var T = window.CORPO && window.CORPO.testa;
+    if (!T || p.y < 2.34) return p;
+    var c = T.centro, r = T.raggi;
+    var dx = p.x - c[0], dy = p.y - c[1], dz = p.z - c[2];
+    var q = Math.sqrt(Math.pow(dx / r[0], 2) + Math.pow(dy / r[1], 2) + Math.pow(dz / r[2], 2));
+    if (q <= 1.001) return p;
+    return { x: c[0] + dx / q, y: c[1] + dy / q, z: c[2] + dz / q };
+  }
+  function proj(p0, pl) {
+    var p = snapTesta(p0);
     if (pl.proj === "zy") return [p.z * pl.mir, -p.y];
     if (pl.proj === "xz") return [p.x * pl.mir, -p.z];
     return [p.x * pl.mir, -p.y];
@@ -79,7 +98,7 @@
                 if (!pl.vis(p)) return;
                 out.push({ kind: "mer", p: p, col: m.colore, r: n.chiave ? 0.026 : 0.016,
                            sigla: n.sigla, nome: n.nome, mer: m.id, idx: i, side: s, ramo: b === 1,
-                           chiave: !!n.chiave });
+                           chiave: !!n.chiave, soft: !!(pl.soft && pl.soft(p)) });
               });
             });
           });
@@ -92,7 +111,7 @@
       (window.PUNTI_INDICATORI.punti || []).forEach(function (q, i) {
         if (!q.pos || !pl.vis(q.pos)) return;
         out.push({ kind: "ind", p: q.pos, col: "#ff5a4d", r: 0.040, sigla: String(i + 1),
-                   nome: q.organo, id: q.id, num: i + 1 });
+                   nome: q.organo, id: q.id, num: i + 1, soft: !!(pl.soft && pl.soft(q.pos)) });
       });
     }
     return out;
@@ -105,7 +124,7 @@
     var MM = window.MeridianiMap;
     var hi = MM && MM.highlighted ? MM.highlighted() : null;
     var etichette = MM && MM.labelsEnabled ? MM.labelsEnabled() : true;
-    var zoomPlate = ["testa", "testa-r", "mano", "piede"].indexOf(plate.id) >= 0;
+    var zoomPlate = ["testa", "testa-r", "mano", "piede-su", "piede-giu"].indexOf(plate.id) >= 0;
     var im = IMG[plate.id];
     var s = "";
     if (im && im.src) {
@@ -126,7 +145,7 @@
     s += '<g class="tav__pts">';
     pts.forEach(function (q, idx) {
       var xy = proj(q.p, plate);
-      var attenua = hi && q.kind === "mer" && q.mer !== hi;
+      var attenua = q.soft || (hi && q.kind === "mer" && q.mer !== hi);
       s += '<circle class="tp' + (q.kind === "ind" ? " tp--ind" : (q.chiave ? "" : " tp--sec")) +
            '" cx="' + xy[0].toFixed(3) +
            '" cy="' + xy[1].toFixed(3) + '" r="' + (q.r * sc).toFixed(4) + '" fill="' + esc(q.col) +
@@ -135,7 +154,7 @@
       if (q.kind === "ind") {
         lab += '<text class="tl tl--ind" x="' + xy[0].toFixed(3) + '" y="' + (xy[1] + 0.016 * sc).toFixed(3) +
                '">' + esc(q.num) + '</text>';
-      } else if (etichette && ((hi && q.mer === hi) || (zoomPlate && q.chiave))) {
+      } else if (etichette && !q.soft && ((hi && q.mer === hi) || (zoomPlate && q.chiave))) {
         lab += '<text class="tl" x="' + (xy[0] + (q.r + 0.012) * sc).toFixed(3) + '" y="' + (xy[1] + 0.012 * sc).toFixed(3) +
                '" fill="' + esc(q.col) + '">' + esc(q.sigla) + '</text>';
       }

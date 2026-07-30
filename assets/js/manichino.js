@@ -375,19 +375,27 @@
       add(new THREE.SphereGeometry(0.036, 14, 12), s * 0.163, -1.155, 0.005, 0, 0, 0, 0.8, 1, 1);
       add(new THREE.SphereGeometry(0.034, 14, 12), s * 0.272, -1.165, -0.005, 0, 0, 0, 0.8, 1, 1);
 
-      // ---- piede ----
+      // ---- piede: profilo asimmetrico (tallone stretto, avampiede largo,
+      //      lato dell'alluce più pieno) ottenuto spostando l'asse del loft ----
       var Ft = C.piede;
-      var zs = [Ft.tallone_z, -0.02, 0.14, 0.28, 0.36];
+      var med = Ft.mediale || Ft.larghezza, lat = Ft.laterale || Ft.larghezza;
+      var zs = [Ft.tallone_z, -0.05, 0.05, 0.15, 0.25, 0.31, 0.38, 0.43];
       var pts = zs.map(function (z) {
         var yt = lerpTab(Ft.dorso, z);
-        return V(s * Ft.cx, (yt + Ft.suola) / 2 + 0.012, z);
+        var wm = lerpTab(med, z), wl = lerpTab(lat, z);
+        return V(s * (Ft.cx + (wl - wm) / 2), (yt + Ft.suola) / 2 + 0.010, z);
       });
-      var rr = zs.map(function (z) { return lerpTab(Ft.larghezza, z) * 1.05; });
-      var piede = tube(pts, rr, 34, 18);
-      piede.scale.y = 0.80;
-      piede.position.y = (1 - 0.80) * ((lerpTab(Ft.dorso, 0.1) + Ft.suola) / 2);
-      // tallone
-      add(new THREE.SphereGeometry(0.062, 18, 14), s * Ft.cx, -1.245, Ft.tallone_z + 0.02, 0, 0, 0, 1.0, 0.95, 1.0);
+      var rr = zs.map(function (z) { return (lerpTab(med, z) + lerpTab(lat, z)) / 2 * 1.04; });
+      var piede = tube(pts, rr, 40, 20);
+      piede.scale.y = 0.62;                    // il piede è basso, non tondo
+      piede.position.y = (1 - 0.62) * ((lerpTab(Ft.dorso, 0.1) + Ft.suola) / 2 + 0.010);
+      // tallone e cuscinetto plantare
+      add(new THREE.SphereGeometry(0.058, 20, 16), s * Ft.cx, -1.248, Ft.tallone_z + 0.030,
+          0, 0, 0, 0.95, 0.80, 1.05);
+      add(new THREE.SphereGeometry(0.070, 20, 16), s * (Ft.cx + 0.006), -1.278, 0.300,
+          0, 0, 0, 1.20, 0.35, 0.85);
+      // collo del piede
+      add(new THREE.SphereGeometry(0.052, 18, 14), s * Ft.cx, -1.170, 0.020, 0, 0, 0, 1.0, 0.9, 1.3);
       // arco plantare (accenno) + dita
       Ft.dita.forEach(function (d) {
         var x = d[1], zt = d[2], r = d[3];

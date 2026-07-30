@@ -150,8 +150,18 @@ HAND = {
 # --- piede: profilo lungo z (tallone -0.12 → punta 0.46) ---
 FOOT = {
     "cx": 0.215, "suola": -1.30, "tallone_z": -0.12, "punta_z": 0.46,
-    "dorso": [(-0.12,-1.20),(0.0,-1.16),(0.20,-1.21),(0.33,-1.25),(0.46,-1.275)],
-    "larghezza": [(-0.12,0.055),(0.0,0.062),(0.20,0.085),(0.33,0.088),(0.46,0.070)],
+    "dorso": [(-0.150,-1.245),(-0.12,-1.215),(-0.05,-1.175),(0.0,-1.160),(0.10,-1.185),
+              (0.20,-1.215),(0.30,-1.243),(0.38,-1.260),(0.46,-1.272),(0.490,-1.282)],
+    # semilarghezze separate: il piede è più stretto al tallone, largo all'avampiede
+    # e più pieno sul lato dell'alluce (mediale)
+    # estremi rastremati: il contorno si chiude arrotondato su tallone e punta
+    "mediale":  [(-0.150,0.010),(-0.135,0.030),(-0.12,0.050),(-0.05,0.058),(0.05,0.060),
+                 (0.15,0.070),(0.25,0.086),(0.31,0.098),(0.38,0.094),(0.43,0.078),
+                 (0.46,0.060),(0.478,0.032),(0.490,0.010)],
+    "laterale": [(-0.150,0.010),(-0.135,0.032),(-0.12,0.052),(-0.05,0.064),(0.05,0.076),
+                 (0.15,0.090),(0.25,0.100),(0.31,0.097),(0.38,0.080),(0.43,0.060),
+                 (0.46,0.042),(0.478,0.024),(0.490,0.010)],
+    "larghezza": [(-0.15,0.010),(-0.12,0.051),(0.0,0.068),(0.20,0.093),(0.31,0.097),(0.46,0.050),(0.49,0.010)],
     "dita": [  # nome, x, z punta, raggio
         ("alluce", 0.150, 0.462, 0.030), ("2", 0.194, 0.458, 0.022),
         ("3", 0.228, 0.442, 0.021), ("4", 0.256, 0.418, 0.019),
@@ -188,6 +198,16 @@ def LEG(y, lat, ant):
     x, z = _surf(cx, cz, r, lat, ant)
     return (x, round(y,3), z)
 
+def _lerp_y(tab, y):
+    """interpola una tabella [(y,valore)] crescente; None fuori dall'intervallo"""
+    if y < tab[0][0] or y > tab[-1][0]: return None
+    for i in range(len(tab)-1):
+        y0,v0 = tab[i]; y1,v1 = tab[i+1]
+        if y0 <= y <= y1:
+            t = (y-y0)/(y1-y0) if y1 != y0 else 0
+            return v0 + (v1-v0)*t
+    return tab[-1][1]
+
 def _lerp_tab(tab, z):
     if z <= tab[0][0]: return tab[0][1]
     if z >= tab[-1][0]: return tab[-1][1]
@@ -200,7 +220,8 @@ def _lerp_tab(tab, z):
 def FT(z, lat, sotto=0.0):
     """punto sul piede: z lungo il piede, lat -1 (mediale) … +1 (laterale),
        sotto = 0 dorso, 1 pianta"""
-    w = _lerp_tab(FOOT["larghezza"], z)
+    tab = FOOT["laterale"] if lat >= 0 else FOOT["mediale"]
+    w = _lerp_tab(tab, z)
     ytop = _lerp_tab(FOOT["dorso"], z)
     y = ytop + (FOOT["suola"] - ytop) * sotto
     return (round(FOOT["cx"] + w*1.03*lat, 3), round(y, 3), round(z, 3))
@@ -1031,8 +1052,17 @@ def sagome_fronte():
         # gamba
         C.append(_contorno_bordi(-1.14, 0.70,
             lambda y, s=s: s*_leg_edge(y), lambda y, s=s: s*_leg_edge(y, False), cap_alto=True))
-        # piede visto di fronte
-        C.append(_poly([(s*0.157,-1.14),(s*0.288,-1.14),(s*0.305,-1.30),(s*0.128,-1.30)]))
+        # piede visto di fronte: collo del piede che si allarga nell'avampiede
+        prof = ((-1.130,0.050,0.048),(-1.170,0.066,0.058),(-1.210,0.082,0.070),
+                (-1.245,0.094,0.084),(-1.275,0.100,0.092),(-1.298,0.098,0.092))
+        pf = [(FOOT["cx"] + wl, yy) for (yy, wl, wm) in prof]
+        pf.append((FOOT["cx"] + 0.070, -1.308))          # raccordo in punta
+        pf.append((FOOT["cx"] - 0.062, -1.308))
+        pf += [(FOOT["cx"] - wm, yy) for (yy, wl, wm) in reversed(prof)]
+        C.append(_poly([(s*a, b) for (a, b) in pf]))
+        # dita viste di punta
+        for nome, x, zt, r in FOOT["dita"]:
+            C.append(_capsula((s*x, -1.262), (s*x, -1.295), r*0.85, r*0.75, 8))
     return C
 
 def dettagli_fronte():
@@ -1133,6 +1163,13 @@ def dettagli_retro():
         A([(s*0.14, 1.60), (s*0.30, 1.50)])                  # margine gran dorsale
     return D
 
+VISO_PROFILO = [(2.395,0.140),(2.425,0.185),(2.450,0.212),(2.472,0.228),(2.492,0.238),
+                (2.510,0.246),(2.530,0.262),(2.545,0.272),(2.560,0.252),(2.585,0.236),
+                (2.620,0.232),(2.660,0.228),(2.700,0.222),(2.745,0.198)]
+GLUTEI_PROFILO = [(0.440,-0.190),(0.490,-0.240),(0.540,-0.282),(0.590,-0.315),(0.640,-0.336),
+                  (0.690,-0.349),(0.740,-0.352),(0.790,-0.347),(0.840,-0.333),(0.890,-0.311),
+                  (0.940,-0.282),(0.985,-0.250)]
+
 def sagome_lato():
     """contorni della vista laterale (piano z-y): profilo del corpo"""
     def zmax(y):
@@ -1140,9 +1177,8 @@ def sagome_lato():
         if 0.60 <= y <= 2.31: v = max(v, torso_r(y)*TORSO_ZSCALE + 0.02)
         if 2.23 <= y <= 2.45: v = max(v, 0.115)
         if 2.35 <= y <= 2.93: v = max(v, _head_z(y) + HC[2])
-        for (yy, zz) in ((2.40,0.150),(2.44,0.196),(2.47,0.222),(2.50,0.240),
-                         (2.545,0.272),(2.58,0.238),(2.62,0.230),(2.68,0.222),(2.74,0.200)):
-            if abs(y - yy) < 0.022: v = max(v, zz)      # profilo del viso (naso, labbra, mento)
+        vf = _lerp_y(VISO_PROFILO, y)               # profilo del viso (naso, labbra, mento)
+        if vf is not None: v = max(v, vf)
         if -1.30 <= y <= -1.10: v = max(v, 0.46)        # piede
         if -1.14 <= y <= 0.92:
             cx, cz, r = _interp(LEG_AXIS, y); v = max(v, cz + r)
@@ -1152,7 +1188,8 @@ def sagome_lato():
         if 0.60 <= y <= 2.31: v = min(v, -(torso_r(y)*TORSO_ZSCALE + 0.02))
         if 2.23 <= y <= 2.45: v = min(v, -0.115)
         if 2.35 <= y <= 2.93: v = min(v, -(_head_z(y) - HC[2]))
-        if 0.45 <= y <= 0.90: v = min(v, -0.34)         # glutei
+        gl = _lerp_y(GLUTEI_PROFILO, y)             # profilo dei glutei
+        if gl is not None: v = min(v, gl)
         if -1.30 <= y <= -1.14: v = min(v, -0.16)       # tallone
         if -1.14 <= y <= 0.92:
             cx, cz, r = _interp(LEG_AXIS, y); v = min(v, cz - r)
@@ -1177,7 +1214,7 @@ def dettagli_lato():
     A([(0.24, 1.82), (0.30, 1.80)])                              # capezzolo
     A([(0.230, 1.20), (0.256, 1.20)])                            # ombelico
     A([(0.24, 1.55), (0.20, 1.42)])                              # arcata costale
-    A([(-0.30, 0.80), (-0.26, 0.60), (-0.16, 0.48)])             # gluteo
+    A([(-0.335, 0.82), (-0.348, 0.72), (-0.315, 0.62), (-0.24, 0.52), (-0.16, 0.47)])  # piega glutea
     A([(0.14, -0.135), (0.18, -0.135)])                          # rotula
     A([(-0.12, -0.90), (-0.09, -1.16)])                          # tendine d'Achille
     A([(-0.12, -1.28), (0.44, -1.28)])                           # pianta
@@ -1186,11 +1223,29 @@ def dettagli_lato():
 def sagoma_piede():
     """dorso del piede visto dall'alto (piano x-z), lato sinistro"""
     C = []
+    cx = FOOT["cx"]
+    z0, z1 = -0.118, 0.462                       # tratto rettilineo, poi le calotte
+    zs = [z0 + i*0.012 for i in range(int((z1-z0)/0.012)+1)]
     pts = []
-    zs = [i*0.02 - 0.12 for i in range(int((0.46+0.12)/0.02)+1)]
-    for z in zs: pts.append((FOOT["cx"] + _lerp_tab(FOOT["larghezza"], z), z))
-    for z in reversed(zs): pts.append((FOOT["cx"] - _lerp_tab(FOOT["larghezza"], z), z))
+    # bordo laterale, dal tallone alla punta
+    for z in zs: pts.append((cx + _lerp_tab(FOOT["laterale"], z), z))
+    # calotta anteriore (avampiede): semicerchio dal bordo laterale al mediale
+    wl, wm = _lerp_tab(FOOT["laterale"], z1), _lerp_tab(FOOT["mediale"], z1)
+    rc = (wl + wm)/2.0; cc = cx + (wl - wm)/2.0
+    for i in range(1, 20):
+        a = math.pi * (i/20.0)                       # 0 = lato, pi = mediale
+        pts.append((cc + rc*math.cos(a), z1 + rc*math.sin(a)*0.80))
+    # bordo mediale, dalla punta al tallone
+    for z in reversed(zs): pts.append((cx - _lerp_tab(FOOT["mediale"], z), z))
+    # calotta del tallone: semicerchio dal bordo mediale al laterale
+    wl0, wm0 = _lerp_tab(FOOT["laterale"], z0), _lerp_tab(FOOT["mediale"], z0)
+    r0 = (wl0 + wm0)/2.0; c0 = cx + (wl0 - wm0)/2.0
+    for i in range(1, 20):
+        a = math.pi * (1 - i/20.0)                   # pi = mediale, 0 = laterale
+        pts.append((c0 + r0*math.cos(a), z0 - r0*math.sin(a)*0.95))
     C.append(_poly(pts))
+    # caviglia (sezione della gamba): così i punti dei malleoli non restano fuori
+    C.append(_arco(cx, 0.005, 0.082, 0.115, 0, 2*math.pi, 26))
     for nome, x, zt, r in FOOT["dita"]:
         C.append(_capsula((x, zt - 0.11), (x, zt), r, r*0.8))
     return C
@@ -1205,8 +1260,29 @@ def dettagli_piede():
     A([(0.150, 0.20), (0.282, 0.20)])                  # linea dei metatarsi
     return D
 
+def dettagli_pianta():
+    """linee della PIANTA del piede (vista dal basso)"""
+    D = []
+    A = lambda pts: D.append(_poly(pts))
+    cx = FOOT["cx"]
+    # cuscinetto del tallone
+    D.append(_arco(cx, -0.055, 0.052, 0.060, 0, 2*math.pi))
+    # arco plantare (bordo mediale sollevato) e bordo laterale d'appoggio
+    A([(cx-0.048, -0.02), (cx-0.068, 0.09), (cx-0.058, 0.20)])
+    A([(cx+0.052, -0.02), (cx+0.078, 0.10), (cx+0.070, 0.22)])
+    # teste metatarsali (cuscinetto anteriore) e polpastrelli
+    for nome, x, zt, r in FOOT["dita"]:
+        D.append(_arco(x, zt-0.145, r*1.00, r*0.85, 0, 2*math.pi))
+        D.append(_arco(x, zt-0.020, r*0.80, r*0.70, 0, 2*math.pi))
+    # piega di flessione delle dita
+    A([(0.130, 0.322), (0.200, 0.318), (0.286, 0.268)])
+    # solco mediano della pianta
+    A([(cx-0.005, 0.02), (cx, 0.16)])
+    return D
+
 def tavole():
     return {
+        "piede-pianta": {"contorni": sagoma_piede(), "dettagli": dettagli_pianta()},
         "fronte":  {"contorni": sagome_fronte(), "dettagli": dettagli_fronte()},
         "retro":   {"contorni": sagome_fronte(), "dettagli": dettagli_retro()},
         "lato":    {"contorni": sagome_lato(),   "dettagli": dettagli_lato()},

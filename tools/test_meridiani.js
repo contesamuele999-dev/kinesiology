@@ -205,7 +205,7 @@ console.log("\n=== 4c. Tavole 2D ===");
   tab2.dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
   ok(w.PuntiMap.stage() === "2d", "la sottoscheda passa a 2D");
   ok(!d.getElementById("stage2d").hidden && d.getElementById("stage3d").hidden, "gli stage si scambiano");
-  ok(d.querySelectorAll("#plateTabs .platetab").length === 8, "8 tavole disponibili",
+  ok(d.querySelectorAll("#plateTabs .platetab").length === 9, "9 tavole disponibili",
      d.querySelectorAll("#plateTabs .platetab").length);
   const svg = d.getElementById("tavolaSvg");
   ok(svg.querySelectorAll(".tav__body path").length > 10, "sagome disegnate",
