@@ -220,49 +220,50 @@
     /* ============================ COLLO + TESTA ============================ */
     (function testa() {
       var hc = C.testa.centro, hr = C.testa.raggi;
+      var F = (C.testa && C.testa.viso) || {};
+      var ipd = F.ipd || 0.078, oy = F.orecchioY || 2.62, ox = F.orecchioX || 0.176,
+          oz = F.orecchioZ || -0.03, yocchi = F.occhi || 2.658, ynaso = F.naso || 2.545,
+          ybocca = F.bocca || 2.462, ymento = F.mento || 2.400;
       // collo
-      tube([V(0, 2.26, -0.01), V(0, 2.34, 0.0), V(0, 2.44, 0.01)], [0.145, 0.128, 0.120], 16, 20);
+      tube([V(0, 2.24, -0.01), V(0, 2.34, 0.0), V(0, 2.44, 0.01)], [0.150, 0.130, 0.120], 18, 22);
       // sternocleidomastoidei
       [-1, 1].forEach(function (s) {
-        tube([V(s * 0.05, 2.44, 0.09), V(s * 0.10, 2.34, 0.07), V(s * 0.16, 2.24, 0.02)],
-             [0.018, 0.026, 0.030], 16, 10);
+        tube([V(s * 0.045, 2.44, 0.085), V(s * 0.095, 2.34, 0.068), V(s * 0.150, 2.24, 0.02)],
+             [0.016, 0.024, 0.030], 16, 10);
       });
-      // cranio (ellissoide invariato: i punti della testa vi sono ancorati)
-      add(new THREE.SphereGeometry(hr[0], 56, 44), hc[0], hc[1], hc[2], 0, 0, 0, 1, hr[1] / hr[0], hr[2] / hr[0]);
-      // volto / mascella
-      add(new THREE.SphereGeometry(0.20, 32, 26), 0, 2.50, 0.12, 0, 0, 0, 0.90, 1.00, 0.72);
-      add(new THREE.SphereGeometry(0.115, 20, 16), 0, 2.435, 0.175, 0, 0, 0, 1.0, 0.85, 0.9); // mento
-      // zigomi
+      // cranio — semiassi presi da corpo_data.js (misure umane reali)
+      add(new THREE.SphereGeometry(hr[0], 56, 44), hc[0], hc[1], hc[2], 0, 0, 0,
+          1, hr[1] / hr[0], hr[2] / hr[0]);
+      // volto e mandibola
+      add(new THREE.SphereGeometry(0.150, 34, 28), 0, 2.505, 0.042, 0, 0, 0, 1.00, 0.83, 1.20);
+      add(new THREE.SphereGeometry(0.075, 22, 18), 0, ymento + 0.022, 0.140, 0, 0, 0, 1.10, 0.85, 0.95);
       [-1, 1].forEach(function (s) {
-        add(new THREE.SphereGeometry(0.058, 14, 12), s * 0.135, 2.545, 0.185, 0, 0, 0, 1, 0.8, 0.8);
-      });
-      // arcate sopraccigliari
-      [-1, 1].forEach(function (s) {
-        tube([V(s * 0.02, 2.655, 0.245), V(s * 0.09, 2.665, 0.232), V(s * 0.155, 2.655, 0.19)],
-             [0.017, 0.019, 0.015], 14, 8);
-      });
-      // occhi
-      [-1, 1].forEach(function (s) {
-        add(new THREE.SphereGeometry(0.036, 16, 14), s * 0.095, 2.605, 0.215, 0, 0, 0, 1.15, 0.8, 0.7);
-      });
-      // naso: dorso + punta + narici
-      tube([V(0, 2.635, 0.235), V(0, 2.575, 0.275), V(0, 2.53, 0.30)], [0.016, 0.024, 0.030], 14, 10);
-      add(new THREE.SphereGeometry(0.033, 16, 14), 0, 2.518, 0.302);
-      [-1, 1].forEach(function (s) { add(new THREE.SphereGeometry(0.019, 12, 10), s * 0.032, 2.513, 0.285); });
-      // bocca
-      add(new THREE.SphereGeometry(0.052, 18, 12), 0, 2.474, 0.268, 0, 0, 0, 1.15, 0.32, 0.45);
-      add(new THREE.SphereGeometry(0.050, 18, 12), 0, 2.452, 0.266, 0, 0, 0, 1.10, 0.30, 0.45);
-      // orecchie (elica + lobo)
-      [-1, 1].forEach(function (s) {
+        add(new THREE.SphereGeometry(0.058, 18, 14), s * 0.128, 2.500, 0.058, 0, 0, 0, 0.9, 1.25, 0.9);  // ganascia
+        add(new THREE.SphereGeometry(0.048, 16, 14), s * 0.124, 2.588, 0.135, 0, 0, 0, 1.0, 0.75, 0.8);  // zigomo
+        // arcata sopraccigliare
+        tube([V(s * 0.015, yocchi + 0.046, 0.208), V(s * 0.070, yocchi + 0.050, 0.192),
+              V(s * 0.122, yocchi + 0.036, 0.140)], [0.014, 0.016, 0.012], 14, 8);
+        // occhio
+        add(new THREE.SphereGeometry(0.030, 18, 14), s * ipd, yocchi, 0.170, 0, 0, 0, 1.25, 0.85, 0.7);
+        // orecchio: elica + conca + lobo
         var e = [];
         for (var i = 0; i <= 12; i++) {
-          var a = Math.PI * (0.25 + 1.45 * (i / 12));
-          e.push(V(s * 0.262, 2.60 + Math.cos(a) * 0.062, 0.005 + Math.sin(a) * 0.05));
+          var a = Math.PI * (0.22 + 1.5 * (i / 12));
+          e.push(V(s * ox, oy + Math.cos(a) * 0.052, oz + Math.sin(a) * 0.040));
         }
-        tube(e, e.map(function () { return 0.016; }), 20, 8);
-        add(new THREE.SphereGeometry(0.030, 14, 12), s * 0.258, 2.545, 0.005, 0, 0, 0, 0.55, 1.0, 0.8);
-        add(new THREE.SphereGeometry(0.045, 14, 12), s * 0.252, 2.60, 0.005, 0, 0, 0, 0.45, 1.15, 0.85);
+        tube(e, e.map(function () { return 0.013; }), 20, 8);
+        add(new THREE.SphereGeometry(0.034, 16, 12), s * (ox - 0.008), oy, oz + 0.006, 0, 0, 0, 0.45, 1.15, 0.9);
+        add(new THREE.SphereGeometry(0.024, 14, 12), s * (ox - 0.004), oy - 0.058, oz + 0.004, 0, 0, 0, 0.55, 1.0, 0.9);
+        // narice
+        add(new THREE.SphereGeometry(0.016, 12, 10), s * 0.026, ynaso - 0.026, 0.236);
       });
+      // naso
+      tube([V(0, yocchi + 0.030, 0.196), V(0, yocchi - 0.045, 0.225), V(0, ynaso + 0.008, 0.248)],
+           [0.014, 0.020, 0.026], 16, 12);
+      add(new THREE.SphereGeometry(0.028, 18, 14), 0, ynaso - 0.004, 0.256, 0, 0, 0, 1.1, 0.95, 1.0);
+      // labbra
+      add(new THREE.SphereGeometry(0.046, 20, 12), 0, ybocca + 0.011, 0.212, 0, 0, 0, 1.15, 0.30, 0.42);
+      add(new THREE.SphereGeometry(0.044, 20, 12), 0, ybocca - 0.011, 0.210, 0, 0, 0, 1.10, 0.28, 0.42);
     })();
 
     /* ============================ BRACCIA + MANI ============================ */

@@ -58,10 +58,33 @@ def B(x, y, off=0.012):
 
 # ---------- geometria del capo (ellissoide del cranio di punti.js) ----------
 # add(SphereGeometry(0.27), 0, 2.62, 0.01, scale 1 x 1.15 x 1.02)
-HC = (0.0, 2.62, 0.01)
-HR = (0.27, 0.27*1.15, 0.27*1.02)
+# testa umana media: larghezza ~15 cm, profondità ~19 cm, altezza ~21 cm
+# (1 unità = 40 cm) → semiassi 0.185 x 0.290 x 0.235, centro a y 2.64
+HC = (0.0, 2.64, 0.0)
+HR = (0.185, 0.290, 0.235)
 
-def H(dx, dy, dz, off=0.022):
+# riferimenti del viso (quote y e semi-distanze x)
+FACE = {
+    "vertice": 2.930, "attaccatura": 2.800, "glabella": 2.700, "occhi": 2.658,
+    "naso": 2.545, "sottonaso": 2.505, "bocca": 2.462, "mento": 2.400,
+    "ipd": 0.078,        # semi-distanza fra le pupille (IPD ~6,3 cm)
+    "cantoInt": 0.030, "cantoEst": 0.122, "zigomo": 0.150,
+    "orecchioX": 0.176, "orecchioY": 2.620, "orecchioZ": -0.030,
+}
+
+def FZ(x, y, off=0.022):
+    """punto sulla superficie ANTERIORE della testa alla quota (x,y)"""
+    t = 1.0 - (x/HR[0])**2 - ((y-HC[1])/HR[1])**2
+    z = HR[2]*math.sqrt(max(0.05, t))
+    return (round(x,3), round(y,3), round(HC[2] + z + off, 3))
+
+def LZ(x, y, off=0.020):
+    """punto sulla superficie POSTERIORE della testa alla quota (x,y)"""
+    t = 1.0 - (x/HR[0])**2 - ((y-HC[1])/HR[1])**2
+    z = HR[2]*math.sqrt(max(0.05, t))
+    return (round(x,3), round(y,3), round(HC[2] - z - off, 3))
+
+def H(dx, dy, dz, off=0.028):
     """proietta la direzione (dx,dy,dz) dal centro del cranio sulla superficie
        della testa, con un piccolo scostamento verso l'esterno (off) così il
        tracciato resta VISIBILE e non sprofonda dentro il modello."""
@@ -434,8 +457,8 @@ mer(id="intestino-crasso", nome="Grosso Intestino", sigla="GI", siglaInt="LI",
       A(16,"Jugu",    (0.420,2.140,0.020)),
       A(17,"Tianding",(0.126,2.330,0.056)),
       A(18,"Futu",    (0.118,2.380,0.056)),
-      A(19,"Kouheliao",(0.070,2.500,0.255)),
-      A(20,"Yingxiang",(0.050,2.520,0.268)),
+      A(19,"Kouheliao",FZ(0.038, 2.512)),
+      A(20,"Yingxiang",FZ(0.048, 2.498)),
     ])
 
 # ============================ 3. STOMACO (S / ST) ============================
@@ -444,12 +467,12 @@ mer(id="stomaco", nome="Stomaco", sigla="S", siglaInt="ST", elemento="Terra",
     colore="#f0a92e", bilaterale=True, coordinate=["stomaco-gran-pettorale-clavicolare"],
     descrizione="Dal viso (sotto l'occhio) scende lungo il collo, il torace sulla linea del capezzolo e l'addome a 2 cun dalla mediana, poi sulla faccia antero-esterna della coscia e della gamba fino al 2° dito del piede. 45 punti; il ramo facciale sale alla tempia (S7-S8).",
     seq=[
-      A(1,"Chengqi",  (0.09,2.555,0.252)),
-      A(2,"Sibai",    (0.09,2.515,0.255)),
-      A(3,"Juliao",   (0.09,2.478,0.252)),
-      A(4,"Dicang",   (0.065,2.455,0.258)),
-      A(5,"Daying",   (0.135,2.425,0.215)),
-      A(6,"Jiache",   (0.175,2.425,0.155)),
+      A(1,"Chengqi",  FZ(0.078, 2.618)),
+      A(2,"Sibai",    FZ(0.078, 2.580)),
+      A(3,"Juliao",   FZ(0.075, 2.528)),
+      A(4,"Dicang",   FZ(0.052, 2.470)),
+      A(5,"Daying",   FZ(0.108, 2.436)),
+      A(6,"Jiache",   (0.140, 2.438, 0.100)),
       A(9,"Renying",  (0.086,2.360,0.106)),
       A(10,"Shuitu",  (0.086,2.320,0.106)),
       A(11,"Qishe",   (0.078,2.288,0.108)),
@@ -483,8 +506,8 @@ mer(id="stomaco", nome="Stomaco", sigla="S", siglaInt="ST", elemento="Terra",
       A(45,"Lidui",   (0.198,-1.272,0.452)),
     ],
     ramo_seq=[
-      W((0.175,2.425,0.155)),          # parte da S6 (che appartiene al tracciato principale)
-      A(7,"Xiaguan",  (0.225,2.545,0.135)),
+      W((0.140,2.438,0.100)),          # parte da S6 (che appartiene al tracciato principale)
+      A(7,"Xiaguan",  (0.163, 2.588, 0.078)),
       A(8,"Touwei",   H(0.55,0.62,0.56)),
     ])
 
@@ -556,9 +579,9 @@ mer(id="intestino-tenue", nome="Intestino Tenue", sigla="IT", siglaInt="SI",
       A(14,"Jianwaishu",B(0.20,2.17)),
       A(15,"Jianzhongshu",B(0.14,2.25)),
       A(16,"Tianchuang",(0.116,2.345,-0.062)),
-      A(17,"Tianrong",(0.138,2.420,-0.022)),
-      A(18,"Quanliao",(0.155,2.50,0.19)),
-      A(19,"Tinggong",(0.265,2.575,0.105)),
+      A(17,"Tianrong",(0.128, 2.428, -0.030)),
+      A(18,"Quanliao",FZ(0.112, 2.566)),
+      A(19,"Tinggong",(0.172, 2.618, 0.052)),
     ])
 
 # ============================ 7. VESCICA (V / BL) ============================
@@ -567,8 +590,8 @@ mer(id="vescica", nome="Vescica", sigla="V", siglaInt="BL", elemento="Acqua",
     colore="#2f7fd4", bilaterale=True, coordinate=["vescica-tibiale-anteriore"],
     descrizione="Il meridiano più lungo (67 punti): dall'angolo interno dell'occhio passa sul cranio, scende lungo tutta la schiena con i punti Shu del dorso (linea interna a 1,5 cun) e la linea esterna a 3 cun (V41-V54), poi il retro della coscia e del polpaccio fino al 5° dito del piede.",
     seq=[
-      A(1,"Jingming", (0.05,2.605,0.248)),
-      A(2,"Cuanzhu",  (0.095,2.655,0.232)),
+      A(1,"Jingming", FZ(0.032, 2.662)),
+      A(2,"Cuanzhu",  FZ(0.042, 2.700)),
       A(3,"Meichong", H(0.30,0.85,0.75)),
       A(4,"Qucha",    H(0.34,0.95,0.62)),
       A(5,"Wuchu",    H(0.32,1.05,0.45)),
@@ -576,7 +599,7 @@ mer(id="vescica", nome="Vescica", sigla="V", siglaInt="BL", elemento="Acqua",
       A(7,"Tongtian", H(0.30,1.10,-0.05)),
       A(8,"Luoque",   H(0.30,1.00,-0.35)),
       A(9,"Yuzhen",   H(0.30,0.32,-0.95)),
-      A(10,"Tianzhu", (0.090,2.458,-0.196)),
+      A(10,"Tianzhu", (0.068, 2.462, -0.180)),
       A(11,"Dazhu",   B(0.10,2.28)),
       A(12,"Fengmen", B(0.10,2.20)),
       A(13,"Feishu",  B(0.10,2.12)),
@@ -714,13 +737,13 @@ mer(id="triplice-riscaldatore", nome="Triplice Riscaldatore", sigla="TR", siglaI
       A(14,"Jianliao",(0.520,2.060,-0.075)),
       A(15,"Tianliao",(0.380,2.180,-0.105)),
       A(16,"Tianyou", (0.114,2.380,-0.064)),
-      A(17,"Yifeng",  (0.238,2.498,-0.078)),
+      A(17,"Yifeng",  (0.158, 2.548, -0.082)),
       A(18,"Chimai",  H(0.80,0.05,-0.60)),
       A(19,"Luxi",    H(0.82,0.38,-0.45)),
       A(20,"Jiaosun", H(0.72,0.66,-0.08)),
-      A(21,"Ermen",   (0.275,2.645,0.055)),
-      A(22,"Erheliao",(0.240,2.685,0.100)),
-      A(23,"Sizhukong",(0.170,2.685,0.185)),
+      A(21,"Ermen",   (0.176, 2.662, 0.042)),
+      A(22,"Erheliao",(0.156, 2.692, 0.078)),
+      A(23,"Sizhukong",FZ(0.118, 2.700)),
     ])
 
 # ====================== 11. VESCICA BILIARE (VB / GB) ======================
@@ -729,9 +752,9 @@ mer(id="vescica-biliare", nome="Vescica Biliare", sigla="VB", siglaInt="GB",
     colore="#3fa14a", bilaterale=True, coordinate=["vescica-biliare-deltoide-anteriore"],
     descrizione="Dall'angolo esterno dell'occhio percorre a zig-zag il lato del cranio (VB1-VB20), scende sulla spalla e sul fianco del tronco, sull'anca e sulla faccia esterna della coscia e della gamba, fino al 4° dito del piede. 44 punti.",
     seq=[
-      A(1,"Tongziliao",(0.145,2.62,0.215)),
-      A(2,"Tinghui",  (0.265,2.525,0.09)),
-      A(3,"Shangguan",(0.258,2.60,0.10)),
+      A(1,"Tongziliao",FZ(0.128, 2.660)),
+      A(2,"Tinghui",  (0.172, 2.556, 0.045)),
+      A(3,"Shangguan",(0.170, 2.622, 0.048)),
       A(4,"Hanyan",   H(0.85,0.45,0.35)),
       A(5,"Xuanlu",   H(0.90,0.30,0.26)),
       A(6,"Xuanli",   H(0.92,0.20,0.16)),
@@ -740,15 +763,15 @@ mer(id="vescica-biliare", nome="Vescica Biliare", sigla="VB", siglaInt="GB",
       A(9,"Tianchong",H(0.68,0.70,-0.30)),
       A(10,"Fubai",   H(0.70,0.36,-0.55)),
       A(11,"Touqiaoyin",H(0.62,0.15,-0.75)),
-      A(12,"Wangu",   (0.200,2.480,-0.152)),
+      A(12,"Wangu",   (0.132, 2.508, -0.148)),
       A(13,"Benshen", H(0.60,0.74,0.42)),
-      A(14,"Yangbai", (0.13,2.70,0.198)),
+      A(14,"Yangbai", FZ(0.078, 2.736)),
       A(15,"Toulinqi",H(0.35,0.92,0.55)),
       A(16,"Muchuang",H(0.35,1.02,0.30)),
       A(17,"Zhengying",H(0.35,1.05,0.03)),
       A(18,"Chengling",H(0.35,0.95,-0.27)),
       A(19,"Naokong", H(0.35,0.56,-0.72)),
-      A(20,"Fengchi", (0.140,2.462,-0.198)),
+      A(20,"Fengchi", (0.098, 2.478, -0.176)),
       A(21,"Jianjing",(0.38,2.14,-0.02)),
       A(22,"Yuanye",  (0.46,1.80,-0.02)),
       A(23,"Zhejin",  (0.45,1.76,0.05)),
@@ -825,8 +848,8 @@ mer(id="vaso-concezione", nome="Vaso Concezione", sigla="VC", siglaInt="CV",
       A(20,"Huagai",  F(0.0,1.89)),
       A(21,"Xuanji",  F(0.0,1.96)),
       A(22,"Tiantu",  F(0.0,2.14)),
-      A(23,"Lianquan",(0.0,2.330,0.132)),
-      A(24,"Chengjiang",(0.0,2.44,0.245)),
+      A(23,"Lianquan",(0.0, 2.352, 0.128)),
+      A(24,"Chengjiang",(0.0, 2.436, 0.228)),
     ])
 
 # ====================== 14. VASO GOVERNATORE (VG / GV) ======================
@@ -849,8 +872,8 @@ mer(id="vaso-governatore", nome="Vaso Governatore", sigla="VG", siglaInt="GV",
       A(12,"Shenzhu", B(0.0,2.06)),
       A(13,"Taodao",  B(0.0,2.18)),
       A(14,"Dazhui",  B(0.0,2.28)),
-      A(15,"Yamen",   (0.0,2.440,-0.232)),
-      A(16,"Fengfu",  (0.0,2.505,-0.262)),
+      A(15,"Yamen",   (0.0, 2.452, -0.212)),
+      A(16,"Fengfu",  LZ(0.0, 2.512)),
       A(17,"Naohu",   H(0.0,0.30,-0.95)),
       A(18,"Qiangjian",H(0.0,0.65,-0.75)),
       A(19,"Houding", H(0.0,0.90,-0.45)),
@@ -860,10 +883,10 @@ mer(id="vaso-governatore", nome="Vaso Governatore", sigla="VG", siglaInt="GV",
       A(23,"Shangxing",H(0.0,0.62,0.80)),
       A(24,"Shenting",H(0.0,0.48,0.90)),
       W(H(0.0,0.10,1.00)),
-      A(25,"Suliao",  (0.0,2.53,0.325)),
-      A(26,"Renzhong",(0.0,2.478,0.278)),
-      A(27,"Duiduan", (0.0,2.458,0.268)),
-      A(28,"Yinjiao", (0.0,2.442,0.258)),
+      A(25,"Suliao",  (0.0, 2.545, 0.272)),
+      A(26,"Renzhong",(0.0, 2.492, 0.242)),
+      A(27,"Duiduan", (0.0, 2.474, 0.238)),
+      A(28,"Yinjiao", (0.0, 2.462, 0.234)),
     ])
 
 # ---------------- mappa nomi usati altrove nell'app -> id meridiano ----------------
@@ -911,7 +934,7 @@ def _tronco_x(y):
     return torso_r(y) if 0.60 <= y <= 2.31 else 0.0
 
 def _orecchio(y):
-    return 0.279 if 2.535 <= y <= 2.665 else 0.0
+    return 0.196 if 2.560 <= y <= 2.682 else 0.0
 
 def _corpo_x(y):
     return max(_tronco_x(y), _collo(y), _head_x(y), _orecchio(y))
@@ -1017,14 +1040,19 @@ def dettagli_fronte():
     A = lambda pts: D.append(_poly(pts))
     zf = lambda x, y: 0
     # viso
+    fx = FACE
     for s in (1, -1):
-        D.append(_arco(s*0.095, 2.605, 0.042, 0.026, 0, 2*math.pi))          # occhio
-        D.append(_arco(s*0.09, 2.655, 0.075, 0.035, math.pi*0.15, math.pi*0.85))  # sopracciglio
-        D.append(_arco(s*0.262, 2.60, 0.028, 0.062, -math.pi/2, math.pi/2))  # orecchio
-    A([(-0.03, 2.62), (0.0, 2.53), (0.03, 2.62)])                            # naso
-    A([(-0.055, 2.462), (0.0, 2.472), (0.055, 2.462)])                       # bocca
-    A([(-0.115, 2.60), (-0.14, 2.50), (-0.09, 2.415), (0.0, 2.398),
-       (0.09, 2.415), (0.14, 2.50), (0.115, 2.60)])                          # mandibola
+        D.append(_arco(s*fx["ipd"], fx["occhi"], 0.036, 0.020, 0, 2*math.pi))            # occhio
+        D.append(_arco(s*0.075, fx["occhi"]+0.042, 0.058, 0.024, math.pi*0.12, math.pi*0.88))  # sopracciglio
+        D.append(_arco(s*fx["orecchioX"], fx["orecchioY"], 0.022, 0.050, -math.pi/2, math.pi/2))  # orecchio
+    A([(-0.026, fx["glabella"]-0.02), (-0.018, fx["naso"]+0.02), (0.0, fx["naso"]),
+       (0.018, fx["naso"]+0.02), (0.026, fx["glabella"]-0.02)])              # naso
+    A([(-0.030, fx["sottonaso"]), (0.0, fx["sottonaso"]-0.008), (0.030, fx["sottonaso"])])  # narici
+    A([(-0.046, fx["bocca"]), (0.0, fx["bocca"]+0.010), (0.046, fx["bocca"])])   # bocca
+    A([(-0.152, 2.635), (-0.150, fx["zigomo"] and 2.545), (-0.108, 2.462),
+       (-0.048, fx["mento"]+0.012), (0.0, fx["mento"]),
+       (0.048, fx["mento"]+0.012), (0.108, 2.462), (0.150, 2.545), (0.152, 2.635)])  # mandibola
+    A([(-0.132, 2.800), (0.0, 2.826), (0.132, 2.800)])                       # attaccatura dei capelli
     # collo e clavicole
     for s in (1, -1):
         A([(s*0.05, 2.44), (s*0.10, 2.32), (s*0.16, 2.22)])                  # sternocleidomastoideo
@@ -1110,10 +1138,10 @@ def sagome_lato():
     def zmax(y):
         v = 0.0
         if 0.60 <= y <= 2.31: v = max(v, torso_r(y)*TORSO_ZSCALE + 0.02)
-        if 2.23 <= y <= 2.45: v = max(v, 0.12)
-        if 2.31 <= y <= 2.93: v = max(v, _head_z(y) + HC[2])
-        for (yy, zz) in ((2.40,0.235),(2.44,0.262),(2.47,0.278),(2.50,0.300),
-                         (2.53,0.330),(2.56,0.300),(2.60,0.272),(2.66,0.268),(2.72,0.245)):
+        if 2.23 <= y <= 2.45: v = max(v, 0.115)
+        if 2.35 <= y <= 2.93: v = max(v, _head_z(y) + HC[2])
+        for (yy, zz) in ((2.40,0.150),(2.44,0.196),(2.47,0.222),(2.50,0.240),
+                         (2.545,0.272),(2.58,0.238),(2.62,0.230),(2.68,0.222),(2.74,0.200)):
             if abs(y - yy) < 0.022: v = max(v, zz)      # profilo del viso (naso, labbra, mento)
         if -1.30 <= y <= -1.10: v = max(v, 0.46)        # piede
         if -1.14 <= y <= 0.92:
@@ -1122,8 +1150,8 @@ def sagome_lato():
     def zmin(y):
         v = 0.0
         if 0.60 <= y <= 2.31: v = min(v, -(torso_r(y)*TORSO_ZSCALE + 0.02))
-        if 2.23 <= y <= 2.45: v = min(v, -0.12)
-        if 2.31 <= y <= 2.93: v = min(v, -(_head_z(y) - HC[2]))
+        if 2.23 <= y <= 2.45: v = min(v, -0.115)
+        if 2.35 <= y <= 2.93: v = min(v, -(_head_z(y) - HC[2]))
         if 0.45 <= y <= 0.90: v = min(v, -0.34)         # glutei
         if -1.30 <= y <= -1.14: v = min(v, -0.16)       # tallone
         if -1.14 <= y <= 0.92:
@@ -1140,9 +1168,9 @@ def sagome_lato():
 def dettagli_lato():
     D = []
     A = lambda pts: D.append(_poly(pts))
-    D.append(_arco(-0.01, 2.60, 0.030, 0.062, 0, 2*math.pi))     # orecchio
-    A([(0.20, 2.60), (0.26, 2.55), (0.24, 2.48), (0.18, 2.44)])  # zigomo/mascella
-    A([(0.22, 2.42), (0.10, 2.40), (0.02, 2.35)])                # mandibola
+    D.append(_arco(FACE["orecchioZ"], FACE["orecchioY"], 0.026, 0.050, 0, 2*math.pi))   # orecchio
+    A([(0.16, 2.62), (0.21, 2.57), (0.20, 2.49), (0.15, 2.44)])  # zigomo/mascella
+    A([(0.19, 2.43), (0.09, 2.405), (0.02, 2.36)])               # mandibola
     A([(-0.20, 2.30), (-0.19, 2.10), (-0.17, 1.80), (-0.20, 1.50),
        (-0.19, 1.20), (-0.16, 0.95), (-0.13, 0.84)])             # colonna di profilo
     A([(0.0, 2.14), (0.10, 2.10), (0.20, 2.00)])                 # clavicola di profilo
@@ -1191,7 +1219,7 @@ def corpo():
         "unitaCm": 40,
         "torsoProfile": [[y, r] for (y, r) in TORSO_PROFILE],
         "torsoZScale": TORSO_ZSCALE,
-        "testa": {"centro": list(HC), "raggi": [round(v,4) for v in HR]},
+        "testa": {"centro": list(HC), "raggi": [round(v,4) for v in HR], "viso": FACE},
         "braccio": [list(a) for a in ARM_AXIS],
         "gamba": [list(a) for a in LEG_AXIS],
         "mano": HAND,
