@@ -25,7 +25,7 @@
   let editing = false, draggingPoint = null;
   let ORIGINAL = [];
   // meridiani MTC
-  let merSel = null, probeMesh = null, probePos = null, SAVED_MER = null;
+  let merSel = null, merSelMesh = null, probeMesh = null, probePos = null, SAVED_MER = null;
 
   /* ---------- Persistenza locale (modifiche permanenti sul dispositivo) ----------
      Le posizioni/nomi modificati nell'editor sono salvati in localStorage e
@@ -132,223 +132,26 @@
     };
   }
 
-  // profilo (r,y) del tronco, rivoluzionato in un solido organico
-  function torsoLathe(THREE) {
-    const pts = [];
-    const P = (r, y) => pts.push(new THREE.Vector2(r, y));
-    P(0.02, 0.60);
-    P(0.20, 0.64);
-    P(0.33, 0.72);   // bacino
-    P(0.40, 0.82);   // creste iliache
-    P(0.405, 0.92);  // anche
-    P(0.36, 1.02);   // vita
-    P(0.315, 1.14);  // punto vita (più stretto)
-    P(0.315, 1.20);
-    P(0.35, 1.30);   // addome basso
-    P(0.385, 1.44);  // addome (livello ombelico)
-    P(0.40, 1.56);   // arcata costale
-    P(0.435, 1.68);  // margine costale
-    P(0.475, 1.82);  // basso torace
-    P(0.505, 1.96);  // torace (max ampiezza pettorale)
-    P(0.495, 2.06);  // petto alto
-    P(0.44, 2.14);   // clavicole
-    P(0.32, 2.22);   // trapezio/base collo
-    P(0.17, 2.28);   // base collo
-    P(0.04, 2.31);
-    const geo = new THREE.LatheGeometry(pts, 64);
-    geo.scale(1, 1, 0.64);   // sezione ellittica (profondità < larghezza)
-    return geo;
-  }
-
+  /* Il manichino è costruito da assets/js/manichino.js a partire dall'anatomia
+     condivisa in assets/js/corpo_data.js (stessa sorgente dei punti dei
+     meridiani). Qui passiamo solo i colori del tema e i riferimenti del tronco,
+     che restano quelli su cui sono calibrati i punti indicatori del cliente. */
   function makeBody() {
+    if (window.Manichino && window.Manichino.build) {
+      return window.Manichino.build(THREE, {
+        col: themeColors(), LAND: LAND, torsoR: torsoR, surfaceZ: surfaceZ
+      });
+    }
+    // fallback minimo se manichino.js non è disponibile
     const g = new THREE.Group();
     const col = themeColors();
-    const mat = new THREE.MeshStandardMaterial({ color: col.body, roughness: 0.8, metalness: 0.04, emissive: col.bodyEmis, flatShading: false });
-    const add = (geo, x, y, z, rx, ry, rz, sx, sy, sz) => {
-      const m = new THREE.Mesh(geo, mat);
-      m.position.set(x, y, z);
-      if (rx || ry || rz) m.rotation.set(rx || 0, ry || 0, rz || 0);
-      if (sx != null || sy != null || sz != null) m.scale.set(sx == null ? 1 : sx, sy == null ? 1 : sy, sz == null ? 1 : sz);
-      m.userData.bodyPart = true;
-      g.add(m); return m;
-    };
-
-    // ----- Tronco (un unico solido organico) -----
-    add(torsoLathe(THREE), 0, 0, 0);
-
-    // ----- Collo + testa + viso -----
-    add(new THREE.CylinderGeometry(0.115, 0.14, 0.20, 28), 0, 2.34, 0);
-    add(new THREE.SphereGeometry(0.27, 48, 40), 0, 2.62, 0.01, 0,0,0, 1, 1.15, 1.02); // cranio
-    add(new THREE.SphereGeometry(0.20, 24, 20), 0, 2.50, 0.12, 0,0,0, 0.9, 1.0, 0.7); // volto/mascella
-    add(new THREE.SphereGeometry(0.05, 12, 10), 0, 2.53, 0.28); // naso
-    add(new THREE.SphereGeometry(0.035, 12, 10), 0.09, 2.60, 0.24); // occhio dx
-    add(new THREE.SphereGeometry(0.035, 12, 10), -0.09, 2.60, 0.24); // occhio sx
-    add(new THREE.SphereGeometry(0.05, 12, 10), 0.27, 2.60, 0.02, 0,0,0, 0.6,1,1); // orecchio dx
-    add(new THREE.SphereGeometry(0.05, 12, 10), -0.27, 2.60, 0.02, 0,0,0, 0.6,1,1); // orecchio sx
-
-    // ----- Spalle (deltoidi) -----
-    add(new THREE.SphereGeometry(0.19, 22, 18), 0.52, 2.02, 0, 0,0,0, 1,0.95,1);
-    add(new THREE.SphereGeometry(0.19, 22, 18), -0.52, 2.02, 0, 0,0,0, 1,0.95,1);
-
-    // ----- Braccia articolate (omero + gomito + avambraccio + mano) -----
-    const arm = (s) => {
-      add(new THREE.CylinderGeometry(0.115, 0.10, 0.62, 18), s*0.60, 1.66, 0, 0,0,s*0.06);   // braccio
-      add(new THREE.SphereGeometry(0.10, 16, 14), s*0.66, 1.34, 0);                            // gomito
-      add(new THREE.CylinderGeometry(0.095, 0.075, 0.58, 18), s*0.70, 1.04, 0.02, 0.12,0,s*0.05); // avambraccio
-      add(new THREE.SphereGeometry(0.09, 16, 14), s*0.74, 0.74, 0.05, 0,0,0, 0.8,1.1,0.5);     // mano
-    };
-    arm(1); arm(-1);
-
-    // ----- Landmark anatomici di riferimento (aiutano a localizzare i punti) -----
-    const lmMat = new THREE.MeshStandardMaterial({ color: col.landmark, roughness: 0.9, metalness: 0, emissive: col.bodyEmis });
-    const lmMatHi = new THREE.MeshStandardMaterial({ color: col.landmarkHi, roughness: 0.8, metalness: 0, emissive: col.bodyEmis });
-    const lm = (geo, x, y, z, rx, ry, rz, sx, sy, sz, hi) => {
-      const m = new THREE.Mesh(geo, hi ? lmMatHi : lmMat);
-      m.position.set(x, y, z);
-      if (rx || ry || rz) m.rotation.set(rx||0, ry||0, rz||0);
-      if (sx != null || sy != null || sz != null) m.scale.set(sx==null?1:sx, sy==null?1:sy, sz==null?1:sz);
-      m.userData.bodyPart = true; m.userData.landmark = true; m.userData.landmarkHi = !!hi; g.add(m); return m;
-    };
-    const zf = (x,y) => surfaceZ(x, y, true);
-
-    // --- Capezzoli (linea mammillare) ---
-    lm(new THREE.SphereGeometry(0.028, 16, 14),  LAND.capX, LAND.capezzoli, zf( LAND.capX, LAND.capezzoli)+0.005, 0,0,0, 1,1,1, true);
-    lm(new THREE.SphereGeometry(0.028, 16, 14), -LAND.capX, LAND.capezzoli, zf(-LAND.capX, LAND.capezzoli)+0.005, 0,0,0, 1,1,1, true);
-
-    // --- Ombelico (fossetta) ---
-    lm(new THREE.SphereGeometry(0.032, 16, 14), 0, LAND.ombelico, zf(0, LAND.ombelico)-0.01, 0,0,0, 1,1,0.6, true);
-
-    // --- Incisura giugulare (base collo) ---
-    lm(new THREE.SphereGeometry(0.026, 14, 12), 0, LAND.giugulo, zf(0, LAND.giugulo)-0.01);
-
-    // --- Linea mediana (sterno → pube): sottile solco di riferimento ---
-    lm(new THREE.CylinderGeometry(0.006, 0.006, LAND.giugulo - LAND.pube, 10),
-       0, (LAND.giugulo + LAND.pube)/2, zf(0, (LAND.giugulo+LAND.pube)/2)+0.01, 0.05,0,0);
-
-    // --- Arcata costale (margine costale): due archi obliqui a V dal centro verso i fianchi ---
-    (function ribArc(){
-      const seg = 7;
-      for (let side = -1; side <= 1; side += 2) {
-        for (let i = 0; i < seg; i++) {
-          const t = i / (seg - 1);                 // 0=centro(alto) .. 1=fianco(basso)
-          const x = side * (0.02 + t * 0.36);
-          const y = LAND.arcata + 0.10 - t * 0.30; // scende verso i lati
-          lm(new THREE.SphereGeometry(0.016, 10, 8), x, y, zf(x, y)+0.004);
-        }
-      }
-    })();
-
-    // --- Gabbia toracica: 3 coppie di archi costali brevi sopra l\'arcata ---
-    (function ribs(){
-      const levels = [LAND.arcata + 0.14, LAND.arcata + 0.28, LAND.capezzoli + 0.02];
-      levels.forEach((yBase, li) => {
-        const seg = 6, spread = 0.30 + li*0.03;
-        for (let side=-1; side<=1; side+=2){
-          for (let i=0;i<seg;i++){
-            const t=i/(seg-1);
-            const x=side*(0.06 + t*spread);
-            const y=yBase + Math.sin(t*Math.PI)*0.05 - t*0.02;
-            lm(new THREE.SphereGeometry(0.012, 8, 6), x, y, zf(x,y)+0.003);
-          }
-        }
-      });
-    })();
-
-    // --- Creste iliache (bacino) ---
-    (function iliac(){
-      const seg=5;
-      for (let side=-1; side<=1; side+=2){
-        for (let i=0;i<seg;i++){
-          const t=i/(seg-1);
-          const x=side*(0.10 + t*0.26);
-          const y=LAND.cresta + t*0.05;
-          lm(new THREE.SphereGeometry(0.013, 8, 6), x, y, zf(x,y)+0.003);
-        }
-      }
-    })();
-
-    // --- Pavimento pelvico / sinfisi pubica (arco basso) ---
-    (function pube(){
-      const seg=7;
-      for (let i=0;i<seg;i++){
-        const t=i/(seg-1);
-        const x=(t-0.5)*0.30;
-        const y=LAND.pube - Math.cos((t-0.5)*Math.PI)*0.03;
-        lm(new THREE.SphereGeometry(0.014, 8, 6), x, y, zf(x,y)+0.003, 0,0,0, 1,1,1, true);
-      }
-    })();
-
-    // ===== RETRO: colonna vertebrale + costole posteriori =====
-    const zb = (x,y) => surfaceZ(x, y, false);   // superficie posteriore
-
-    // --- Colonna vertebrale (serie di vertebre lungo la mediana posteriore) ---
-    (function spine(){
-      const yTop = LAND.giugulo + 0.06, yBot = LAND.pube + 0.02;
-      const n = 17;
-      for (let i=0;i<n;i++){
-        const t=i/(n-1);
-        const y=yTop - t*(yTop-yBot);
-        const r = 0.026 - 0.006*Math.sin(t*Math.PI);      // leggermente affusolata
-        lm(new THREE.SphereGeometry(r, 10, 8), 0, y, zb(0,y)-0.004, 0,0,0, 1,0.85,1);
-      }
-    })();
-
-    // --- Costole posteriori: archi che partono dalla colonna verso i fianchi ---
-    (function backRibs(){
-      const levels = [LAND.arcata+0.02, LAND.arcata+0.16, LAND.arcata+0.30, LAND.capezzoli+0.06, LAND.capezzoli+0.20];
-      levels.forEach((yBase) => {
-        const seg=7, spread=0.34;
-        for (let side=-1; side<=1; side+=2){
-          for (let i=1;i<seg;i++){        // parte da i=1 per non sovrapporsi alla colonna
-            const t=i/(seg-1);
-            const x=side*(t*spread);
-            const y=yBase - t*0.10;       // gli archi scendono verso i lati
-            lm(new THREE.SphereGeometry(0.013, 8, 6), x, y, zb(x,y)-0.003);
-          }
-        }
-      });
-    })();
-
-    // --- Scapole (accenno, per orientarsi sul retro alto) ---
-    (function scapole(){
-      for (let side=-1; side<=1; side+=2){
-        const x=side*0.24, y=LAND.capezzoli+0.14;
-        lm(new THREE.SphereGeometry(0.05, 12, 10), x, y, zb(x,y)-0.01, 0,0,0, 1,1.3,0.5);
-      }
-    })();
-
-    // ===== MUTANDE / SLIP (copre la zona pelvica, fronte + retro) =====
-    (function slip(){
-      const col2 = themeColors();
-      const briefMat = new THREE.MeshStandardMaterial({ color: col2.brief, roughness: 0.7, metalness: 0.02, emissive: col2.bodyEmis });
-      const brief = (geo, x, y, z, rx, ry, rz, sx, sy, sz) => {
-        const m = new THREE.Mesh(geo, briefMat);
-        m.position.set(x, y, z);
-        if (rx||ry||rz) m.rotation.set(rx||0, ry||0, rz||0);
-        if (sx!=null||sy!=null||sz!=null) m.scale.set(sx==null?1:sx, sy==null?1:sy, sz==null?1:sz);
-        m.userData.bodyPart = true; m.userData.brief = true; g.add(m); return m;
-      };
-      // fascia in vita (anello attorno al bacino, appena sopra il pube)
-      brief(new THREE.CylinderGeometry(torsoR(LAND.pube+0.10)+0.015, torsoR(LAND.pube+0.02)+0.02, 0.30, 40, 1, true),
-            0, LAND.pube+0.02, 0, 0,0,0, 1,1,TORSO_ZSCALE);
-      // fondo/cavallo (chiude sotto tra le gambe)
-      brief(new THREE.SphereGeometry(0.30, 28, 20), 0, LAND.pube-0.14, 0, 0,0,0, 1,0.6,TORSO_ZSCALE);
-    })();
-
-    // ----- Glutei/bacino inferiore -----
-    add(new THREE.SphereGeometry(0.22, 22, 18), 0.16, 0.60, -0.06, 0,0,0, 1,0.8,1);
-    add(new THREE.SphereGeometry(0.22, 22, 18), -0.16, 0.60, -0.06, 0,0,0, 1,0.8,1);
-
-    // ----- Gambe articolate (coscia + ginocchio + polpaccio + piede) -----
-    const leg = (s) => {
-      add(new THREE.CylinderGeometry(0.175, 0.13, 0.90, 20), s*0.20, 0.18, 0);      // coscia
-      add(new THREE.SphereGeometry(0.135, 18, 16), s*0.21, -0.30, 0.01);            // ginocchio
-      add(new THREE.CylinderGeometry(0.125, 0.085, 0.86, 20), s*0.22, -0.74, 0);    // polpaccio
-      add(new THREE.SphereGeometry(0.10, 16, 14), s*0.22, -1.18, 0);                // caviglia
-      add(new THREE.BoxGeometry(0.16, 0.11, 0.34), s*0.22, -1.24, 0.10);            // piede
-    };
-    leg(1); leg(-1);
-
+    const mat = new THREE.MeshStandardMaterial({ color: col.body, roughness: 0.8, emissive: col.bodyEmis });
+    const pts = TORSO_PROFILE.map((p) => new THREE.Vector2(p[1], p[0]));
+    const geo = new THREE.LatheGeometry(pts, 48);
+    geo.scale(1, 1, TORSO_ZSCALE);
+    const m = new THREE.Mesh(geo, mat);
+    m.userData.bodyPart = true;
+    g.add(m);
     return g;
   }
 
@@ -465,6 +268,33 @@
     camera.lookAt(target);
   }
 
+  /* ---------- viste preimpostate della camera ---------- */
+  const VISTE = {
+    fronte:   { yaw: 0,             pitch: 0.05, dist: 6.2, target: [0, 1.20, 0] },
+    retro:    { yaw: Math.PI,       pitch: 0.05, dist: 6.2, target: [0, 1.20, 0] },
+    sinistra: { yaw: Math.PI / 2,   pitch: 0.05, dist: 6.2, target: [0, 1.20, 0] },
+    destra:   { yaw: -Math.PI / 2,  pitch: 0.05, dist: 6.2, target: [0, 1.20, 0] },
+    testa:    { pitch: 0.05,        dist: 1.55,  target: [0, 2.62, 0] },
+    corpo:    { pitch: 0.05,        dist: 6.2,   target: [0, 1.20, 0] }
+  };
+  function setView(nome) {
+    const v = VISTE[nome]; if (!v || !camera) return;
+    if (v.yaw != null) yaw = v.yaw;
+    if (v.pitch != null) pitch = v.pitch;
+    if (v.dist != null) dist = v.dist;
+    if (v.target) target.set(v.target[0], v.target[1], v.target[2]);
+    updateCamera();
+    const bar = document.getElementById("viewBar");
+    if (bar) Array.from(bar.querySelectorAll("[data-view]")).forEach((b) => b.classList.toggle("is-on", b.dataset.view === nome));
+  }
+  // inquadra da vicino un punto senza cambiare l'angolo di vista
+  function focusOn(pos, d) {
+    if (!camera || !pos) return;
+    target.set(pos.x, pos.y, pos.z);
+    dist = d || 1.5;
+    updateCamera();
+  }
+
   function bindControls() {
     const dom = renderer.domElement;
     const down = (x, y) => {
@@ -495,13 +325,13 @@
     dom.addEventListener("wheel", (e) => {
       e.preventDefault();
       if (editing && picked) { nudgeDepth(e.deltaY < 0 ? 0.01 : -0.01); return; }  // regola profondità
-      dist = Math.max(3.2, Math.min(11, dist + e.deltaY * 0.01)); updateCamera();
+      dist = Math.max(1.0, Math.min(11, dist + e.deltaY * 0.01 * Math.max(0.35, dist / 6))); updateCamera();
     }, { passive: false });
     // pinch zoom
     let pinch0 = null;
     dom.addEventListener("touchstart", (e) => { if (e.touches.length === 2) pinch0 = pdist(e); }, { passive: true });
     dom.addEventListener("touchmove", (e) => {
-      if (e.touches.length === 2 && pinch0) { const d = pdist(e); dist = Math.max(3.2, Math.min(11, dist * pinch0 / d)); pinch0 = d; updateCamera(); }
+      if (e.touches.length === 2 && pinch0) { const d = pdist(e); dist = Math.max(1.0, Math.min(11, dist * pinch0 / d)); pinch0 = d; updateCamera(); }
     }, { passive: true });
     dom.addEventListener("touchend", () => { pinch0 = null; });
     // click / tap to pick
@@ -980,7 +810,11 @@
   function selectMerPoint(ref) {
     const mm = MM(); if (!mm) return;
     const m = mm.get(ref.merId); if (!m) return;
+    // ripristina la dimensione del punto MTC selezionato in precedenza
+    if (merSelMesh) { merSelMesh.scale.setScalar(1); merSelMesh = null; }
     merSel = ref; picked = null; clearProbe();
+    const mk = mm.markerFor(ref);
+    if (mk) { mk.visible = true; mk.scale.setScalar(1.8); merSelMesh = mk; }
     const col = themeColors();
     markerMeshes.forEach((x) => {
       x.scale.setScalar(1);
@@ -1051,9 +885,12 @@
   function renderMerPointInfo(m, ref) {
     if (!infoEl) return;
     const mm = MM();
-    const n = m.nodi[ref.idx] || {};
+    const arr = mm.nodiDi(m.id, ref.ramo) || [];
+    const n = arr[ref.idx] || {};
     const rows = [["Meridiano", m.nome + " (" + m.sigla + " / " + m.siglaInt + ")"]];
+    if (n.nome) rows.push(["Nome cinese", n.nome]);
     if (n.ruolo) rows.push(["Ruolo", n.ruolo]);
+    if (ref.ramo) rows.push(["Ramo", m.id === "vescica" ? "linea esterna del dorso (3 cun)" : "ramo secondario"]);
     if (m.bilaterale) rows.push(["Lato", mm.latoLabel(ref.side)]);
     merMetaRows(m).forEach((r) => rows.push(r));
     let editHtml = "";
@@ -1066,21 +903,35 @@
     infoEl.innerHTML =
       '<div class="pinfo__head">' + merDot(m, n.sigla) + '<h3>' + esc((n.sigla || "") + (n.nome ? " · " + n.nome : "")) + '</h3></div>' +
       (n.note ? '<p class="pinfo__note">' + esc(n.note) + '</p>' : '') +
-      dlOf(rows) + merActions(m) + editHtml;
+      dlOf(rows) +
+      '<div class="meractions"><button type="button" class="ebtn ebtn--mini" data-mzoom="' +
+        esc(String(n.x)) + ',' + esc(String(n.y)) + ',' + esc(String(n.z)) + ',' + (ref.side || 1) +
+        '">\u{1F50D} Inquadra il punto</button></div>' +
+      merActions(m) + editHtml;
     infoEl.hidden = false;
     wireMerActions();
   }
 
-  function renderMerInfo(m) {
+  function renderMerInfo(m, tutti) {
     if (!infoEl) return;
-    const punti = (m.nodi || []).filter((n) => n.sigla);
-    const chips = punti.map((n, i) => '<button type="button" class="merpt" data-mpt="' + m.nodi.indexOf(n) + '" data-mid="' + esc(m.id) + '">' +
-      '<b>' + esc(n.sigla) + '</b> ' + esc(n.nome || "") + '</button>').join("");
+    const mm = MM();
+    const tot = mm.puntiDi(m.id, false);
+    const chiave = mm.puntiDi(m.id, true);
+    const mostra = tutti ? tot : chiave;
+    const chip = (p) => '<button type="button" class="merpt' + (p.nodo.chiave ? ' merpt--key' : '') +
+      '" data-mpt="' + p.idx + '" data-mid="' + esc(m.id) + '" data-mramo="' + (p.ramo ? 1 : 0) + '">' +
+      '<b>' + esc(p.nodo.sigla) + '</b> ' + esc(p.nodo.nome || "") + '</button>';
+    const toggle = '<button type="button" class="ebtn ebtn--mini" data-mall="' + (tutti ? '0' : '1') +
+      '" data-mid="' + esc(m.id) + '">' + (tutti ? 'Mostra solo i principali' : 'Mostra tutti i ' + tot.length + ' punti') + '</button>';
     infoEl.innerHTML =
       '<div class="pinfo__head">' + merDot(m) + '<h3>' + esc(m.nome) + '</h3></div>' +
       (m.descrizione ? '<p class="pinfo__note">' + esc(m.descrizione) + '</p>' : '') +
-      dlOf(merMetaRows(m).concat([["Punti mappati", String(punti.length) + (m.bilaterale ? " per lato" : "")]])) +
-      '<div class="merpts">' + chips + '</div>' +
+      dlOf(merMetaRows(m).concat([
+        ["Punti", String(tot.length) + (m.bilaterale ? " per lato" : "") + " · " + chiave.length + " principali"]
+      ])) +
+      '<h4 class="merbox__h">' + (tutti ? 'Tutti i punti' : 'Punti principali') + '</h4>' +
+      '<div class="merpts merpts--scroll">' + mostra.map(chip).join("") + '</div>' +
+      '<div class="meractions">' + toggle + '</div>' +
       merActions(m);
     infoEl.hidden = false;
     wireMerActions();
@@ -1174,7 +1025,16 @@
       b.addEventListener("click", () => {
         const id = b.dataset.mid, idx = parseInt(b.dataset.mpt, 10);
         mm.setVisible(id, true);
-        selectMerPoint({ merId: id, idx: idx, side: 1 });
+        selectMerPoint({ merId: id, idx: idx, side: 1, ramo: b.dataset.mramo === "1" });
+      });
+    });
+    infoEl.querySelectorAll("[data-mall]").forEach((b) => {
+      b.addEventListener("click", () => renderMerInfo(mm.get(b.dataset.mid), b.dataset.mall === "1"));
+    });
+    infoEl.querySelectorAll("[data-mzoom]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const v = b.dataset.mzoom.split(",").map(Number);
+        focusOn({ x: v[0] * (v[3] || 1), y: v[1], z: v[2] }, 1.3);
       });
     });
   }
@@ -1218,8 +1078,21 @@
       const p = document.getElementById("merPanel");
       if (p) p.classList.toggle("is-hidden", !show.checked);
     });
-    const pts = document.getElementById("merPointsShow");
-    if (pts) pts.addEventListener("change", () => mm.setPointsVisible(!!pts.checked));
+    const pts = document.getElementById("merPointsMode");
+    if (pts) {
+      pts.value = mm.pointsMode();
+      pts.addEventListener("change", () => mm.setPointsMode(pts.value));
+    }
+    const lab = document.getElementById("merLabels");
+    if (lab) {
+      lab.checked = mm.labelsEnabled();
+      lab.addEventListener("change", () => mm.setLabels(!!lab.checked));
+    }
+    const bar = document.getElementById("viewBar");
+    if (bar) bar.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-view]"); if (!b) return;
+      setView(b.dataset.view);
+    });
     const bAll = document.getElementById("merAll");
     if (bAll) bAll.addEventListener("click", () => { mm.setAllVisible(true); mm.highlight(null); syncChips(); });
     const bNone = document.getElementById("merNone");
@@ -1257,6 +1130,8 @@
     selectMeridiano: selectMeridiano,
     selectMerPoint: selectMerPoint,
     probeAt: probeAt,
+    setView: setView,
+    focusOn: focusOn,
     meridianoDi: (pos) => (window.MeridianiMap ? window.MeridianiMap.nearest(pos) : null)
   };
 

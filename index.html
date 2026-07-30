@@ -38,6 +38,14 @@
     <div class="punti__layout">
       <div class="punti__stage">
         <div id="punti3d" class="punti__canvas" role="img" aria-label="Mappa 3D del corpo con i punti d'allarme"></div>
+        <div class="viewbar" id="viewBar">
+          <button class="ebtn ebtn--mini is-on" type="button" data-view="fronte">Fronte</button>
+          <button class="ebtn ebtn--mini" type="button" data-view="retro">Retro</button>
+          <button class="ebtn ebtn--mini" type="button" data-view="sinistra">Lato sx</button>
+          <button class="ebtn ebtn--mini" type="button" data-view="destra">Lato dx</button>
+          <button class="ebtn ebtn--mini" type="button" data-view="testa">Testa</button>
+          <button class="ebtn ebtn--mini" type="button" data-view="corpo">Corpo intero</button>
+        </div>
         <p class="punti__hint">Trascina per ruotare · rotella/pinch per zoom · tocca un punto per i dettagli</p>
       </div>
       <aside class="punti__side">
@@ -60,7 +68,14 @@
         <section class="merpanel" id="merPanel">
           <div class="merpanel__head">
             <label class="merswitch"><input type="checkbox" id="merShow" checked /> <span>Meridiani MTC</span></label>
-            <label class="merswitch"><input type="checkbox" id="merPointsShow" checked /> <span>Punti</span></label>
+            <label class="merswitch"><span>Punti</span>
+              <select id="merPointsMode" aria-label="Quali punti mostrare">
+                <option value="chiave">principali</option>
+                <option value="tutti">tutti (361)</option>
+                <option value="nessuno">nessuno</option>
+              </select>
+            </label>
+            <label class="merswitch"><input type="checkbox" id="merLabels" checked /> <span>Sigle</span></label>
             <button id="merAll" class="ebtn ebtn--mini" type="button">Tutti</button>
             <button id="merNone" class="ebtn ebtn--mini" type="button">Nessuno</button>
           </div>
@@ -118,6 +133,8 @@
   <script src="assets/vendor/three.min.js"></script>
   <script src="assets/js/data.js"></script>
   <script src="assets/js/punti_data.js"></script>
+  <script src="assets/js/corpo_data.js"></script>
+  <script src="assets/js/manichino.js"></script>
   <script src="assets/js/meridiani_data.js"></script>
   <script src="assets/js/meridiani.js"></script>
   <script src="assets/js/app.js"></script>

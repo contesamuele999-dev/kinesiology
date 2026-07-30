@@ -432,3 +432,11 @@ body.editing .punti__canvas{ cursor:crosshair; outline:2px solid color-mix(in sr
 .merrow__txt em{ font-style:normal; font-size:.78rem; color:var(--muted); }
 .mermatch{ margin:8px 0 0; padding:8px 10px; border-radius:9px; font-size:.85rem; line-height:1.45;
   background:color-mix(in srgb,var(--brand) 9%, var(--card)); border:1px solid color-mix(in srgb,var(--brand) 25%, var(--line)); }
+
+/* ---- Barra viste della mappa 3D ---- */
+.viewbar{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 2px 0; }
+.viewbar .ebtn.is-on{ background:var(--brand); color:#fff; border-color:var(--brand); }
+.merswitch select{ font:inherit; font-size:.82rem; font-weight:700; color:var(--ink);
+  background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:3px 6px; cursor:pointer; }
+.merpts--scroll{ max-height:190px; overflow-y:auto; padding:2px; }
+.merpt--key{ border-color:color-mix(in srgb,var(--brand) 45%, var(--line)); font-weight:700; }

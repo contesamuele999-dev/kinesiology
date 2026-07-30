@@ -1,8 +1,9 @@
-/* meridiani_data.js — dati dei meridiani MTC (tracciati + punti principali).
+/* meridiani_data.js — dati dei meridiani MTC (tracciati + 361 punti classici).
    Generato da tools/generate_meridiani.py. NON editare a mano. */
 window.MERIDIANI = {
   "titolo": "Meridiani MTC",
-  "descrizione": "Tracciati e punti principali dei 12 meridiani principali + Vaso Concezione e Vaso Governatore, mappati sul manichino. Convenzione: x<0 = lato DESTRO del soggetto, x>0 = lato SINISTRO; i meridiani bilaterali sono definiti sul lato sinistro e specchiati dall'app. Posizioni indicative a scopo di consultazione.",
+  "descrizione": "Tracciati e TUTTI i 361 punti classici dei 12 meridiani principali + Vaso Concezione e Vaso Governatore, mappati sul manichino in posizione anatomica (palmi in avanti). Convenzione: x<0 = lato DESTRO del soggetto, x>0 = lato SINISTRO; i meridiani bilaterali sono definiti sul lato sinistro e specchiati dall'app. Posizioni indicative a scopo di consultazione.",
+  "totalePunti": 361,
   "alias": {
     "polmone": [
       "Polmone",
@@ -97,7 +98,7 @@ window.MERIDIANI = {
       "coordinate": [
         "polmone-deltoide-medio"
       ],
-      "descrizione": "Parte dal torace (P1), scorre sulla faccia anteriore-radiale del braccio e termina all'angolo ungueale del pollice.",
+      "descrizione": "Parte dal torace (P1 Zhongfu), sale a P2 sotto la clavicola, poi scende sulla faccia anteriore-radiale del braccio e dell'avambraccio e termina all'angolo ungueale del pollice. 11 punti.",
       "nodi": [
         {
           "x": 0.36,
@@ -106,68 +107,98 @@ window.MERIDIANI = {
           "sigla": "P1",
           "nome": "Zhongfu",
           "ruolo": "Mu del Polmone",
-          "note": "1° spazio intercostale, sotto la clavicola, lato esterno del torace"
+          "note": "1° spazio intercostale, sotto la clavicola, lato esterno del torace",
+          "chiave": true
         },
         {
-          "x": 0.44,
-          "y": 1.92,
-          "z": 0.22
+          "x": 0.4,
+          "y": 2.08,
+          "z": 0.224,
+          "sigla": "P2",
+          "nome": "Yunmen"
         },
         {
-          "x": 0.56,
-          "y": 1.82,
-          "z": 0.14
+          "x": 0.47,
+          "y": 1.96,
+          "z": 0.16
         },
         {
-          "x": 0.64,
-          "y": 1.6,
-          "z": 0.12
+          "x": 0.59,
+          "y": 1.72,
+          "z": 0.1,
+          "sigla": "P3",
+          "nome": "Tianfu"
         },
         {
-          "x": 0.72,
-          "y": 1.36,
-          "z": 0.12,
+          "x": 0.586,
+          "y": 1.58,
+          "z": 0.095,
+          "sigla": "P4",
+          "nome": "Xiabai"
+        },
+        {
+          "x": 0.579,
+          "y": 1.33,
+          "z": 0.085,
           "sigla": "P5",
           "nome": "Chize",
           "ruolo": "He-mare · dispersione",
-          "note": "piega del gomito, lato radiale (esterno) del tendine del bicipite"
+          "note": "piega del gomito, lato radiale (esterno) del tendine del bicipite",
+          "chiave": true
         },
         {
-          "x": 0.735,
+          "x": 0.594,
           "y": 1.14,
-          "z": 0.11
+          "z": 0.086,
+          "sigla": "P6",
+          "nome": "Kongzui",
+          "ruolo": "Xi dei fori",
+          "note": "5 cun sopra la piega del polso, sul bordo radiale dell'avambraccio",
+          "chiave": true
         },
         {
-          "x": 0.755,
-          "y": 0.95,
-          "z": 0.1,
+          "x": 0.597,
+          "y": 0.87,
+          "z": 0.069,
           "sigla": "P7",
           "nome": "Lieque",
-          "ruolo": "Luo di passaggio",
-          "note": "1,5 cun sopra la piega del polso, sul bordo radiale"
+          "ruolo": "Luo di passaggio · punto chiave di Ren Mai",
+          "note": "1,5 cun sopra la piega del polso, sul bordo radiale",
+          "chiave": true
         },
         {
-          "x": 0.77,
-          "y": 0.86,
-          "z": 0.09,
+          "x": 0.594,
+          "y": 0.8,
+          "z": 0.068,
+          "sigla": "P8",
+          "nome": "Jingqu"
+        },
+        {
+          "x": 0.589,
+          "y": 0.755,
+          "z": 0.07,
           "sigla": "P9",
           "nome": "Taiyuan",
           "ruolo": "Yuan sorgente · tonificazione",
-          "note": "piega del polso, lato radiale, sull'arteria"
+          "note": "piega del polso, lato radiale, sull'arteria",
+          "chiave": true
         },
         {
-          "x": 0.8,
-          "y": 0.76,
-          "z": 0.1
+          "x": 0.648,
+          "y": 0.62,
+          "z": 0.058,
+          "sigla": "P10",
+          "nome": "Yuji"
         },
         {
-          "x": 0.82,
-          "y": 0.67,
-          "z": 0.1,
+          "x": 0.688,
+          "y": 0.512,
+          "z": 0.048,
           "sigla": "P11",
           "nome": "Shaoshang",
           "ruolo": "Jing-pozzo",
-          "note": "angolo ungueale del pollice, lato radiale"
+          "note": "angolo ungueale del pollice, lato radiale",
+          "chiave": true
         }
       ]
     },
@@ -185,82 +216,168 @@ window.MERIDIANI = {
       "coordinate": [
         "intestino-crasso-tensore-fascia-lata"
       ],
-      "descrizione": "Dall'indice risale il dorso della mano e la faccia esterna del braccio fino alla spalla, al collo e all'ala del naso.",
+      "descrizione": "Dall'indice risale il dorso della mano e la faccia dorso-radiale dell'avambraccio e del braccio fino alla spalla, poi il collo e il viso, terminando a lato dell'ala del naso. 20 punti.",
       "nodi": [
         {
-          "x": 0.805,
-          "y": 0.66,
-          "z": 0.09,
+          "x": 0.626,
+          "y": 0.255,
+          "z": 0.03,
           "sigla": "GI1",
           "nome": "Shangyang",
           "ruolo": "Jing-pozzo",
-          "note": "angolo ungueale dell'indice, lato radiale"
+          "note": "angolo ungueale dell'indice, lato radiale",
+          "chiave": true
         },
         {
-          "x": 0.79,
-          "y": 0.755,
-          "z": -0.02,
+          "x": 0.628,
+          "y": 0.345,
+          "z": 0.018,
+          "sigla": "GI2",
+          "nome": "Erjian"
+        },
+        {
+          "x": 0.628,
+          "y": 0.462,
+          "z": 0.008,
+          "sigla": "GI3",
+          "nome": "Sanjian"
+        },
+        {
+          "x": 0.622,
+          "y": 0.575,
+          "z": 0.004,
           "sigla": "GI4",
           "nome": "Hegu",
           "ruolo": "Yuan sorgente",
-          "note": "dorso della mano, tra 1° e 2° metacarpo"
+          "note": "dorso della mano, tra 1° e 2° metacarpo",
+          "chiave": true
         },
         {
-          "x": 0.775,
-          "y": 0.86,
-          "z": -0.05
+          "x": 0.589,
+          "y": 0.755,
+          "z": 0.012,
+          "sigla": "GI5",
+          "nome": "Yangxi"
         },
         {
-          "x": 0.755,
-          "y": 1.05,
-          "z": -0.04
+          "x": 0.592,
+          "y": 0.852,
+          "z": 0.009,
+          "sigla": "GI6",
+          "nome": "Pianli",
+          "ruolo": "Luo di passaggio",
+          "note": "3 cun sopra GI5, sulla faccia radiale dell'avambraccio",
+          "chiave": true
         },
         {
-          "x": 0.74,
-          "y": 1.36,
-          "z": 0.04,
-          "sigla": "GI11",
-          "nome": "Quchi",
-          "ruolo": "He-mare · tonificazione",
-          "note": "estremità esterna della piega del gomito, a gomito flesso"
+          "x": 0.595,
+          "y": 0.949,
+          "z": 0.006,
+          "sigla": "GI7",
+          "nome": "Wenliu",
+          "ruolo": "Xi dei fori",
+          "note": "5 cun sopra GI5, sul bordo radiale dell'avambraccio",
+          "chiave": true
         },
         {
-          "x": 0.7,
-          "y": 1.62,
-          "z": 0.02
+          "x": 0.597,
+          "y": 1.046,
+          "z": 0.002,
+          "sigla": "GI8",
+          "nome": "Xialian"
         },
         {
           "x": 0.6,
-          "y": 2.02,
-          "z": 0.1,
+          "y": 1.143,
+          "z": -0.001,
+          "sigla": "GI9",
+          "nome": "Shanglian"
+        },
+        {
+          "x": 0.603,
+          "y": 1.24,
+          "z": -0.004,
+          "sigla": "GI10",
+          "nome": "Shousanli"
+        },
+        {
+          "x": 0.602,
+          "y": 1.33,
+          "z": 0.001,
+          "sigla": "GI11",
+          "nome": "Quchi",
+          "ruolo": "He-mare · tonificazione",
+          "note": "estremità esterna della piega del gomito, a gomito flesso",
+          "chiave": true
+        },
+        {
+          "x": 0.604,
+          "y": 1.38,
+          "z": -0.024,
+          "sigla": "GI12",
+          "nome": "Zhouliao"
+        },
+        {
+          "x": 0.61,
+          "y": 1.47,
+          "z": -0.008,
+          "sigla": "GI13",
+          "nome": "Shouwuli"
+        },
+        {
+          "x": 0.626,
+          "y": 1.62,
+          "z": -0.003,
+          "sigla": "GI14",
+          "nome": "Binao"
+        },
+        {
+          "x": 0.56,
+          "y": 2.035,
+          "z": 0.085,
           "sigla": "GI15",
           "nome": "Jianyu",
-          "ruolo": "punto di riunione della spalla",
-          "note": "depressione antero-esterna dell'acromion, a braccio abdotto"
+          "ruolo": "riunione della spalla",
+          "note": "depressione antero-esterna dell'acromion, a braccio abdotto",
+          "chiave": true
         },
         {
-          "x": 0.3,
-          "y": 2.2,
-          "z": 0.13
+          "x": 0.42,
+          "y": 2.14,
+          "z": 0.02,
+          "sigla": "GI16",
+          "nome": "Jugu"
         },
         {
-          "x": 0.18,
+          "x": 0.126,
+          "y": 2.33,
+          "z": 0.056,
+          "sigla": "GI17",
+          "nome": "Tianding"
+        },
+        {
+          "x": 0.118,
           "y": 2.38,
-          "z": 0.11
+          "z": 0.056,
+          "sigla": "GI18",
+          "nome": "Futu"
         },
         {
-          "x": 0.15,
-          "y": 2.47,
-          "z": 0.19
+          "x": 0.07,
+          "y": 2.5,
+          "z": 0.255,
+          "sigla": "GI19",
+          "nome": "Kouheliao"
         },
         {
           "x": 0.05,
           "y": 2.52,
-          "z": 0.27,
+          "z": 0.268,
           "sigla": "GI20",
           "nome": "Yingxiang",
           "ruolo": "fine del meridiano",
-          "note": "nella piega naso-labiale, a lato dell'ala del naso"
+          "note": "nella piega naso-labiale, a lato dell'ala del naso",
+          "chiave": true
         }
       ]
     },
@@ -278,56 +395,170 @@ window.MERIDIANI = {
       "coordinate": [
         "stomaco-gran-pettorale-clavicolare"
       ],
-      "descrizione": "Dal viso scende lungo il collo, il torace (linea del capezzolo) e l'addome, poi sulla faccia antero-esterna della gamba fino al 2° dito del piede.",
+      "descrizione": "Dal viso (sotto l'occhio) scende lungo il collo, il torace sulla linea del capezzolo e l'addome a 2 cun dalla mediana, poi sulla faccia antero-esterna della coscia e della gamba fino al 2° dito del piede. 45 punti; il ramo facciale sale alla tempia (S7-S8).",
       "nodi": [
         {
           "x": 0.09,
-          "y": 2.55,
-          "z": 0.25,
+          "y": 2.555,
+          "z": 0.252,
           "sigla": "S1",
           "nome": "Chengqi",
           "ruolo": "inizio del meridiano",
-          "note": "sotto la pupilla, sul bordo dell'orbita"
+          "note": "sotto la pupilla, sul bordo dell'orbita",
+          "chiave": true
         },
         {
-          "x": 0.06,
-          "y": 2.46,
-          "z": 0.26,
+          "x": 0.09,
+          "y": 2.515,
+          "z": 0.255,
+          "sigla": "S2",
+          "nome": "Sibai"
+        },
+        {
+          "x": 0.09,
+          "y": 2.478,
+          "z": 0.252,
+          "sigla": "S3",
+          "nome": "Juliao"
+        },
+        {
+          "x": 0.065,
+          "y": 2.455,
+          "z": 0.258,
           "sigla": "S4",
-          "nome": "Dicang",
-          "note": "0,4 cun a lato dell'angolo della bocca"
+          "nome": "Dicang"
         },
         {
-          "x": 0.18,
-          "y": 2.44,
-          "z": 0.16,
+          "x": 0.135,
+          "y": 2.425,
+          "z": 0.215,
+          "sigla": "S5",
+          "nome": "Daying"
+        },
+        {
+          "x": 0.175,
+          "y": 2.425,
+          "z": 0.155,
           "sigla": "S6",
           "nome": "Jiache",
-          "note": "angolo della mandibola, sul ventre del massetere"
+          "ruolo": "",
+          "note": "angolo della mandibola, sul ventre del massetere",
+          "chiave": true
         },
         {
-          "x": 0.12,
-          "y": 2.24,
-          "z": 0.14,
+          "x": 0.086,
+          "y": 2.36,
+          "z": 0.106,
           "sigla": "S9",
           "nome": "Renying",
           "ruolo": "finestra del cielo",
-          "note": "a lato del pomo d'Adamo, sull'arteria carotide"
+          "note": "a lato del pomo d'Adamo, sull'arteria carotide",
+          "chiave": true
         },
         {
-          "x": 0.2,
-          "y": 2.12,
-          "z": 0.303
+          "x": 0.086,
+          "y": 2.32,
+          "z": 0.106,
+          "sigla": "S10",
+          "nome": "Shuitu"
+        },
+        {
+          "x": 0.078,
+          "y": 2.288,
+          "z": 0.139,
+          "sigla": "S11",
+          "nome": "Qishe"
+        },
+        {
+          "x": 0.22,
+          "y": 2.14,
+          "z": 0.286,
+          "sigla": "S12",
+          "nome": "Quepen"
+        },
+        {
+          "x": 0.235,
+          "y": 2.08,
+          "z": 0.311,
+          "sigla": "S13",
+          "nome": "Qihu"
+        },
+        {
+          "x": 0.24,
+          "y": 1.99,
+          "z": 0.324,
+          "sigla": "S14",
+          "nome": "Kufang"
+        },
+        {
+          "x": 0.24,
+          "y": 1.92,
+          "z": 0.32,
+          "sigla": "S15",
+          "nome": "Wuyi"
+        },
+        {
+          "x": 0.24,
+          "y": 1.87,
+          "z": 0.312,
+          "sigla": "S16",
+          "nome": "Yingchuang"
         },
         {
           "x": 0.24,
           "y": 1.82,
-          "z": 0.304
+          "z": 0.304,
+          "sigla": "S17",
+          "nome": "Ruzhong"
+        },
+        {
+          "x": 0.24,
+          "y": 1.74,
+          "z": 0.287,
+          "sigla": "S18",
+          "nome": "Rugen"
         },
         {
           "x": 0.22,
-          "y": 1.5,
-          "z": 0.25
+          "y": 1.62,
+          "z": 0.269,
+          "sigla": "S19",
+          "nome": "Burong"
+        },
+        {
+          "x": 0.217,
+          "y": 1.563,
+          "z": 0.258,
+          "sigla": "S20",
+          "nome": "Chengman"
+        },
+        {
+          "x": 0.213,
+          "y": 1.507,
+          "z": 0.253,
+          "sigla": "S21",
+          "nome": "Liangmen"
+        },
+        {
+          "x": 0.21,
+          "y": 1.45,
+          "z": 0.249,
+          "sigla": "S22",
+          "nome": "Guanmen"
+        },
+        {
+          "x": 0.207,
+          "y": 1.393,
+          "z": 0.241,
+          "sigla": "S23",
+          "nome": "Taiyi"
+        },
+        {
+          "x": 0.203,
+          "y": 1.337,
+          "z": 0.231,
+          "sigla": "S24",
+          "nome": "Huaroumen"
         },
         {
           "x": 0.2,
@@ -336,77 +567,187 @@ window.MERIDIANI = {
           "sigla": "S25",
           "nome": "Tianshu",
           "ruolo": "Mu del Grosso Intestino",
-          "note": "2 cun a lato dell'ombelico"
+          "note": "2 cun a lato dell'ombelico",
+          "chiave": true
         },
         {
-          "x": 0.2,
-          "y": 1.02,
-          "z": 0.234
+          "x": 0.205,
+          "y": 1.185,
+          "z": 0.195,
+          "sigla": "S26",
+          "nome": "Wailing"
         },
         {
-          "x": 0.25,
+          "x": 0.21,
+          "y": 1.09,
+          "z": 0.208,
+          "sigla": "S27",
+          "nome": "Daju"
+        },
+        {
+          "x": 0.215,
+          "y": 0.995,
+          "z": 0.236,
+          "sigla": "S28",
+          "nome": "Shuidao"
+        },
+        {
+          "x": 0.22,
+          "y": 0.9,
+          "z": 0.259,
+          "sigla": "S29",
+          "nome": "Guilai"
+        },
+        {
+          "x": 0.24,
           "y": 0.82,
-          "z": 0.242
+          "z": 0.247,
+          "sigla": "S30",
+          "nome": "Qichong"
         },
         {
-          "x": 0.26,
-          "y": 0.4,
-          "z": 0.17
+          "x": 0.29,
+          "y": 0.72,
+          "z": 0.167,
+          "sigla": "S31",
+          "nome": "Biguan"
+        },
+        {
+          "x": 0.262,
+          "y": 0.3,
+          "z": 0.173,
+          "sigla": "S32",
+          "nome": "Futu"
+        },
+        {
+          "x": 0.251,
+          "y": 0.02,
+          "z": 0.154,
+          "sigla": "S33",
+          "nome": "Yinshi"
         },
         {
           "x": 0.25,
-          "y": 0.0,
-          "z": 0.16
+          "y": -0.05,
+          "z": 0.143,
+          "sigla": "S34",
+          "nome": "Liangqiu",
+          "ruolo": "Xi dei fori",
+          "note": "2 cun sopra il bordo superiore-esterno della rotula",
+          "chiave": true
+        },
+        {
+          "x": 0.268,
+          "y": -0.17,
+          "z": 0.118,
+          "sigla": "S35",
+          "nome": "Dubi"
         },
         {
           "x": 0.27,
           "y": -0.28,
-          "z": 0.13
-        },
-        {
-          "x": 0.28,
-          "y": -0.48,
-          "z": 0.12,
+          "z": 0.112,
           "sigla": "S36",
           "nome": "Zusanli",
-          "ruolo": "He-mare · punto di tonificazione generale",
-          "note": "3 cun sotto il ginocchio, un dito a lato della cresta tibiale"
+          "ruolo": "He-mare · tonificazione generale",
+          "note": "3 cun sotto il ginocchio, un dito a lato della cresta tibiale",
+          "chiave": true
         },
         {
-          "x": 0.3,
-          "y": -0.75,
-          "z": 0.11,
+          "x": 0.271,
+          "y": -0.42,
+          "z": 0.106,
+          "sigla": "S37",
+          "nome": "Shangjuxu"
+        },
+        {
+          "x": 0.268,
+          "y": -0.58,
+          "z": 0.098,
+          "sigla": "S38",
+          "nome": "Tiaokou"
+        },
+        {
+          "x": 0.264,
+          "y": -0.66,
+          "z": 0.093,
+          "sigla": "S39",
+          "nome": "Xiajuxu"
+        },
+        {
+          "x": 0.307,
+          "y": -0.58,
+          "z": 0.063,
           "sigla": "S40",
           "nome": "Fenglong",
           "ruolo": "Luo di passaggio",
-          "note": "8 cun sopra il malleolo esterno, a lato della tibia"
+          "note": "8 cun sopra il malleolo esterno, a lato della tibia",
+          "chiave": true
         },
         {
-          "x": 0.24,
-          "y": -1.15,
-          "z": 0.1,
+          "x": 0.215,
+          "y": -1.152,
+          "z": 0.075,
           "sigla": "S41",
           "nome": "Jiexi",
           "ruolo": "tonificazione",
-          "note": "centro della piega anteriore della caviglia, tra i tendini"
+          "note": "centro della piega anteriore della caviglia, tra i tendini",
+          "chiave": true
         },
         {
-          "x": 0.22,
-          "y": -1.23,
-          "z": 0.18,
+          "x": 0.212,
+          "y": -1.208,
+          "z": 0.235,
           "sigla": "S42",
           "nome": "Chongyang",
           "ruolo": "Yuan sorgente",
-          "note": "punto più alto del dorso del piede, sull'arteria pedidia"
+          "note": "punto più alto del dorso del piede, sull'arteria pedidia",
+          "chiave": true
+        },
+        {
+          "x": 0.205,
+          "y": -1.243,
+          "z": 0.33,
+          "sigla": "S43",
+          "nome": "Xiangu"
         },
         {
           "x": 0.2,
-          "y": -1.28,
-          "z": 0.27,
+          "y": -1.262,
+          "z": 0.4,
+          "sigla": "S44",
+          "nome": "Neiting"
+        },
+        {
+          "x": 0.198,
+          "y": -1.272,
+          "z": 0.452,
           "sigla": "S45",
           "nome": "Lidui",
           "ruolo": "Jing-pozzo · dispersione",
-          "note": "angolo ungueale del 2° dito del piede, lato esterno"
+          "note": "angolo ungueale del 2° dito del piede, lato esterno",
+          "chiave": true
+        }
+      ],
+      "ramo": [
+        {
+          "x": 0.175,
+          "y": 2.425,
+          "z": 0.155
+        },
+        {
+          "x": 0.225,
+          "y": 2.545,
+          "z": 0.135,
+          "sigla": "S7",
+          "nome": "Xiaguan"
+        },
+        {
+          "x": 0.169,
+          "y": 2.811,
+          "z": 0.182,
+          "sigla": "S8",
+          "nome": "Touwei"
         }
       ]
     },
@@ -425,80 +766,174 @@ window.MERIDIANI = {
         "milza-trapezio-medio",
         "milza-pancreas-gran-dorsale"
       ],
-      "descrizione": "Dall'alluce risale il bordo interno del piede e della gamba, la faccia interna della coscia, l'addome e termina sul fianco del torace.",
+      "descrizione": "Dall'alluce risale il bordo interno del piede e della gamba, la faccia interna della coscia, l'addome e il fianco del torace fino a MP21 sulla linea medio-ascellare. 21 punti.",
       "nodi": [
         {
-          "x": 0.145,
-          "y": -1.28,
-          "z": 0.24,
+          "x": 0.135,
+          "y": -1.275,
+          "z": 0.45,
           "sigla": "MP1",
           "nome": "Yinbai",
           "ruolo": "Jing-pozzo",
-          "note": "angolo ungueale dell'alluce, lato interno"
+          "note": "angolo ungueale dell'alluce, lato interno",
+          "chiave": true
+        },
+        {
+          "x": 0.132,
+          "y": -1.271,
+          "z": 0.395,
+          "sigla": "MP2",
+          "nome": "Dadu",
+          "ruolo": "tonificazione",
+          "note": "davanti e sotto l'articolazione metatarso-falangea dell'alluce",
+          "chiave": true
         },
         {
           "x": 0.13,
-          "y": -1.26,
-          "z": 0.13,
+          "y": -1.255,
+          "z": 0.31,
           "sigla": "MP3",
           "nome": "Taibai",
           "ruolo": "Yuan sorgente",
-          "note": "bordo interno del piede, dietro la testa del 1° metatarso"
+          "note": "bordo interno del piede, dietro la testa del 1° metatarso",
+          "chiave": true
         },
         {
-          "x": 0.13,
-          "y": -1.25,
-          "z": 0.04,
+          "x": 0.132,
+          "y": -1.24,
+          "z": 0.22,
           "sigla": "MP4",
           "nome": "Gongsun",
-          "ruolo": "Luo di passaggio",
-          "note": "bordo interno del piede, davanti alla base del 1° metatarso"
+          "ruolo": "Luo · punto chiave di Chong Mai",
+          "note": "bordo interno del piede, davanti alla base del 1° metatarso",
+          "chiave": true
         },
         {
-          "x": 0.14,
-          "y": -1.16,
-          "z": 0.06
+          "x": 0.148,
+          "y": -1.182,
+          "z": 0.055,
+          "sigla": "MP5",
+          "nome": "Shangqiu",
+          "ruolo": "dispersione",
+          "note": "davanti e sotto il malleolo interno",
+          "chiave": true
         },
         {
-          "x": 0.14,
-          "y": -0.98,
-          "z": 0.04,
+          "x": 0.143,
+          "y": -0.86,
+          "z": 0.032,
           "sigla": "MP6",
           "nome": "Sanyinjiao",
           "ruolo": "incrocio dei 3 Yin del piede",
-          "note": "3 cun sopra il malleolo interno, sul bordo posteriore della tibia"
+          "note": "3 cun sopra il malleolo interno, sul bordo posteriore della tibia",
+          "chiave": true
         },
         {
-          "x": 0.135,
-          "y": -0.4,
-          "z": 0.05,
+          "x": 0.137,
+          "y": -0.78,
+          "z": 0.033,
+          "sigla": "MP7",
+          "nome": "Lougu"
+        },
+        {
+          "x": 0.114,
+          "y": -0.42,
+          "z": 0.032,
+          "sigla": "MP8",
+          "nome": "Diji",
+          "ruolo": "Xi dei fori",
+          "note": "3 cun sotto MP9, sul bordo interno della tibia",
+          "chiave": true
+        },
+        {
+          "x": 0.11,
+          "y": -0.28,
+          "z": 0.031,
           "sigla": "MP9",
           "nome": "Yinlingquan",
           "ruolo": "He-mare",
-          "note": "depressione sotto il condilo interno della tibia"
+          "note": "depressione sotto il condilo interno della tibia",
+          "chiave": true
         },
         {
-          "x": 0.15,
-          "y": 0.05,
-          "z": 0.11
+          "x": 0.112,
+          "y": -0.05,
+          "z": 0.096,
+          "sigla": "MP10",
+          "nome": "Xuehai",
+          "ruolo": "mare del sangue",
+          "note": "2 cun sopra l'angolo supero-interno della rotula",
+          "chiave": true
         },
         {
-          "x": 0.19,
-          "y": 0.78,
-          "z": 0.21
+          "x": 0.082,
+          "y": 0.22,
+          "z": 0.113,
+          "sigla": "MP11",
+          "nome": "Jimen"
+        },
+        {
+          "x": 0.22,
+          "y": 0.8,
+          "z": 0.245,
+          "sigla": "MP12",
+          "nome": "Chongmen"
+        },
+        {
+          "x": 0.24,
+          "y": 0.88,
+          "z": 0.249,
+          "sigla": "MP13",
+          "nome": "Fushe"
+        },
+        {
+          "x": 0.28,
+          "y": 1.12,
+          "z": 0.164,
+          "sigla": "MP14",
+          "nome": "Fujie"
         },
         {
           "x": 0.3,
           "y": 1.28,
           "z": 0.172,
           "sigla": "MP15",
-          "nome": "Daheng",
-          "note": "4 cun a lato dell'ombelico, sulla linea del capezzolo"
+          "nome": "Daheng"
         },
         {
-          "x": 0.31,
-          "y": 1.52,
-          "z": 0.199
+          "x": 0.3,
+          "y": 1.44,
+          "z": 0.196,
+          "sigla": "MP16",
+          "nome": "Fuai"
+        },
+        {
+          "x": 0.36,
+          "y": 1.7,
+          "z": 0.209,
+          "sigla": "MP17",
+          "nome": "Shidou"
+        },
+        {
+          "x": 0.37,
+          "y": 1.79,
+          "z": 0.224,
+          "sigla": "MP18",
+          "nome": "Tianxi"
+        },
+        {
+          "x": 0.37,
+          "y": 1.88,
+          "z": 0.246,
+          "sigla": "MP19",
+          "nome": "Xiongxiang"
+        },
+        {
+          "x": 0.36,
+          "y": 1.96,
+          "z": 0.269,
+          "sigla": "MP20",
+          "nome": "Zhourong"
         },
         {
           "x": 0.44,
@@ -507,7 +942,8 @@ window.MERIDIANI = {
           "sigla": "MP21",
           "nome": "Dabao",
           "ruolo": "grande Luo della Milza",
-          "note": "linea medio-ascellare, 6° spazio intercostale"
+          "note": "linea medio-ascellare, 6° spazio intercostale",
+          "chiave": true
         }
       ]
     },
@@ -525,67 +961,88 @@ window.MERIDIANI = {
       "coordinate": [
         "cuore-sottoscapolare"
       ],
-      "descrizione": "Dal cavo ascellare scende sulla faccia interna (ulnare) del braccio fino all'angolo ungueale del mignolo.",
+      "descrizione": "Dal cavo ascellare scende sulla faccia interna (ulnare) del braccio e dell'avambraccio, attraversa il palmo e termina all'angolo ungueale del mignolo. 9 punti.",
       "nodi": [
         {
-          "x": 0.47,
-          "y": 1.88,
-          "z": 0.02,
+          "x": 0.407,
+          "y": 1.9,
+          "z": 0.0,
           "sigla": "C1",
           "nome": "Jiquan",
           "ruolo": "inizio del meridiano",
-          "note": "centro del cavo ascellare, sull'arteria"
+          "note": "centro del cavo ascellare, sull'arteria",
+          "chiave": true
         },
         {
-          "x": 0.52,
-          "y": 1.62,
-          "z": 0.05
+          "x": 0.439,
+          "y": 1.5,
+          "z": 0.041,
+          "sigla": "C2",
+          "nome": "Qingling"
         },
         {
-          "x": 0.575,
-          "y": 1.36,
-          "z": 0.09,
+          "x": 0.448,
+          "y": 1.33,
+          "z": 0.046,
           "sigla": "C3",
           "nome": "Shaohai",
           "ruolo": "He-mare",
-          "note": "estremità interna della piega del gomito, a gomito flesso"
+          "note": "estremità interna della piega del gomito, a gomito flesso",
+          "chiave": true
         },
         {
-          "x": 0.61,
-          "y": 1.1,
-          "z": 0.07
+          "x": 0.476,
+          "y": 0.95,
+          "z": 0.066,
+          "sigla": "C4",
+          "nome": "Lingdao"
         },
         {
-          "x": 0.63,
-          "y": 0.98,
-          "z": 0.07,
+          "x": 0.479,
+          "y": 0.92,
+          "z": 0.066,
           "sigla": "C5",
           "nome": "Tongli",
           "ruolo": "Luo di passaggio",
-          "note": "1 cun sopra la piega del polso, lato ulnare"
+          "note": "1 cun sopra la piega del polso, lato ulnare",
+          "chiave": true
         },
         {
-          "x": 0.655,
-          "y": 0.86,
-          "z": 0.07,
+          "x": 0.483,
+          "y": 0.885,
+          "z": 0.066,
+          "sigla": "C6",
+          "nome": "Yinxi",
+          "ruolo": "Xi dei fori",
+          "note": "0,5 cun sopra la piega del polso, lato ulnare",
+          "chiave": true
+        },
+        {
+          "x": 0.5,
+          "y": 0.755,
+          "z": 0.067,
           "sigla": "C7",
           "nome": "Shenmen",
           "ruolo": "Yuan sorgente · dispersione",
-          "note": "piega del polso, lato ulnare, nella depressione del pisiforme"
+          "note": "piega del polso, lato ulnare, nella depressione del pisiforme",
+          "chiave": true
         },
         {
-          "x": 0.67,
-          "y": 0.77,
-          "z": 0.07
+          "x": 0.502,
+          "y": 0.535,
+          "z": 0.072,
+          "sigla": "C8",
+          "nome": "Shaofu"
         },
         {
-          "x": 0.685,
-          "y": 0.66,
-          "z": 0.07,
+          "x": 0.497,
+          "y": 0.308,
+          "z": 0.03,
           "sigla": "C9",
           "nome": "Shaochong",
           "ruolo": "Jing-pozzo · tonificazione",
-          "note": "angolo ungueale del mignolo, lato radiale (verso l'anulare)"
+          "note": "angolo ungueale del mignolo, lato radiale",
+          "chiave": true
         }
       ]
     },
@@ -603,58 +1060,95 @@ window.MERIDIANI = {
       "coordinate": [
         "intestino-tenue-quadricipite"
       ],
-      "descrizione": "Dal mignolo risale il bordo ulnare dell'avambraccio, il retro della spalla e la scapola, poi il collo fino davanti all'orecchio.",
+      "descrizione": "Dal mignolo risale il bordo ulnare della mano e dell'avambraccio, il retro della spalla e la scapola con un percorso a zig-zag, poi il collo e la guancia fino davanti all'orecchio. 19 punti.",
       "nodi": [
         {
-          "x": 0.665,
-          "y": 0.65,
-          "z": 0.01,
+          "x": 0.47,
+          "y": 0.308,
+          "z": 0.018,
           "sigla": "IT1",
           "nome": "Shaoze",
           "ruolo": "Jing-pozzo",
-          "note": "angolo ungueale del mignolo, lato ulnare (esterno)"
+          "note": "angolo ungueale del mignolo, lato ulnare (esterno)",
+          "chiave": true
         },
         {
-          "x": 0.665,
-          "y": 0.76,
-          "z": -0.04,
+          "x": 0.462,
+          "y": 0.4,
+          "z": 0.0,
+          "sigla": "IT2",
+          "nome": "Qiangu"
+        },
+        {
+          "x": 0.458,
+          "y": 0.5,
+          "z": -0.006,
           "sigla": "IT3",
           "nome": "Houxi",
-          "ruolo": "punto chiave del Vaso Governatore",
-          "note": "bordo ulnare della mano, a pugno chiuso, alla fine della piega"
+          "ruolo": "tonificazione · punto chiave del Vaso Governatore",
+          "note": "bordo ulnare della mano, a pugno chiuso, alla fine della piega",
+          "chiave": true
         },
         {
-          "x": 0.655,
-          "y": 0.85,
-          "z": -0.05,
+          "x": 0.458,
+          "y": 0.6,
+          "z": -0.012,
           "sigla": "IT4",
           "nome": "Wangu",
           "ruolo": "Yuan sorgente",
-          "note": "bordo ulnare della mano, tra 5° metacarpo e ossa carpali"
+          "note": "bordo ulnare della mano, tra 5° metacarpo e ossa carpali",
+          "chiave": true
         },
         {
-          "x": 0.655,
-          "y": 1.06,
-          "z": -0.08
+          "x": 0.499,
+          "y": 0.76,
+          "z": 0.011,
+          "sigla": "IT5",
+          "nome": "Yanggu"
         },
         {
-          "x": 0.62,
-          "y": 1.33,
-          "z": -0.09,
+          "x": 0.491,
+          "y": 0.805,
+          "z": 0.014,
+          "sigla": "IT6",
+          "nome": "Yanglao",
+          "ruolo": "Xi dei fori",
+          "note": "sopra la testa dell'ulna, a palmo verso il petto",
+          "chiave": true
+        },
+        {
+          "x": 0.472,
+          "y": 0.98,
+          "z": 0.001,
+          "sigla": "IT7",
+          "nome": "Zhizheng",
+          "ruolo": "Luo di passaggio",
+          "note": "5 cun sopra il polso, sul bordo ulnare dell'avambraccio",
+          "chiave": true
+        },
+        {
+          "x": 0.445,
+          "y": 1.32,
+          "z": -0.016,
           "sigla": "IT8",
           "nome": "Xiaohai",
           "ruolo": "He-mare · dispersione",
-          "note": "tra olecrano ed epicondilo interno (nervo ulnare)"
+          "note": "tra olecrano ed epicondilo interno (nervo ulnare)",
+          "chiave": true
         },
         {
-          "x": 0.58,
-          "y": 1.64,
-          "z": -0.08
+          "x": 0.435,
+          "y": 1.88,
+          "z": -0.11,
+          "sigla": "IT9",
+          "nome": "Jianzhen"
         },
         {
-          "x": 0.5,
-          "y": 1.98,
-          "z": -0.14
+          "x": 0.42,
+          "y": 2.02,
+          "z": -0.13,
+          "sigla": "IT10",
+          "nome": "Naoshu"
         },
         {
           "x": 0.3,
@@ -662,31 +1156,68 @@ window.MERIDIANI = {
           "z": -0.295,
           "sigla": "IT11",
           "nome": "Tianzong",
-          "note": "centro della fossa sottospinata della scapola"
+          "ruolo": "",
+          "note": "centro della fossa sottospinata della scapola",
+          "chiave": true
         },
         {
-          "x": 0.22,
-          "y": 2.16,
-          "z": -0.263
+          "x": 0.34,
+          "y": 2.05,
+          "z": -0.273,
+          "sigla": "IT12",
+          "nome": "Bingfeng"
         },
         {
-          "x": 0.14,
-          "y": 2.34,
-          "z": -0.11
+          "x": 0.24,
+          "y": 2.07,
+          "z": -0.314,
+          "sigla": "IT13",
+          "nome": "Quyuan"
         },
         {
           "x": 0.2,
-          "y": 2.47,
-          "z": 0.05
+          "y": 2.17,
+          "z": -0.26,
+          "sigla": "IT14",
+          "nome": "Jianwaishu"
         },
         {
-          "x": 0.26,
+          "x": 0.14,
+          "y": 2.25,
+          "z": -0.171,
+          "sigla": "IT15",
+          "nome": "Jianzhongshu"
+        },
+        {
+          "x": 0.116,
+          "y": 2.345,
+          "z": -0.062,
+          "sigla": "IT16",
+          "nome": "Tianchuang"
+        },
+        {
+          "x": 0.138,
+          "y": 2.42,
+          "z": -0.022,
+          "sigla": "IT17",
+          "nome": "Tianrong"
+        },
+        {
+          "x": 0.155,
+          "y": 2.5,
+          "z": 0.19,
+          "sigla": "IT18",
+          "nome": "Quanliao"
+        },
+        {
+          "x": 0.265,
           "y": 2.575,
-          "z": 0.11,
+          "z": 0.105,
           "sigla": "IT19",
           "nome": "Tinggong",
           "ruolo": "fine del meridiano",
-          "note": "davanti al trago dell'orecchio, a bocca aperta"
+          "note": "davanti al trago dell'orecchio, a bocca aperta",
+          "chiave": true
         }
       ]
     },
@@ -704,68 +1235,144 @@ window.MERIDIANI = {
       "coordinate": [
         "vescica-tibiale-anteriore"
       ],
-      "descrizione": "Il meridiano più lungo: dall'angolo interno dell'occhio passa sul cranio, scende lungo tutta la schiena (punti Shu del dorso), il retro della coscia e del polpaccio, fino al 5° dito del piede.",
+      "descrizione": "Il meridiano più lungo (67 punti): dall'angolo interno dell'occhio passa sul cranio, scende lungo tutta la schiena con i punti Shu del dorso (linea interna a 1,5 cun) e la linea esterna a 3 cun (V41-V54), poi il retro della coscia e del polpaccio fino al 5° dito del piede.",
       "nodi": [
         {
           "x": 0.05,
-          "y": 2.61,
-          "z": 0.25,
+          "y": 2.605,
+          "z": 0.248,
           "sigla": "V1",
           "nome": "Jingming",
           "ruolo": "inizio del meridiano",
-          "note": "angolo interno dell'occhio, 0,1 cun sopra il canto"
+          "note": "angolo interno dell'occhio, 0,1 cun sopra il canto",
+          "chiave": true
         },
         {
-          "x": 0.1,
-          "y": 2.68,
-          "z": 0.23
+          "x": 0.095,
+          "y": 2.655,
+          "z": 0.232,
+          "sigla": "V2",
+          "nome": "Cuanzhu"
         },
         {
-          "x": 0.1,
-          "y": 2.82,
-          "z": 0.16
+          "x": 0.08,
+          "y": 2.847,
+          "z": 0.211,
+          "sigla": "V3",
+          "nome": "Meichong"
+        },
+        {
+          "x": 0.091,
+          "y": 2.875,
+          "z": 0.176,
+          "sigla": "V4",
+          "nome": "Qucha"
+        },
+        {
+          "x": 0.087,
+          "y": 2.906,
+          "z": 0.133,
+          "sigla": "V5",
+          "nome": "Wuchu"
+        },
+        {
+          "x": 0.085,
+          "y": 2.932,
+          "z": 0.067,
+          "sigla": "V6",
+          "nome": "Chengguang"
+        },
+        {
+          "x": 0.086,
+          "y": 2.937,
+          "z": -0.004,
+          "sigla": "V7",
+          "nome": "Tongtian"
+        },
+        {
+          "x": 0.088,
+          "y": 2.915,
+          "z": -0.093,
+          "sigla": "V8",
+          "nome": "Luoque"
+        },
+        {
+          "x": 0.086,
+          "y": 2.712,
+          "z": -0.262,
+          "sigla": "V9",
+          "nome": "Yuzhen"
         },
         {
           "x": 0.09,
-          "y": 2.9,
-          "z": 0.03
-        },
-        {
-          "x": 0.09,
-          "y": 2.78,
-          "z": -0.16
-        },
-        {
-          "x": 0.09,
-          "y": 2.46,
-          "z": -0.17,
+          "y": 2.458,
+          "z": -0.196,
           "sigla": "V10",
           "nome": "Tianzhu",
           "ruolo": "finestra del cielo",
-          "note": "alla nuca, sul bordo esterno del trapezio, sotto l'occipite"
+          "note": "alla nuca, sul bordo esterno del trapezio, sotto l'occipite",
+          "chiave": true
         },
         {
           "x": 0.1,
           "y": 2.28,
-          "z": -0.13
+          "z": -0.13,
+          "sigla": "V11",
+          "nome": "Dazhu"
         },
         {
           "x": 0.1,
-          "y": 2.06,
-          "z": -0.352,
+          "y": 2.2,
+          "z": -0.257,
+          "sigla": "V12",
+          "nome": "Fengmen"
+        },
+        {
+          "x": 0.1,
+          "y": 2.12,
+          "z": -0.325,
           "sigla": "V13",
           "nome": "Feishu",
           "ruolo": "Shu del dorso · Polmone",
-          "note": "1,5 cun a lato di D3 (3ª vertebra dorsale)"
+          "note": "1,5 cun a lato di D3",
+          "chiave": true
         },
         {
           "x": 0.1,
-          "y": 1.93,
-          "z": -0.355,
+          "y": 2.05,
+          "z": -0.353,
+          "sigla": "V14",
+          "nome": "Jueyinshu",
+          "ruolo": "Shu del dorso · Maestro del Cuore",
+          "note": "1,5 cun a lato di D4",
+          "chiave": true
+        },
+        {
+          "x": 0.1,
+          "y": 1.98,
+          "z": -0.357,
           "sigla": "V15",
           "nome": "Xinshu",
           "ruolo": "Shu del dorso · Cuore",
-          "note": "1,5 cun a lato di D5"
+          "note": "1,5 cun a lato di D5",
+          "chiave": true
+        },
+        {
+          "x": 0.1,
+          "y": 1.91,
+          "z": -0.352,
+          "sigla": "V16",
+          "nome": "Dushu"
+        },
+        {
+          "x": 0.1,
+          "y": 1.84,
+          "z": -0.342,
+          "sigla": "V17",
+          "nome": "Geshu",
+          "ruolo": "riunione del sangue",
+          "note": "1,5 cun a lato di D7, a livello della punta delle scapole",
+          "chiave": true
         },
         {
           "x": 0.1,
@@ -774,16 +1381,48 @@ window.MERIDIANI = {
           "sigla": "V18",
           "nome": "Ganshu",
           "ruolo": "Shu del dorso · Fegato",
-          "note": "1,5 cun a lato di D9"
+          "note": "1,5 cun a lato di D9",
+          "chiave": true
         },
         {
           "x": 0.1,
-          "y": 1.53,
-          "z": -0.287,
+          "y": 1.63,
+          "z": -0.303,
+          "sigla": "V19",
+          "nome": "Danshu",
+          "ruolo": "Shu del dorso · Vescica Biliare",
+          "note": "1,5 cun a lato di D10",
+          "chiave": true
+        },
+        {
+          "x": 0.1,
+          "y": 1.56,
+          "z": -0.29,
           "sigla": "V20",
           "nome": "Pishu",
           "ruolo": "Shu del dorso · Milza",
-          "note": "1,5 cun a lato di D11"
+          "note": "1,5 cun a lato di D11",
+          "chiave": true
+        },
+        {
+          "x": 0.1,
+          "y": 1.49,
+          "z": -0.284,
+          "sigla": "V21",
+          "nome": "Weishu",
+          "ruolo": "Shu del dorso · Stomaco",
+          "note": "1,5 cun a lato di D12",
+          "chiave": true
+        },
+        {
+          "x": 0.1,
+          "y": 1.43,
+          "z": -0.278,
+          "sigla": "V22",
+          "nome": "Sanjiaoshu",
+          "ruolo": "Shu del dorso · Triplice Riscaldatore",
+          "note": "1,5 cun a lato di L1",
+          "chiave": true
         },
         {
           "x": 0.1,
@@ -792,66 +1431,351 @@ window.MERIDIANI = {
           "sigla": "V23",
           "nome": "Shenshu",
           "ruolo": "Shu del dorso · Rene",
-          "note": "1,5 cun a lato di L2, all'altezza dell'ultima costa"
+          "note": "1,5 cun a lato di L2, all'altezza dell'ultima costa",
+          "chiave": true
         },
         {
           "x": 0.1,
-          "y": 1.1,
-          "z": -0.243
+          "y": 1.3,
+          "z": -0.257,
+          "sigla": "V24",
+          "nome": "Qihaishu"
         },
         {
-          "x": 0.09,
-          "y": 0.9,
-          "z": -0.294
+          "x": 0.1,
+          "y": 1.22,
+          "z": -0.238,
+          "sigla": "V25",
+          "nome": "Dachangshu",
+          "ruolo": "Shu del dorso · Grosso Intestino",
+          "note": "1,5 cun a lato di L4",
+          "chiave": true
         },
         {
-          "x": 0.16,
-          "y": 0.58,
-          "z": -0.22
+          "x": 0.1,
+          "y": 1.14,
+          "z": -0.233,
+          "sigla": "V26",
+          "nome": "Guanyuanshu"
         },
         {
-          "x": 0.2,
-          "y": 0.18,
-          "z": -0.17
+          "x": 0.1,
+          "y": 1.06,
+          "z": -0.253,
+          "sigla": "V27",
+          "nome": "Xiaochangshu",
+          "ruolo": "Shu del dorso · Intestino Tenue",
+          "note": "1,5 cun a lato di S1",
+          "chiave": true
         },
         {
-          "x": 0.21,
-          "y": -0.3,
-          "z": -0.15,
+          "x": 0.1,
+          "y": 0.99,
+          "z": -0.272,
+          "sigla": "V28",
+          "nome": "Pangguangshu",
+          "ruolo": "Shu del dorso · Vescica",
+          "note": "1,5 cun a lato di S2",
+          "chiave": true
+        },
+        {
+          "x": 0.1,
+          "y": 0.93,
+          "z": -0.29,
+          "sigla": "V29",
+          "nome": "Zhonglushu"
+        },
+        {
+          "x": 0.1,
+          "y": 0.87,
+          "z": -0.292,
+          "sigla": "V30",
+          "nome": "Baihuanshu"
+        },
+        {
+          "x": 0.05,
+          "y": 0.98,
+          "z": -0.282,
+          "sigla": "V31",
+          "nome": "Shangliao"
+        },
+        {
+          "x": 0.05,
+          "y": 0.92,
+          "z": -0.299,
+          "sigla": "V32",
+          "nome": "Ciliao"
+        },
+        {
+          "x": 0.05,
+          "y": 0.87,
+          "z": -0.298,
+          "sigla": "V33",
+          "nome": "Zhongliao"
+        },
+        {
+          "x": 0.05,
+          "y": 0.82,
+          "z": -0.296,
+          "sigla": "V34",
+          "nome": "Xialiao"
+        },
+        {
+          "x": 0.04,
+          "y": 0.74,
+          "z": -0.17,
+          "sigla": "V35",
+          "nome": "Huiyang"
+        },
+        {
+          "x": 0.196,
+          "y": 0.55,
+          "z": -0.174,
+          "sigla": "V36",
+          "nome": "Chengfu"
+        },
+        {
+          "x": 0.201,
+          "y": 0.25,
+          "z": -0.154,
+          "sigla": "V37",
+          "nome": "Yinmen"
+        },
+        {
+          "x": 0.166,
+          "y": -0.1,
+          "z": -0.102,
+          "sigla": "V38",
+          "nome": "Fuxi"
+        },
+        {
+          "x": 0.274,
+          "y": -0.155,
+          "z": -0.091,
+          "sigla": "V39",
+          "nome": "Weiyang"
+        },
+        {
+          "x": 0.212,
+          "y": -0.155,
+          "z": -0.103,
           "sigla": "V40",
           "nome": "Weizhong",
           "ruolo": "He-mare · punto maestro della schiena",
-          "note": "centro della piega poplitea (dietro il ginocchio)"
+          "note": "centro della piega poplitea",
+          "chiave": true
         },
         {
-          "x": 0.22,
-          "y": -0.72,
-          "z": -0.13,
+          "x": 0.215,
+          "y": -0.28,
+          "z": -0.11,
+          "sigla": "V55",
+          "nome": "Heyang"
+        },
+        {
+          "x": 0.217,
+          "y": -0.45,
+          "z": -0.113,
+          "sigla": "V56",
+          "nome": "Chengjin"
+        },
+        {
+          "x": 0.217,
+          "y": -0.6,
+          "z": -0.103,
           "sigla": "V57",
           "nome": "Chengshan",
-          "note": "sotto il ventre dei gemelli, a metà del polpaccio"
+          "ruolo": "",
+          "note": "sotto il ventre dei gemelli, a metà del polpaccio",
+          "chiave": true
         },
         {
-          "x": 0.3,
-          "y": -1.19,
-          "z": -0.06,
+          "x": 0.266,
+          "y": -0.72,
+          "z": -0.08,
+          "sigla": "V58",
+          "nome": "Feiyang",
+          "ruolo": "Luo di passaggio",
+          "note": "7 cun sopra V60, sul bordo posteriore del perone",
+          "chiave": true
+        },
+        {
+          "x": 0.259,
+          "y": -1.0,
+          "z": -0.043,
+          "sigla": "V59",
+          "nome": "Fuyang"
+        },
+        {
+          "x": 0.287,
+          "y": -1.16,
+          "z": -0.05,
           "sigla": "V60",
           "nome": "Kunlun",
-          "note": "depressione tra malleolo esterno e tendine d'Achille"
+          "ruolo": "",
+          "note": "depressione tra malleolo esterno e tendine d'Achille",
+          "chiave": true
         },
         {
-          "x": 0.3,
-          "y": -1.27,
-          "z": 0.05
+          "x": 0.287,
+          "y": -1.24,
+          "z": -0.03,
+          "sigla": "V61",
+          "nome": "Pucan"
+        },
+        {
+          "x": 0.292,
+          "y": -1.238,
+          "z": 0.03,
+          "sigla": "V62",
+          "nome": "Shenmai",
+          "ruolo": "punto chiave di Yang Qiao Mai",
+          "note": "1 cun sotto il malleolo esterno",
+          "chiave": true
+        },
+        {
+          "x": 0.295,
+          "y": -1.25,
+          "z": 0.09,
+          "sigla": "V63",
+          "nome": "Jinmen"
+        },
+        {
+          "x": 0.295,
+          "y": -1.256,
+          "z": 0.16,
+          "sigla": "V64",
+          "nome": "Jinggu",
+          "ruolo": "Yuan sorgente",
+          "note": "bordo esterno del piede, sotto la tuberosità del 5° metatarso",
+          "chiave": true
         },
         {
           "x": 0.29,
-          "y": -1.29,
-          "z": 0.22,
+          "y": -1.262,
+          "z": 0.235,
+          "sigla": "V65",
+          "nome": "Shugu"
+        },
+        {
+          "x": 0.285,
+          "y": -1.268,
+          "z": 0.315,
+          "sigla": "V66",
+          "nome": "Zutonggu"
+        },
+        {
+          "x": 0.288,
+          "y": -1.272,
+          "z": 0.378,
           "sigla": "V67",
           "nome": "Zhiyin",
           "ruolo": "Jing-pozzo · tonificazione",
-          "note": "angolo ungueale del 5° dito del piede, lato esterno"
+          "note": "angolo ungueale del 5° dito del piede, lato esterno",
+          "chiave": true
+        }
+      ],
+      "ramo": [
+        {
+          "x": 0.2,
+          "y": 2.22,
+          "z": -0.202,
+          "sigla": "V41",
+          "nome": "Fufen"
+        },
+        {
+          "x": 0.2,
+          "y": 2.12,
+          "z": -0.303,
+          "sigla": "V42",
+          "nome": "Pohu"
+        },
+        {
+          "x": 0.2,
+          "y": 2.05,
+          "z": -0.332,
+          "sigla": "V43",
+          "nome": "Gaohuang",
+          "ruolo": "",
+          "note": "3 cun a lato di D4 — punto di tonificazione profonda (Gaohuang)",
+          "chiave": true
+        },
+        {
+          "x": 0.2,
+          "y": 1.98,
+          "z": -0.337,
+          "sigla": "V44",
+          "nome": "Shentang"
+        },
+        {
+          "x": 0.2,
+          "y": 1.91,
+          "z": -0.331,
+          "sigla": "V45",
+          "nome": "Yixi"
+        },
+        {
+          "x": 0.2,
+          "y": 1.84,
+          "z": -0.321,
+          "sigla": "V46",
+          "nome": "Geguan"
+        },
+        {
+          "x": 0.2,
+          "y": 1.7,
+          "z": -0.293,
+          "sigla": "V47",
+          "nome": "Hunmen"
+        },
+        {
+          "x": 0.2,
+          "y": 1.63,
+          "z": -0.279,
+          "sigla": "V48",
+          "nome": "Yanggang"
+        },
+        {
+          "x": 0.2,
+          "y": 1.56,
+          "z": -0.264,
+          "sigla": "V49",
+          "nome": "Yishe"
+        },
+        {
+          "x": 0.2,
+          "y": 1.49,
+          "z": -0.257,
+          "sigla": "V50",
+          "nome": "Weicang"
+        },
+        {
+          "x": 0.2,
+          "y": 1.43,
+          "z": -0.251,
+          "sigla": "V51",
+          "nome": "Huangmen"
+        },
+        {
+          "x": 0.2,
+          "y": 1.37,
+          "z": -0.239,
+          "sigla": "V52",
+          "nome": "Zhishi"
+        },
+        {
+          "x": 0.2,
+          "y": 0.97,
+          "z": -0.251,
+          "sigla": "V53",
+          "nome": "Baohuang"
+        },
+        {
+          "x": 0.19,
+          "y": 0.87,
+          "z": -0.269,
+          "sigla": "V54",
+          "nome": "Zhibian"
         }
       ]
     },
@@ -869,94 +1793,230 @@ window.MERIDIANI = {
       "coordinate": [
         "rene-psoas"
       ],
-      "descrizione": "Nasce sotto la pianta del piede, gira attorno al malleolo interno, risale la faccia interna della gamba e l'addome vicino alla linea mediana fino alla clavicola.",
+      "descrizione": "Nasce sotto la pianta del piede, gira attorno al malleolo interno, risale la faccia interna della gamba e della coscia, poi l'addome a 0,5 cun dalla mediana e il torace a 2 cun, fino sotto la clavicola. 27 punti.",
       "nodi": [
         {
-          "x": 0.2,
-          "y": -1.31,
-          "z": 0.06,
+          "x": 0.205,
+          "y": -1.3,
+          "z": 0.275,
           "sigla": "R1",
           "nome": "Yongquan",
           "ruolo": "Jing-pozzo",
-          "note": "pianta del piede, depressione al 1/3 anteriore, a piede flesso"
+          "note": "pianta del piede, depressione al 1/3 anteriore, a piede flesso",
+          "chiave": true
         },
         {
-          "x": 0.14,
-          "y": -1.27,
-          "z": -0.02
+          "x": 0.145,
+          "y": -1.252,
+          "z": 0.19,
+          "sigla": "R2",
+          "nome": "Rangu"
         },
         {
-          "x": 0.13,
-          "y": -1.18,
-          "z": -0.05,
+          "x": 0.148,
+          "y": -1.16,
+          "z": -0.04,
           "sigla": "R3",
           "nome": "Taixi",
           "ruolo": "Yuan sorgente",
-          "note": "tra malleolo interno e tendine d'Achille"
+          "note": "tra malleolo interno e tendine d'Achille",
+          "chiave": true
         },
         {
-          "x": 0.12,
-          "y": -1.24,
-          "z": 0.0,
+          "x": 0.152,
+          "y": -1.215,
+          "z": -0.048,
+          "sigla": "R4",
+          "nome": "Dazhong",
+          "ruolo": "Luo di passaggio",
+          "note": "dietro e sotto R3, davanti all'inserzione del tendine d'Achille",
+          "chiave": true
+        },
+        {
+          "x": 0.148,
+          "y": -1.228,
+          "z": -0.01,
+          "sigla": "R5",
+          "nome": "Shuiquan",
+          "ruolo": "Xi dei fori",
+          "note": "1 cun sotto R3, nella depressione del calcagno",
+          "chiave": true
+        },
+        {
+          "x": 0.145,
+          "y": -1.215,
+          "z": 0.045,
           "sigla": "R6",
           "nome": "Zhaohai",
           "ruolo": "punto chiave di Yin Qiao Mai",
-          "note": "1 cun sotto il malleolo interno"
+          "note": "1 cun sotto il malleolo interno",
+          "chiave": true
         },
         {
-          "x": 0.13,
-          "y": -1.05,
-          "z": -0.06,
+          "x": 0.159,
+          "y": -0.98,
+          "z": -0.03,
           "sigla": "R7",
           "nome": "Fuliu",
           "ruolo": "tonificazione",
-          "note": "2 cun sopra R3, sul bordo anteriore del tendine d'Achille"
+          "note": "2 cun sopra R3, sul bordo anteriore del tendine d'Achille",
+          "chiave": true
         },
         {
-          "x": 0.14,
-          "y": -0.32,
-          "z": -0.1,
+          "x": 0.148,
+          "y": -0.98,
+          "z": -0.004,
+          "sigla": "R8",
+          "nome": "Jiaoxin"
+        },
+        {
+          "x": 0.146,
+          "y": -0.7,
+          "z": -0.057,
+          "sigla": "R9",
+          "nome": "Zhubin"
+        },
+        {
+          "x": 0.139,
+          "y": -0.155,
+          "z": -0.084,
           "sigla": "R10",
           "nome": "Yingu",
           "ruolo": "He-mare",
-          "note": "estremità interna della piega poplitea, tra i tendini"
+          "note": "estremità interna della piega poplitea, tra i tendini",
+          "chiave": true
         },
         {
-          "x": 0.14,
+          "x": 0.16,
           "y": 0.1,
-          "z": -0.06
+          "z": -0.05
         },
         {
           "x": 0.07,
           "y": 0.82,
-          "z": 0.2
+          "z": 0.185
+        },
+        {
+          "x": 0.07,
+          "y": 0.9,
+          "z": 0.297,
+          "sigla": "R11",
+          "nome": "Henggu"
+        },
+        {
+          "x": 0.07,
+          "y": 1.0,
+          "z": 0.274,
+          "sigla": "R12",
+          "nome": "Dahe"
+        },
+        {
+          "x": 0.07,
+          "y": 1.08,
+          "z": 0.253,
+          "sigla": "R13",
+          "nome": "Qixue"
+        },
+        {
+          "x": 0.07,
+          "y": 1.16,
+          "z": 0.239,
+          "sigla": "R14",
+          "nome": "Siman"
+        },
+        {
+          "x": 0.07,
+          "y": 1.22,
+          "z": 0.243,
+          "sigla": "R15",
+          "nome": "Zhongzhu"
         },
         {
           "x": 0.08,
           "y": 1.28,
           "z": 0.255,
           "sigla": "R16",
-          "nome": "Huangshu",
-          "note": "0,5 cun a lato dell'ombelico"
+          "nome": "Huangshu"
         },
         {
           "x": 0.08,
-          "y": 1.56,
-          "z": 0.293
+          "y": 1.34,
+          "z": 0.267,
+          "sigla": "R17",
+          "nome": "Shangqu"
         },
         {
-          "x": 0.09,
-          "y": 1.86,
-          "z": 0.346
+          "x": 0.08,
+          "y": 1.4,
+          "z": 0.276,
+          "sigla": "R18",
+          "nome": "Shiguan"
+        },
+        {
+          "x": 0.08,
+          "y": 1.46,
+          "z": 0.285,
+          "sigla": "R19",
+          "nome": "Yindu"
+        },
+        {
+          "x": 0.08,
+          "y": 1.52,
+          "z": 0.29,
+          "sigla": "R20",
+          "nome": "Futonggu"
+        },
+        {
+          "x": 0.08,
+          "y": 1.58,
+          "z": 0.297,
+          "sigla": "R21",
+          "nome": "Youmen"
         },
         {
           "x": 0.1,
-          "y": 2.1,
-          "z": 0.334,
+          "y": 1.74,
+          "z": 0.324,
+          "sigla": "R22",
+          "nome": "Bulang"
+        },
+        {
+          "x": 0.1,
+          "y": 1.82,
+          "z": 0.339,
+          "sigla": "R23",
+          "nome": "Shenfeng"
+        },
+        {
+          "x": 0.1,
+          "y": 1.9,
+          "z": 0.35,
+          "sigla": "R24",
+          "nome": "Lingxu"
+        },
+        {
+          "x": 0.1,
+          "y": 1.98,
+          "z": 0.357,
+          "sigla": "R25",
+          "nome": "Shencang"
+        },
+        {
+          "x": 0.1,
+          "y": 2.06,
+          "z": 0.352,
+          "sigla": "R26",
+          "nome": "Yuzhong"
+        },
+        {
+          "x": 0.1,
+          "y": 2.12,
+          "z": 0.325,
           "sigla": "R27",
           "nome": "Shufu",
           "ruolo": "fine del meridiano",
-          "note": "sotto la clavicola, 2 cun dalla linea mediana"
+          "note": "sotto la clavicola, 2 cun dalla linea mediana",
+          "chiave": true
         }
       ]
     },
@@ -974,7 +2034,7 @@ window.MERIDIANI = {
       "coordinate": [
         "maestro-cuore-medio-gluteo"
       ],
-      "descrizione": "Dal torace, a lato del capezzolo, scende al centro della faccia anteriore del braccio e dell'avambraccio fino alla punta del dito medio.",
+      "descrizione": "Dal torace, a lato del capezzolo, scende al centro della faccia anteriore del braccio e dell'avambraccio, attraversa il palmo e termina sulla punta del dito medio. 9 punti.",
       "nodi": [
         {
           "x": 0.33,
@@ -983,66 +2043,82 @@ window.MERIDIANI = {
           "sigla": "MC1",
           "nome": "Tianchi",
           "ruolo": "inizio del meridiano",
-          "note": "1 cun a lato del capezzolo, 4° spazio intercostale"
+          "note": "1 cun a lato del capezzolo, 4° spazio intercostale",
+          "chiave": true
         },
         {
-          "x": 0.46,
-          "y": 1.86,
-          "z": 0.11
+          "x": 0.525,
+          "y": 1.72,
+          "z": 0.118,
+          "sigla": "MC2",
+          "nome": "Tianquan"
         },
         {
-          "x": 0.55,
-          "y": 1.6,
-          "z": 0.11
-        },
-        {
-          "x": 0.65,
-          "y": 1.36,
-          "z": 0.13,
+          "x": 0.525,
+          "y": 1.33,
+          "z": 0.1,
           "sigla": "MC3",
           "nome": "Quze",
           "ruolo": "He-mare",
-          "note": "piega del gomito, lato interno del tendine del bicipite"
+          "note": "piega del gomito, lato interno del tendine del bicipite",
+          "chiave": true
         },
         {
-          "x": 0.695,
-          "y": 1.1,
-          "z": 0.12
+          "x": 0.537,
+          "y": 1.0,
+          "z": 0.105,
+          "sigla": "MC4",
+          "nome": "Ximen",
+          "ruolo": "Xi dei fori",
+          "note": "5 cun sopra la piega del polso, tra i due tendini",
+          "chiave": true
         },
         {
-          "x": 0.705,
-          "y": 0.95,
-          "z": 0.11,
+          "x": 0.541,
+          "y": 0.86,
+          "z": 0.098,
+          "sigla": "MC5",
+          "nome": "Jianshi"
+        },
+        {
+          "x": 0.542,
+          "y": 0.82,
+          "z": 0.096,
           "sigla": "MC6",
           "nome": "Neiguan",
-          "ruolo": "Luo di passaggio · punto chiave di Yin Wei Mai",
-          "note": "2 cun sopra la piega del polso, tra i due tendini"
+          "ruolo": "Luo · punto chiave di Yin Wei Mai",
+          "note": "2 cun sopra la piega del polso, tra i due tendini",
+          "chiave": true
         },
         {
-          "x": 0.715,
-          "y": 0.86,
-          "z": 0.1,
+          "x": 0.544,
+          "y": 0.755,
+          "z": 0.092,
           "sigla": "MC7",
           "nome": "Daling",
           "ruolo": "Yuan sorgente · dispersione",
-          "note": "centro della piega del polso, tra i due tendini"
+          "note": "centro della piega del polso, tra i due tendini",
+          "chiave": true
         },
         {
-          "x": 0.73,
-          "y": 0.76,
-          "z": 0.1,
+          "x": 0.552,
+          "y": 0.6,
+          "z": 0.08,
           "sigla": "MC8",
           "nome": "Laogong",
-          "note": "centro del palmo, dove poggia la punta del dito medio a pugno chiuso"
+          "ruolo": "",
+          "note": "centro del palmo, dove poggia la punta del dito medio a pugno chiuso",
+          "chiave": true
         },
         {
-          "x": 0.74,
-          "y": 0.645,
-          "z": 0.1,
+          "x": 0.56,
+          "y": 0.218,
+          "z": 0.032,
           "sigla": "MC9",
           "nome": "Zhongchong",
           "ruolo": "Jing-pozzo · tonificazione",
-          "note": "punta del dito medio"
+          "note": "punta del dito medio",
+          "chiave": true
         }
       ]
     },
@@ -1061,96 +2137,195 @@ window.MERIDIANI = {
         "tr-tiroide-piccolo-rotondo",
         "tr-surrenali-sartorio"
       ],
-      "descrizione": "Dall'anulare risale il dorso della mano e il centro della faccia posteriore del braccio, la spalla, il collo e gira attorno all'orecchio fino al sopracciglio.",
+      "descrizione": "Dall'anulare risale il dorso della mano e il centro della faccia posteriore dell'avambraccio e del braccio, la spalla e il collo, poi gira attorno all'orecchio fino all'estremità del sopracciglio. 23 punti.",
       "nodi": [
         {
-          "x": 0.705,
-          "y": 0.655,
-          "z": -0.02,
+          "x": 0.508,
+          "y": 0.252,
+          "z": 0.008,
           "sigla": "TR1",
           "nome": "Guanchong",
           "ruolo": "Jing-pozzo",
-          "note": "angolo ungueale dell'anulare, lato ulnare"
+          "note": "angolo ungueale dell'anulare, lato ulnare",
+          "chiave": true
         },
         {
-          "x": 0.72,
-          "y": 0.78,
-          "z": -0.06
+          "x": 0.5,
+          "y": 0.468,
+          "z": -0.012,
+          "sigla": "TR2",
+          "nome": "Yemen"
         },
         {
-          "x": 0.72,
-          "y": 0.86,
-          "z": -0.07,
+          "x": 0.506,
+          "y": 0.552,
+          "z": -0.02,
+          "sigla": "TR3",
+          "nome": "Zhongzhu",
+          "ruolo": "tonificazione",
+          "note": "dorso della mano, tra 4° e 5° metacarpo",
+          "chiave": true
+        },
+        {
+          "x": 0.544,
+          "y": 0.755,
+          "z": -0.013,
           "sigla": "TR4",
           "nome": "Yangchi",
           "ruolo": "Yuan sorgente",
-          "note": "centro della piega dorsale del polso"
+          "note": "centro della piega dorsale del polso",
+          "chiave": true
         },
         {
-          "x": 0.72,
-          "y": 0.98,
-          "z": -0.09,
+          "x": 0.542,
+          "y": 0.83,
+          "z": -0.023,
           "sigla": "TR5",
           "nome": "Waiguan",
           "ruolo": "Luo · punto chiave di Yang Wei Mai",
-          "note": "2 cun sopra TR4, tra radio e ulna, faccia dorsale"
+          "note": "2 cun sopra TR4, tra radio e ulna, faccia dorsale",
+          "chiave": true
         },
         {
-          "x": 0.7,
-          "y": 1.2,
-          "z": -0.1
+          "x": 0.541,
+          "y": 0.87,
+          "z": -0.027,
+          "sigla": "TR6",
+          "nome": "Zhigou"
         },
         {
-          "x": 0.665,
-          "y": 1.42,
-          "z": -0.1,
+          "x": 0.564,
+          "y": 0.87,
+          "z": -0.024,
+          "sigla": "TR7",
+          "nome": "Huizong",
+          "ruolo": "Xi dei fori",
+          "note": "3 cun sopra TR4, sul bordo ulnare del radio",
+          "chiave": true
+        },
+        {
+          "x": 0.539,
+          "y": 0.93,
+          "z": -0.034,
+          "sigla": "TR8",
+          "nome": "Sanyangluo"
+        },
+        {
+          "x": 0.535,
+          "y": 1.06,
+          "z": -0.052,
+          "sigla": "TR9",
+          "nome": "Sidu"
+        },
+        {
+          "x": 0.525,
+          "y": 1.36,
+          "z": -0.073,
           "sigla": "TR10",
           "nome": "Tianjing",
           "ruolo": "He-mare · dispersione",
-          "note": "1 cun sopra l'olecrano, a gomito flesso"
+          "note": "1 cun sopra l'olecrano, a gomito flesso",
+          "chiave": true
         },
         {
-          "x": 0.63,
-          "y": 1.68,
-          "z": -0.09
+          "x": 0.525,
+          "y": 1.44,
+          "z": -0.08,
+          "sigla": "TR11",
+          "nome": "Qinglengyuan"
         },
         {
-          "x": 0.55,
+          "x": 0.526,
+          "y": 1.53,
+          "z": -0.089,
+          "sigla": "TR12",
+          "nome": "Xiaoluo"
+        },
+        {
+          "x": 0.56,
+          "y": 1.66,
+          "z": -0.096,
+          "sigla": "TR13",
+          "nome": "Naohui"
+        },
+        {
+          "x": 0.52,
           "y": 2.06,
-          "z": -0.06,
+          "z": -0.075,
           "sigla": "TR14",
           "nome": "Jianliao",
-          "note": "depressione postero-esterna dell'acromion, a braccio abdotto"
+          "ruolo": "",
+          "note": "depressione postero-esterna dell'acromion, a braccio abdotto",
+          "chiave": true
         },
         {
-          "x": 0.3,
-          "y": 2.26,
-          "z": -0.07
+          "x": 0.38,
+          "y": 2.18,
+          "z": -0.105,
+          "sigla": "TR15",
+          "nome": "Tianliao"
         },
         {
-          "x": 0.27,
-          "y": 2.52,
-          "z": -0.06,
+          "x": 0.114,
+          "y": 2.38,
+          "z": -0.064,
+          "sigla": "TR16",
+          "nome": "Tianyou"
+        },
+        {
+          "x": 0.238,
+          "y": 2.498,
+          "z": -0.078,
           "sigla": "TR17",
           "nome": "Yifeng",
-          "note": "depressione dietro il lobo dell'orecchio"
+          "ruolo": "",
+          "note": "depressione dietro il lobo dell'orecchio",
+          "chiave": true
         },
         {
-          "x": 0.28,
-          "y": 2.65,
-          "z": 0.05,
+          "x": 0.235,
+          "y": 2.635,
+          "z": -0.166,
+          "sigla": "TR18",
+          "nome": "Chimai"
+        },
+        {
+          "x": 0.242,
+          "y": 2.732,
+          "z": -0.123,
+          "sigla": "TR19",
+          "nome": "Luxi"
+        },
+        {
+          "x": 0.227,
+          "y": 2.828,
+          "z": -0.015,
+          "sigla": "TR20",
+          "nome": "Jiaosun"
+        },
+        {
+          "x": 0.275,
+          "y": 2.645,
+          "z": 0.055,
           "sigla": "TR21",
-          "nome": "Ermen",
-          "note": "davanti all'incisura superiore dell'orecchio, a bocca aperta"
+          "nome": "Ermen"
+        },
+        {
+          "x": 0.24,
+          "y": 2.685,
+          "z": 0.1,
+          "sigla": "TR22",
+          "nome": "Erheliao"
         },
         {
           "x": 0.17,
-          "y": 2.68,
-          "z": 0.19,
+          "y": 2.685,
+          "z": 0.185,
           "sigla": "TR23",
           "nome": "Sizhukong",
           "ruolo": "fine del meridiano",
-          "note": "estremità esterna del sopracciglio"
+          "note": "estremità esterna del sopracciglio",
+          "chiave": true
         }
       ]
     },
@@ -1168,39 +2343,156 @@ window.MERIDIANI = {
       "coordinate": [
         "vescica-biliare-deltoide-anteriore"
       ],
-      "descrizione": "Dall'angolo esterno dell'occhio percorre a zig-zag il lato del cranio, scende sul fianco del tronco, sull'anca e sulla faccia esterna della gamba fino al 4° dito del piede.",
+      "descrizione": "Dall'angolo esterno dell'occhio percorre a zig-zag il lato del cranio (VB1-VB20), scende sulla spalla e sul fianco del tronco, sull'anca e sulla faccia esterna della coscia e della gamba, fino al 4° dito del piede. 44 punti.",
       "nodi": [
         {
-          "x": 0.14,
+          "x": 0.145,
           "y": 2.62,
-          "z": 0.22,
+          "z": 0.215,
           "sigla": "VB1",
           "nome": "Tongziliao",
           "ruolo": "inizio del meridiano",
-          "note": "0,5 cun all'esterno dell'angolo esterno dell'occhio"
+          "note": "0,5 cun all'esterno dell'angolo esterno dell'occhio",
+          "chiave": true
         },
         {
-          "x": 0.26,
-          "y": 2.58,
-          "z": 0.1
+          "x": 0.265,
+          "y": 2.525,
+          "z": 0.09,
+          "sigla": "VB2",
+          "nome": "Tinghui"
+        },
+        {
+          "x": 0.258,
+          "y": 2.6,
+          "z": 0.1,
+          "sigla": "VB3",
+          "nome": "Shangguan"
+        },
+        {
+          "x": 0.249,
+          "y": 2.752,
+          "z": 0.112,
+          "sigla": "VB4",
+          "nome": "Hanyan"
         },
         {
           "x": 0.27,
-          "y": 2.78,
-          "z": 0.02
+          "y": 2.71,
+          "z": 0.088,
+          "sigla": "VB5",
+          "nome": "Xuanlu"
         },
         {
-          "x": 0.22,
-          "y": 2.72,
-          "z": -0.12
+          "x": 0.283,
+          "y": 2.681,
+          "z": 0.059,
+          "sigla": "VB6",
+          "nome": "Xuanli"
+        },
+        {
+          "x": 0.283,
+          "y": 2.7,
+          "z": -0.008,
+          "sigla": "VB7",
+          "nome": "Qubin"
+        },
+        {
+          "x": 0.214,
+          "y": 2.846,
+          "z": -0.005,
+          "sigla": "VB8",
+          "nome": "Shuaigu"
+        },
+        {
+          "x": 0.206,
+          "y": 2.832,
+          "z": -0.081,
+          "sigla": "VB9",
+          "nome": "Tianchong"
+        },
+        {
+          "x": 0.218,
+          "y": 2.732,
+          "z": -0.161,
+          "sigla": "VB10",
+          "nome": "Fubai"
+        },
+        {
+          "x": 0.186,
+          "y": 2.665,
+          "z": -0.215,
+          "sigla": "VB11",
+          "nome": "Touqiaoyin"
+        },
+        {
+          "x": 0.2,
+          "y": 2.48,
+          "z": -0.152,
+          "sigla": "VB12",
+          "nome": "Wangu"
+        },
+        {
+          "x": 0.179,
+          "y": 2.841,
+          "z": 0.136,
+          "sigla": "VB13",
+          "nome": "Benshen"
+        },
+        {
+          "x": 0.13,
+          "y": 2.7,
+          "z": 0.198,
+          "sigla": "VB14",
+          "nome": "Yangbai",
+          "ruolo": "",
+          "note": "1 cun sopra il centro del sopracciglio",
+          "chiave": true
+        },
+        {
+          "x": 0.099,
+          "y": 2.88,
+          "z": 0.165,
+          "sigla": "VB15",
+          "nome": "Toulinqi"
+        },
+        {
+          "x": 0.102,
+          "y": 2.916,
+          "z": 0.097,
+          "sigla": "VB16",
+          "nome": "Muchuang"
+        },
+        {
+          "x": 0.104,
+          "y": 2.931,
+          "z": 0.019,
+          "sigla": "VB17",
+          "nome": "Zhengying"
+        },
+        {
+          "x": 0.108,
+          "y": 2.914,
+          "z": -0.074,
+          "sigla": "VB18",
+          "nome": "Chengling"
+        },
+        {
+          "x": 0.11,
+          "y": 2.796,
+          "z": -0.216,
+          "sigla": "VB19",
+          "nome": "Naokong"
         },
         {
           "x": 0.14,
-          "y": 2.46,
-          "z": -0.19,
+          "y": 2.462,
+          "z": -0.198,
           "sigla": "VB20",
           "nome": "Fengchi",
-          "note": "sotto l'occipite, tra i due grandi muscoli della nuca"
+          "ruolo": "",
+          "note": "sotto l'occipite, tra i due grandi muscoli della nuca",
+          "chiave": true
         },
         {
           "x": 0.38,
@@ -1208,12 +2500,23 @@ window.MERIDIANI = {
           "z": -0.02,
           "sigla": "VB21",
           "nome": "Jianjing",
-          "note": "punto più alto della spalla, a metà tra C7 e l'acromion"
+          "ruolo": "",
+          "note": "punto più alto della spalla, a metà tra C7 e l'acromion",
+          "chiave": true
         },
         {
           "x": 0.46,
-          "y": 1.84,
-          "z": -0.02
+          "y": 1.8,
+          "z": -0.02,
+          "sigla": "VB22",
+          "nome": "Yuanye"
+        },
+        {
+          "x": 0.45,
+          "y": 1.76,
+          "z": 0.05,
+          "sigla": "VB23",
+          "nome": "Zhejin"
         },
         {
           "x": 0.31,
@@ -1222,7 +2525,8 @@ window.MERIDIANI = {
           "sigla": "VB24",
           "nome": "Riyue",
           "ruolo": "Mu della Vescica Biliare",
-          "note": "7° spazio intercostale, sotto il capezzolo (cartilagine della 6ª costa)"
+          "note": "7° spazio intercostale, sotto il capezzolo",
+          "chiave": true
         },
         {
           "x": 0.4,
@@ -1231,62 +2535,171 @@ window.MERIDIANI = {
           "sigla": "VB25",
           "nome": "Jingmen",
           "ruolo": "Mu del Rene",
-          "note": "estremità libera della 12ª costa, sul fianco"
+          "note": "estremità libera della 12ª costa, sul fianco",
+          "chiave": true
         },
         {
           "x": 0.4,
-          "y": 1.16,
-          "z": 0.03
+          "y": 1.24,
+          "z": 0.02,
+          "sigla": "VB26",
+          "nome": "Daimai",
+          "ruolo": "punto di Dai Mai (cintura)",
+          "note": "sul fianco, all'altezza dell'ombelico, sotto la 11ª costa",
+          "chiave": true
         },
         {
-          "x": 0.36,
+          "x": 0.385,
+          "y": 1.0,
+          "z": 0.06,
+          "sigla": "VB27",
+          "nome": "Wushu"
+        },
+        {
+          "x": 0.375,
+          "y": 0.96,
+          "z": 0.08,
+          "sigla": "VB28",
+          "nome": "Weidao"
+        },
+        {
+          "x": 0.365,
+          "y": 0.78,
+          "z": 0.02,
+          "sigla": "VB29",
+          "nome": "Juliao"
+        },
+        {
+          "x": 0.355,
           "y": 0.62,
           "z": -0.16,
           "sigla": "VB30",
           "nome": "Huantiao",
-          "note": "depressione del grande trocantere, sul gluteo"
+          "ruolo": "",
+          "note": "depressione del grande trocantere, sul gluteo",
+          "chiave": true
         },
         {
-          "x": 0.33,
-          "y": 0.1,
-          "z": -0.02
+          "x": 0.363,
+          "y": 0.22,
+          "z": 0.011,
+          "sigla": "VB31",
+          "nome": "Fengshi"
         },
         {
-          "x": 0.3,
-          "y": -0.42,
-          "z": 0.04,
+          "x": 0.353,
+          "y": 0.05,
+          "z": 0.012,
+          "sigla": "VB32",
+          "nome": "Zhongdu"
+        },
+        {
+          "x": 0.323,
+          "y": -0.155,
+          "z": 0.051,
+          "sigla": "VB33",
+          "nome": "Xiyangguan"
+        },
+        {
+          "x": 0.319,
+          "y": -0.26,
+          "z": 0.05,
           "sigla": "VB34",
           "nome": "Yanglingquan",
           "ruolo": "He-mare · punto maestro dei tendini",
-          "note": "depressione davanti e sotto la testa del perone"
+          "note": "depressione davanti e sotto la testa del perone",
+          "chiave": true
         },
         {
-          "x": 0.31,
+          "x": 0.328,
+          "y": -0.5,
+          "z": 0.012,
+          "sigla": "VB35",
+          "nome": "Yangjiao"
+        },
+        {
+          "x": 0.332,
+          "y": -0.5,
+          "z": 0.03,
+          "sigla": "VB36",
+          "nome": "Waiqiu",
+          "ruolo": "Xi dei fori",
+          "note": "7 cun sopra il malleolo esterno, sul bordo anteriore del perone",
+          "chiave": true
+        },
+        {
+          "x": 0.311,
+          "y": -0.66,
+          "z": 0.029,
+          "sigla": "VB37",
+          "nome": "Guangming",
+          "ruolo": "Luo di passaggio",
+          "note": "5 cun sopra il malleolo esterno",
+          "chiave": true
+        },
+        {
+          "x": 0.298,
           "y": -0.8,
-          "z": 0.03
+          "z": 0.028,
+          "sigla": "VB38",
+          "nome": "Yangfu"
         },
         {
-          "x": 0.29,
-          "y": -1.19,
-          "z": 0.08,
+          "x": 0.284,
+          "y": -0.92,
+          "z": 0.031,
+          "sigla": "VB39",
+          "nome": "Xuanzhong",
+          "ruolo": "punto maestro del midollo",
+          "note": "3 cun sopra il malleolo esterno, sul bordo del perone",
+          "chiave": true
+        },
+        {
+          "x": 0.285,
+          "y": -1.185,
+          "z": 0.09,
           "sigla": "VB40",
           "nome": "Qiuxu",
           "ruolo": "Yuan sorgente",
-          "note": "davanti e sotto il malleolo esterno"
+          "note": "davanti e sotto il malleolo esterno",
+          "chiave": true
         },
         {
-          "x": 0.27,
-          "y": -1.25,
-          "z": 0.17
+          "x": 0.262,
+          "y": -1.235,
+          "z": 0.29,
+          "sigla": "VB41",
+          "nome": "Zulinqi",
+          "ruolo": "punto chiave di Dai Mai",
+          "note": "dorso del piede, tra 4° e 5° metatarso",
+          "chiave": true
         },
         {
-          "x": 0.26,
-          "y": -1.28,
-          "z": 0.25,
+          "x": 0.258,
+          "y": -1.245,
+          "z": 0.335,
+          "sigla": "VB42",
+          "nome": "Diwuhui"
+        },
+        {
+          "x": 0.252,
+          "y": -1.262,
+          "z": 0.4,
+          "sigla": "VB43",
+          "nome": "Xiaxi",
+          "ruolo": "tonificazione",
+          "note": "tra 4° e 5° dito del piede, sulla piega interdigitale",
+          "chiave": true
+        },
+        {
+          "x": 0.252,
+          "y": -1.272,
+          "z": 0.435,
           "sigla": "VB44",
           "nome": "Zuqiaoyin",
           "ruolo": "Jing-pozzo",
-          "note": "angolo ungueale del 4° dito del piede, lato esterno"
+          "note": "angolo ungueale del 4° dito del piede, lato esterno",
+          "chiave": true
         }
       ]
     },
@@ -1304,63 +2717,109 @@ window.MERIDIANI = {
       "coordinate": [
         "fegato-romboide"
       ],
-      "descrizione": "Dall'alluce (lato esterno) risale il dorso del piede, la faccia interna della gamba e della coscia, l'inguine, e termina sul torace sotto il capezzolo.",
+      "descrizione": "Dall'alluce (lato esterno) risale il dorso del piede, la faccia interna della gamba e della coscia, l'inguine, e termina sul torace sotto il capezzolo (F14 Qimen). 14 punti.",
       "nodi": [
         {
-          "x": 0.17,
-          "y": -1.29,
-          "z": 0.26,
+          "x": 0.168,
+          "y": -1.272,
+          "z": 0.455,
           "sigla": "F1",
           "nome": "Dadun",
           "ruolo": "Jing-pozzo",
-          "note": "angolo ungueale dell'alluce, lato esterno"
+          "note": "angolo ungueale dell'alluce, lato esterno",
+          "chiave": true
         },
         {
-          "x": 0.17,
-          "y": -1.26,
-          "z": 0.22,
+          "x": 0.172,
+          "y": -1.262,
+          "z": 0.375,
           "sigla": "F2",
           "nome": "Xingjian",
           "ruolo": "dispersione",
-          "note": "tra 1° e 2° dito, sulla piega interdigitale"
+          "note": "tra 1° e 2° dito, sulla piega interdigitale",
+          "chiave": true
         },
         {
-          "x": 0.17,
+          "x": 0.175,
           "y": -1.235,
-          "z": 0.16,
+          "z": 0.28,
           "sigla": "F3",
           "nome": "Taichong",
           "ruolo": "Yuan sorgente",
-          "note": "dorso del piede, nella depressione tra 1° e 2° metatarso"
+          "note": "dorso del piede, nella depressione tra 1° e 2° metatarso",
+          "chiave": true
         },
         {
-          "x": 0.16,
-          "y": -1.16,
-          "z": 0.09
+          "x": 0.165,
+          "y": -1.185,
+          "z": 0.115,
+          "sigla": "F4",
+          "nome": "Zhongfeng"
         },
         {
-          "x": 0.16,
-          "y": -0.8,
-          "z": 0.06
+          "x": 0.146,
+          "y": -0.85,
+          "z": 0.036,
+          "sigla": "F5",
+          "nome": "Ligou",
+          "ruolo": "Luo di passaggio",
+          "note": "5 cun sopra il malleolo interno, sulla faccia mediale della tibia",
+          "chiave": true
         },
         {
-          "x": 0.15,
-          "y": -0.34,
-          "z": 0.02,
+          "x": 0.14,
+          "y": -0.76,
+          "z": 0.038,
+          "sigla": "F6",
+          "nome": "Zhongdu",
+          "ruolo": "Xi dei fori",
+          "note": "7 cun sopra il malleolo interno",
+          "chiave": true
+        },
+        {
+          "x": 0.109,
+          "y": -0.2,
+          "z": 0.036,
+          "sigla": "F7",
+          "nome": "Xiguan"
+        },
+        {
+          "x": 0.108,
+          "y": -0.155,
+          "z": 0.032,
           "sigla": "F8",
           "nome": "Ququan",
           "ruolo": "He-mare · tonificazione",
-          "note": "estremità interna della piega del ginocchio flesso"
+          "note": "estremità interna della piega del ginocchio flesso",
+          "chiave": true
         },
         {
-          "x": 0.18,
+          "x": 0.076,
           "y": 0.1,
-          "z": 0.11
+          "z": 0.06,
+          "sigla": "F9",
+          "nome": "Yinbao"
         },
         {
-          "x": 0.22,
-          "y": 0.8,
-          "z": 0.2
+          "x": 0.063,
+          "y": 0.55,
+          "z": 0.101,
+          "sigla": "F10",
+          "nome": "Zuwuli"
+        },
+        {
+          "x": 0.074,
+          "y": 0.68,
+          "z": 0.122,
+          "sigla": "F11",
+          "nome": "Yinlian"
+        },
+        {
+          "x": 0.2,
+          "y": 0.78,
+          "z": 0.243,
+          "sigla": "F12",
+          "nome": "Jimai"
         },
         {
           "x": 0.38,
@@ -1368,8 +2827,9 @@ window.MERIDIANI = {
           "z": 0.1,
           "sigla": "F13",
           "nome": "Zhangmen",
-          "ruolo": "Mu della Milza",
-          "note": "estremità libera della 11ª costa, sul fianco"
+          "ruolo": "Mu della Milza · riunione degli organi",
+          "note": "estremità libera della 11ª costa, sul fianco",
+          "chiave": true
         },
         {
           "x": 0.27,
@@ -1378,7 +2838,8 @@ window.MERIDIANI = {
           "sigla": "F14",
           "nome": "Qimen",
           "ruolo": "Mu del Fegato",
-          "note": "6° spazio intercostale, sulla linea del capezzolo"
+          "note": "6° spazio intercostale, sulla linea del capezzolo",
+          "chiave": true
         }
       ]
     },
@@ -1396,7 +2857,7 @@ window.MERIDIANI = {
       "coordinate": [
         "vc-sovraspinato"
       ],
-      "descrizione": "Vaso straordinario mediano anteriore: dal perineo risale al centro dell'addome e del torace fino al mento. Raccoglie molti punti Mu (allarme).",
+      "descrizione": "Vaso straordinario mediano anteriore: dal perineo risale al centro dell'addome e del torace fino al mento. Raccoglie molti punti Mu (allarme). 24 punti.",
       "nodi": [
         {
           "x": 0.0,
@@ -1405,12 +2866,15 @@ window.MERIDIANI = {
           "sigla": "VC1",
           "nome": "Huiyin",
           "ruolo": "inizio del meridiano",
-          "note": "centro del perineo"
+          "note": "centro del perineo",
+          "chiave": true
         },
         {
           "x": 0.0,
-          "y": 0.86,
-          "z": 0.299
+          "y": 0.88,
+          "z": 0.3,
+          "sigla": "VC2",
+          "nome": "Qugu"
         },
         {
           "x": 0.0,
@@ -1419,7 +2883,8 @@ window.MERIDIANI = {
           "sigla": "VC3",
           "nome": "Zhongji",
           "ruolo": "Mu della Vescica",
-          "note": "4 cun sotto l'ombelico, 1 cun sopra il pube"
+          "note": "4 cun sotto l'ombelico, 1 cun sopra il pube",
+          "chiave": true
         },
         {
           "x": 0.0,
@@ -1428,7 +2893,18 @@ window.MERIDIANI = {
           "sigla": "VC4",
           "nome": "Guanyuan",
           "ruolo": "Mu dell'Intestino Tenue",
-          "note": "3 cun sotto l'ombelico"
+          "note": "3 cun sotto l'ombelico",
+          "chiave": true
+        },
+        {
+          "x": 0.0,
+          "y": 1.1,
+          "z": 0.253,
+          "sigla": "VC5",
+          "nome": "Shimen",
+          "ruolo": "Mu del Triplice Riscaldatore",
+          "note": "2 cun sotto l'ombelico",
+          "chiave": true
         },
         {
           "x": 0.0,
@@ -1437,7 +2913,15 @@ window.MERIDIANI = {
           "sigla": "VC6",
           "nome": "Qihai",
           "ruolo": "mare del Qi",
-          "note": "1,5 cun sotto l'ombelico"
+          "note": "1,5 cun sotto l'ombelico",
+          "chiave": true
+        },
+        {
+          "x": 0.0,
+          "y": 1.22,
+          "z": 0.248,
+          "sigla": "VC7",
+          "nome": "Yinjiao"
         },
         {
           "x": 0.0,
@@ -1445,7 +2929,30 @@ window.MERIDIANI = {
           "z": 0.262,
           "sigla": "VC8",
           "nome": "Shenque",
-          "note": "centro dell'ombelico (non si punge)"
+          "ruolo": "",
+          "note": "centro dell'ombelico (non si punge)",
+          "chiave": true
+        },
+        {
+          "x": 0.0,
+          "y": 1.32,
+          "z": 0.269,
+          "sigla": "VC9",
+          "nome": "Shuifen"
+        },
+        {
+          "x": 0.0,
+          "y": 1.36,
+          "z": 0.276,
+          "sigla": "VC10",
+          "nome": "Xiawan"
+        },
+        {
+          "x": 0.0,
+          "y": 1.4,
+          "z": 0.282,
+          "sigla": "VC11",
+          "nome": "Jianli"
         },
         {
           "x": 0.0,
@@ -1453,17 +2960,43 @@ window.MERIDIANI = {
           "z": 0.288,
           "sigla": "VC12",
           "nome": "Zhongwan",
-          "ruolo": "Mu dello Stomaco",
-          "note": "a metà tra ombelico e apice dello sterno (4 cun sopra l'ombelico)"
+          "ruolo": "Mu dello Stomaco · riunione dei visceri",
+          "note": "a metà tra ombelico e apice dello sterno",
+          "chiave": true
         },
         {
           "x": 0.0,
-          "y": 1.58,
-          "z": 0.302,
+          "y": 1.49,
+          "z": 0.292,
+          "sigla": "VC13",
+          "nome": "Shangwan"
+        },
+        {
+          "x": 0.0,
+          "y": 1.545,
+          "z": 0.297,
           "sigla": "VC14",
           "nome": "Juque",
           "ruolo": "Mu del Cuore",
-          "note": "6 cun sopra l'ombelico, sotto l'apice dello sterno"
+          "note": "6 cun sopra l'ombelico, sotto l'apice dello sterno",
+          "chiave": true
+        },
+        {
+          "x": 0.0,
+          "y": 1.59,
+          "z": 0.304,
+          "sigla": "VC15",
+          "nome": "Jiuwei",
+          "ruolo": "Luo di passaggio",
+          "note": "sotto l'apice dell'apofisi xifoide",
+          "chiave": true
+        },
+        {
+          "x": 0.0,
+          "y": 1.64,
+          "z": 0.313,
+          "sigla": "VC16",
+          "nome": "Zhongting"
         },
         {
           "x": 0.0,
@@ -1472,12 +3005,36 @@ window.MERIDIANI = {
           "sigla": "VC17",
           "nome": "Shanzhong",
           "ruolo": "Mu del Maestro del Cuore · mare del Qi",
-          "note": "centro dello sterno, a livello del 4° spazio intercostale"
+          "note": "centro dello sterno, a livello del 4° spazio intercostale",
+          "chiave": true
         },
         {
           "x": 0.0,
-          "y": 1.95,
-          "z": 0.364
+          "y": 1.77,
+          "z": 0.337,
+          "sigla": "VC18",
+          "nome": "Yutang"
+        },
+        {
+          "x": 0.0,
+          "y": 1.83,
+          "z": 0.347,
+          "sigla": "VC19",
+          "nome": "Zigong"
+        },
+        {
+          "x": 0.0,
+          "y": 1.89,
+          "z": 0.356,
+          "sigla": "VC20",
+          "nome": "Huagai"
+        },
+        {
+          "x": 0.0,
+          "y": 1.96,
+          "z": 0.365,
+          "sigla": "VC21",
+          "nome": "Xuanji"
         },
         {
           "x": 0.0,
@@ -1485,12 +3042,16 @@ window.MERIDIANI = {
           "z": 0.324,
           "sigla": "VC22",
           "nome": "Tiantu",
-          "note": "centro dell'incisura giugulare (fossetta del collo)"
+          "ruolo": "finestra del cielo",
+          "note": "centro dell'incisura giugulare (fossetta del collo)",
+          "chiave": true
         },
         {
           "x": 0.0,
-          "y": 2.3,
-          "z": 0.15
+          "y": 2.33,
+          "z": 0.132,
+          "sigla": "VC23",
+          "nome": "Lianquan"
         },
         {
           "x": 0.0,
@@ -1499,7 +3060,8 @@ window.MERIDIANI = {
           "sigla": "VC24",
           "nome": "Chengjiang",
           "ruolo": "fine del meridiano",
-          "note": "nella fossetta sotto il labbro inferiore"
+          "note": "nella fossetta sotto il labbro inferiore",
+          "chiave": true
         }
       ]
     },
@@ -1517,7 +3079,7 @@ window.MERIDIANI = {
       "coordinate": [
         "vg-grande-rotondo"
       ],
-      "descrizione": "Vaso straordinario mediano posteriore: dal coccige risale lungo la colonna vertebrale, la nuca e il cranio fino al labbro superiore.",
+      "descrizione": "Vaso straordinario mediano posteriore: dal coccige risale lungo la colonna vertebrale, la nuca e la linea mediana del cranio fino al labbro superiore. 28 punti.",
       "nodi": [
         {
           "x": 0.0,
@@ -1525,13 +3087,16 @@ window.MERIDIANI = {
           "z": -0.17,
           "sigla": "VG1",
           "nome": "Changqiang",
-          "ruolo": "Luo · inizio del meridiano",
-          "note": "tra la punta del coccige e l'ano"
+          "ruolo": "Luo di passaggio · inizio del meridiano",
+          "note": "tra la punta del coccige e l'ano",
+          "chiave": true
         },
         {
           "x": 0.0,
-          "y": 0.92,
-          "z": -0.301
+          "y": 0.86,
+          "z": -0.299,
+          "sigla": "VG2",
+          "nome": "Yaoshu"
         },
         {
           "x": 0.0,
@@ -1539,7 +3104,9 @@ window.MERIDIANI = {
           "z": -0.248,
           "sigla": "VG3",
           "nome": "Yaoyangguan",
-          "note": "sotto l'apofisi di L4, a livello delle creste iliache"
+          "ruolo": "",
+          "note": "sotto l'apofisi di L4, a livello delle creste iliache",
+          "chiave": true
         },
         {
           "x": 0.0,
@@ -1547,23 +3114,75 @@ window.MERIDIANI = {
           "z": -0.277,
           "sigla": "VG4",
           "nome": "Mingmen",
-          "ruolo": "porta della vita",
-          "note": "sotto l'apofisi di L2, di fronte all'ombelico"
+          "ruolo": "porta della vita (Mingmen)",
+          "note": "sotto l'apofisi di L2, di fronte all'ombelico",
+          "chiave": true
         },
         {
           "x": 0.0,
-          "y": 1.58,
-          "z": -0.302
+          "y": 1.45,
+          "z": -0.289,
+          "sigla": "VG5",
+          "nome": "Xuanshu"
         },
         {
           "x": 0.0,
-          "y": 1.82,
-          "z": -0.346
+          "y": 1.56,
+          "z": -0.298,
+          "sigla": "VG6",
+          "nome": "Jizhong"
+        },
+        {
+          "x": 0.0,
+          "y": 1.64,
+          "z": -0.313,
+          "sigla": "VG7",
+          "nome": "Zhongshu"
+        },
+        {
+          "x": 0.0,
+          "y": 1.72,
+          "z": -0.328,
+          "sigla": "VG8",
+          "nome": "Jinsuo"
+        },
+        {
+          "x": 0.0,
+          "y": 1.8,
+          "z": -0.342,
+          "sigla": "VG9",
+          "nome": "Zhiyang",
+          "ruolo": "",
+          "note": "sotto l'apofisi di D7, a livello della punta delle scapole",
+          "chiave": true
+        },
+        {
+          "x": 0.0,
+          "y": 1.88,
+          "z": -0.354,
+          "sigla": "VG10",
+          "nome": "Lingtai"
+        },
+        {
+          "x": 0.0,
+          "y": 1.96,
+          "z": -0.365,
+          "sigla": "VG11",
+          "nome": "Shendao"
         },
         {
           "x": 0.0,
           "y": 2.06,
-          "z": -0.359
+          "z": -0.359,
+          "sigla": "VG12",
+          "nome": "Shenzhu"
+        },
+        {
+          "x": 0.0,
+          "y": 2.18,
+          "z": -0.285,
+          "sigla": "VG13",
+          "nome": "Taodao"
         },
         {
           "x": 0.0,
@@ -1572,57 +3191,123 @@ window.MERIDIANI = {
           "sigla": "VG14",
           "nome": "Dazhui",
           "ruolo": "riunione dei meridiani Yang",
-          "note": "sotto l'apofisi di C7 (la vertebra più sporgente del collo)"
-        },
-        {
-          "x": 0.0,
-          "y": 2.5,
-          "z": -0.19,
-          "sigla": "VG16",
-          "nome": "Fengfu",
-          "note": "1 cun sopra l'attaccatura dei capelli, sotto l'occipite"
-        },
-        {
-          "x": 0.0,
-          "y": 2.74,
-          "z": -0.14
-        },
-        {
-          "x": 0.0,
-          "y": 2.93,
-          "z": 0.0,
-          "sigla": "VG20",
-          "nome": "Baihui",
-          "ruolo": "riunione dei 100 incontri",
-          "note": "sulla sommità del capo, a metà tra gli apici delle orecchie"
-        },
-        {
-          "x": 0.0,
-          "y": 2.82,
-          "z": 0.17
-        },
-        {
-          "x": 0.0,
-          "y": 2.54,
-          "z": 0.32
-        },
-        {
-          "x": 0.0,
-          "y": 2.475,
-          "z": 0.275,
-          "sigla": "VG26",
-          "nome": "Renzhong",
-          "ruolo": "punto di rianimazione",
-          "note": "al terzo superiore del solco naso-labiale (filtro)"
+          "note": "sotto l'apofisi di C7, la vertebra più sporgente del collo",
+          "chiave": true
         },
         {
           "x": 0.0,
           "y": 2.44,
-          "z": 0.26,
+          "z": -0.232,
+          "sigla": "VG15",
+          "nome": "Yamen"
+        },
+        {
+          "x": 0.0,
+          "y": 2.505,
+          "z": -0.262,
+          "sigla": "VG16",
+          "nome": "Fengfu",
+          "ruolo": "finestra del cielo",
+          "note": "1 cun sopra l'attaccatura dei capelli, sotto l'occipite",
+          "chiave": true
+        },
+        {
+          "x": 0.0,
+          "y": 2.71,
+          "z": -0.276,
+          "sigla": "VG17",
+          "nome": "Naohu"
+        },
+        {
+          "x": 0.0,
+          "y": 2.824,
+          "z": -0.225,
+          "sigla": "VG18",
+          "nome": "Qiangjian"
+        },
+        {
+          "x": 0.0,
+          "y": 2.91,
+          "z": -0.135,
+          "sigla": "VG19",
+          "nome": "Houding"
+        },
+        {
+          "x": 0.0,
+          "y": 2.953,
+          "z": 0.01,
+          "sigla": "VG20",
+          "nome": "Baihui",
+          "ruolo": "riunione dei 100 incontri",
+          "note": "sulla sommità del capo, a metà tra gli apici delle orecchie",
+          "chiave": true
+        },
+        {
+          "x": 0.0,
+          "y": 2.927,
+          "z": 0.123,
+          "sigla": "VG21",
+          "nome": "Qianding"
+        },
+        {
+          "x": 0.0,
+          "y": 2.875,
+          "z": 0.201,
+          "sigla": "VG22",
+          "nome": "Xinhui"
+        },
+        {
+          "x": 0.0,
+          "y": 2.809,
+          "z": 0.254,
+          "sigla": "VG23",
+          "nome": "Shangxing"
+        },
+        {
+          "x": 0.0,
+          "y": 2.763,
+          "z": 0.278,
+          "sigla": "VG24",
+          "nome": "Shenting"
+        },
+        {
+          "x": 0.0,
+          "y": 2.65,
+          "z": 0.306
+        },
+        {
+          "x": 0.0,
+          "y": 2.53,
+          "z": 0.325,
+          "sigla": "VG25",
+          "nome": "Suliao"
+        },
+        {
+          "x": 0.0,
+          "y": 2.478,
+          "z": 0.278,
+          "sigla": "VG26",
+          "nome": "Renzhong",
+          "ruolo": "punto di rianimazione",
+          "note": "al terzo superiore del solco naso-labiale (filtro)",
+          "chiave": true
+        },
+        {
+          "x": 0.0,
+          "y": 2.458,
+          "z": 0.268,
+          "sigla": "VG27",
+          "nome": "Duiduan"
+        },
+        {
+          "x": 0.0,
+          "y": 2.442,
+          "z": 0.258,
           "sigla": "VG28",
           "nome": "Yinjiao",
           "ruolo": "fine del meridiano",
-          "note": "frenulo del labbro superiore"
+          "note": "frenulo del labbro superiore",
+          "chiave": true
         }
       ]
     }
