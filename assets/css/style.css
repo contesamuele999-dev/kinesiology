@@ -345,6 +345,7 @@ body.installpop-open{ overflow:hidden; }
 .punti__menu{ position:absolute; top:calc(100% + 6px); left:0; z-index:20; display:flex; flex-direction:column;
   gap:8px; min-width:220px; padding:12px; border-radius:12px; border:1px solid var(--line);
   background:var(--card); box-shadow:var(--shadow); }
+.punti__menu[hidden]{ display:none !important; }
 .edittools{ display:flex; flex-direction:column; gap:8px; }
 .edittools .ebtn{ width:100%; text-align:left; }
 .ebtn{ font:inherit; font-weight:700; font-size:.88rem; padding:8px 14px; border-radius:10px;

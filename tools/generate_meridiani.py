@@ -1170,6 +1170,27 @@ GLUTEI_PROFILO = [(0.440,-0.190),(0.490,-0.240),(0.540,-0.282),(0.590,-0.315),(0
                   (0.690,-0.349),(0.740,-0.352),(0.790,-0.347),(0.840,-0.333),(0.890,-0.311),
                   (0.940,-0.282),(0.985,-0.250)]
 
+def piede_lato():
+    """contorno del piede visto di lato (piano z-y): dorso curvo (dal tallone
+       alla punta, tabella FOOT["dorso"]), pianta piatta, tallone e punta
+       arrotondati. Sostituisce il vecchio blocco rettangolare."""
+    top = FOOT["dorso"]                       # [(z, y_dorso), ...] tallone -> punta
+    z0, y0 = top[0]
+    z1, y1 = top[-1]
+    y_sole = FOOT["suola"]
+    pts = list(top)
+    # punta arrotondata: dal dorso scende fino al livello della pianta
+    rx_t, ry_t = 0.028, (y1 - y_sole)
+    for i in range(1, 7):
+        a = (math.pi/2.0) * i/6.0
+        pts.append((z1 + rx_t*math.sin(a), y1 - ry_t*(1 - math.cos(a))))
+    # pianta piatta (linea retta fra i due punti di raccordo) + tallone arrotondato
+    rx_h, ry_h = 0.05, (y0 - y_sole)
+    for i in range(0, 7):
+        a = (math.pi/2.0) * i/6.0
+        pts.append((z0 - rx_h*math.cos(a), y_sole + ry_h*math.sin(a)))
+    return _poly(pts)
+
 def sagome_lato():
     """contorni della vista laterale (piano z-y): profilo del corpo"""
     def zmax(y):
@@ -1179,8 +1200,7 @@ def sagome_lato():
         if 2.35 <= y <= 2.93: v = max(v, _head_z(y) + HC[2])
         vf = _lerp_y(VISO_PROFILO, y)               # profilo del viso (naso, labbra, mento)
         if vf is not None: v = max(v, vf)
-        if -1.30 <= y <= -1.10: v = max(v, 0.46)        # piede
-        if -1.14 <= y <= 0.92:
+        if -1.20 <= y <= 0.92:
             cx, cz, r = _interp(LEG_AXIS, y); v = max(v, cz + r)
         return v
     def zmin(y):
@@ -1190,11 +1210,11 @@ def sagome_lato():
         if 2.35 <= y <= 2.93: v = min(v, -(_head_z(y) - HC[2]))
         gl = _lerp_y(GLUTEI_PROFILO, y)             # profilo dei glutei
         if gl is not None: v = min(v, gl)
-        if -1.30 <= y <= -1.14: v = min(v, -0.16)       # tallone
-        if -1.14 <= y <= 0.92:
+        if -1.20 <= y <= 0.92:
             cx, cz, r = _interp(LEG_AXIS, y); v = min(v, cz - r)
         return v
-    C = [_contorno_bordi(-1.30, 2.93, zmax, zmin)]
+    C = [_contorno_bordi(-1.20, 2.93, zmax, zmin)]
+    C.append(piede_lato())                          # sagoma del piede (dorso/pianta/tallone/punta)
     # braccio di profilo
     C.append(_contorno_bordi(0.47, 2.00,
         lambda y: (_interp(ARM_AXIS, y)[1] + _interp(ARM_AXIS, y)[2]) if y >= 0.74 else 0.078,
