@@ -37,6 +37,11 @@
   <main id="puntiView" class="puntiview" hidden>
     <div class="punti__layout">
       <div class="punti__stage">
+        <nav class="subtabs" id="stageTabs" aria-label="Tipo di visualizzazione">
+          <button class="subtab is-on" type="button" data-stage="3d">Mappa 3D</button>
+          <button class="subtab" type="button" data-stage="2d">Tavole 2D</button>
+        </nav>
+        <div id="stage3d">
         <div id="punti3d" class="punti__canvas" role="img" aria-label="Mappa 3D del corpo con i punti d'allarme"></div>
         <div class="viewbar" id="viewBar">
           <button class="ebtn ebtn--mini is-on" type="button" data-view="fronte">Fronte</button>
@@ -47,6 +52,26 @@
           <button class="ebtn ebtn--mini" type="button" data-view="corpo">Corpo intero</button>
         </div>
         <p class="punti__hint">Trascina per ruotare · rotella/pinch per zoom · tocca un punto per i dettagli</p>
+        </div>
+
+        <!-- ===== Tavole 2D ===== -->
+        <div id="stage2d" hidden>
+          <nav class="platetabs" id="plateTabs" aria-label="Tavola"></nav>
+          <div class="tav__wrap">
+            <svg id="tavolaSvg" class="tav__svg" viewBox="-0.95 -3 1.9 4.45" role="img"
+                 aria-label="Tavola anatomica con i punti dei meridiani"></svg>
+          </div>
+          <div class="tav__tools">
+            <label class="ebtn ebtn--mini" for="tavImg">⬆ Immagine di sfondo</label>
+            <input id="tavImg" type="file" accept="image/*" hidden />
+            <button id="tavImgMove" class="ebtn ebtn--mini" type="button" aria-pressed="false">✥ Sposta / scala</button>
+            <label class="tav__op">Opacità <input id="tavImgOp" type="range" min="0" max="100" value="60" /></label>
+            <button id="tavImgDel" class="ebtn ebtn--mini" type="button">Rimuovi</button>
+            <button id="tavReset" class="ebtn ebtn--mini" type="button">Reimposta zoom</button>
+          </div>
+          <p class="punti__hint">Rotella/pinch per zoom · trascina per spostare · tocca un punto per i dettagli.
+            Puoi caricare una tua tavola o foto come sfondo e allinearla con «Sposta / scala».</p>
+        </div>
       </div>
       <aside class="punti__side">
         <div class="punti__toolbar">
@@ -66,18 +91,28 @@
         </p>
         <!-- ===== Meridiani MTC: controlli ===== -->
         <section class="merpanel" id="merPanel">
-          <div class="merpanel__head">
-            <label class="merswitch"><input type="checkbox" id="merShow" checked /> <span>Meridiani MTC</span></label>
-            <label class="merswitch"><span>Punti</span>
-              <select id="merPointsMode" aria-label="Quali punti mostrare">
-                <option value="chiave">principali</option>
-                <option value="tutti">tutti (361)</option>
-                <option value="nessuno">nessuno</option>
-              </select>
-            </label>
-            <label class="merswitch"><input type="checkbox" id="merLabels" checked /> <span>Sigle</span></label>
-            <button id="merAll" class="ebtn ebtn--mini" type="button">Tutti</button>
-            <button id="merNone" class="ebtn ebtn--mini" type="button">Nessuno</button>
+          <div class="tgls">
+            <label class="tgl"><input type="checkbox" id="puntiShow" checked />
+              <span class="tgl__sw" aria-hidden="true"></span><span class="tgl__lb">Punti indicatori</span></label>
+            <label class="tgl"><input type="checkbox" id="merShow" checked />
+              <span class="tgl__sw" aria-hidden="true"></span><span class="tgl__lb">Meridiani MTC</span></label>
+            <label class="tgl"><input type="checkbox" id="merLabels" checked />
+              <span class="tgl__sw" aria-hidden="true"></span><span class="tgl__lb">Sigle dei punti</span></label>
+          </div>
+          <div class="segrow">
+            <span class="segrow__lb">Punti dei meridiani</span>
+            <div class="seg" id="merPointsSeg" role="group" aria-label="Quali punti mostrare">
+              <button type="button" class="seg__b is-on" data-pm="chiave">Principali</button>
+              <button type="button" class="seg__b" data-pm="tutti">Tutti (361)</button>
+              <button type="button" class="seg__b" data-pm="nessuno">Nessuno</button>
+            </div>
+          </div>
+          <div class="segrow">
+            <span class="segrow__lb">Meridiani visibili</span>
+            <div class="seg">
+              <button type="button" class="seg__b" id="merAll">Tutti</button>
+              <button type="button" class="seg__b" id="merNone">Nessuno</button>
+            </div>
           </div>
           <div class="merchips" id="merChips"></div>
           <p class="merpanel__hint">Tocca un <strong>punto colorato</strong> o un <strong>tracciato</strong> per la scheda del meridiano;
@@ -137,6 +172,7 @@
   <script src="assets/js/manichino.js"></script>
   <script src="assets/js/meridiani_data.js"></script>
   <script src="assets/js/meridiani.js"></script>
+  <script src="assets/js/tavole.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/punti.js"></script>
 </body>

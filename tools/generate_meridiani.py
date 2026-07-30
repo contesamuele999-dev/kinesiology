@@ -889,6 +889,302 @@ ATTESI = {"polmone":11,"intestino-crasso":20,"stomaco":45,"milza":21,"cuore":9,
           "triplice-riscaldatore":23,"vescica-biliare":44,"fegato":14,
           "vaso-concezione":24,"vaso-governatore":28}
 
+# ============================================================================
+#  TAVOLE 2D — contorni e linee anatomiche ricavati dalle STESSE quote del
+#  manichino 3D, così i punti proiettati coincidono con il disegno.
+#  Unità identiche al 3D; l'app converte in coordinate SVG.
+# ============================================================================
+def _head_x(y):
+    t = (y - HC[1]) / HR[1]
+    if abs(t) >= 1: return 0.0
+    return HR[0] * math.sqrt(1 - t*t)
+
+def _head_z(y):
+    t = (y - HC[1]) / HR[1]
+    if abs(t) >= 1: return 0.0
+    return HR[2] * math.sqrt(1 - t*t)
+
+def _collo(y):
+    return 0.145 if 2.23 <= y <= 2.45 else 0.0
+
+def _tronco_x(y):
+    return torso_r(y) if 0.60 <= y <= 2.31 else 0.0
+
+def _orecchio(y):
+    return 0.279 if 2.535 <= y <= 2.665 else 0.0
+
+def _corpo_x(y):
+    return max(_tronco_x(y), _collo(y), _head_x(y), _orecchio(y))
+
+def _arm_edge(y, esterno=True):
+    cx, cz, r = _interp(ARM_AXIS, y)
+    return cx + r if esterno else cx - r
+
+def _leg_edge(y, esterno=True):
+    cx, cz, r = _interp(LEG_AXIS, y)
+    return cx + r if esterno else cx - r
+
+def _R(v): return round(v, 3)
+def _poly(pts): return [[_R(a), _R(b)] for a, b in pts]
+
+def _contorno_simmetrico(y0, y1, fx, passo=0.025):
+    """contorno chiuso di una parte simmetrica rispetto a x=0"""
+    su, giu = [], []
+    y = y0
+    while y <= y1 + 1e-9:
+        v = fx(y)
+        if v > 0.001:
+            su.append((v, y)); giu.append((-v, y))
+        y += passo
+    return _poly(su + list(reversed(giu)))
+
+def _cap(p, q, verso, n=8):
+    """semicerchio che raccorda due bordi (verso=+1 verso l'alto, -1 verso il basso)"""
+    cx, cy = (p[0]+q[0])/2.0, (p[1]+q[1])/2.0
+    r = abs(q[0]-p[0])/2.0
+    if r < 1e-4: return []
+    a0 = math.atan2(p[1]-cy, p[0]-cx); a1 = math.atan2(q[1]-cy, q[0]-cx)
+    out = []
+    for i in range(1, n):
+        t = i/float(n)
+        a = a0 + (a1-a0)*t
+        out.append((cx + r*math.cos(a), cy + verso*abs(r*math.sin(math.pi*t))*1.0))
+    return out
+
+def _contorno_bordi(y0, y1, fdx, fsx, passo=0.025, cap_alto=False, cap_basso=False):
+    """contorno chiuso definito da bordo destro e bordo sinistro"""
+    a, b = [], []
+    y = y0
+    while y <= y1 + 1e-9:
+        a.append((fdx(y), y)); b.append((fsx(y), y))
+        y += passo
+    pts = list(a)
+    if cap_alto: pts += _cap(a[-1], b[-1], +1)
+    pts += list(reversed(b))
+    if cap_basso: pts += _cap(b[0], a[0], -1)
+    return _poly(pts)
+
+def _capsula(p0, p1, r0, r1, n=10):
+    """contorno di una capsula fra due punti 2D (per dita e ossa)"""
+    (x0, y0), (x1, y1) = p0, p1
+    dx, dy = x1 - x0, y1 - y0
+    L = math.hypot(dx, dy) or 1.0
+    ux, uy = dx / L, dy / L
+    px, py = -uy, ux
+    pts = []
+    for i in range(n + 1):
+        a = math.pi * i / n
+        pts.append((x0 + px*r0*math.cos(a) - ux*r0*math.sin(a),
+                    y0 + py*r0*math.cos(a) - uy*r0*math.sin(a)))
+    for i in range(n + 1):
+        a = math.pi * i / n
+        pts.append((x1 - px*r1*math.cos(a) + ux*r1*math.sin(a),
+                    y1 - py*r1*math.cos(a) + uy*r1*math.sin(a)))
+    return _poly(pts)
+
+def _arco(cx, cy, rx, ry, a0, a1, n=14):
+    return _poly([(cx + rx*math.cos(a0 + (a1-a0)*i/n), cy + ry*math.sin(a0 + (a1-a0)*i/n))
+                  for i in range(n + 1)])
+
+def sagome_fronte():
+    """contorni chiusi della vista frontale (piano x-y)"""
+    C = []
+    C.append(_contorno_simmetrico(0.60, 2.93, _corpo_x))
+    for s in (1, -1):
+        # braccio + palmo
+        def _palmo_w(y):
+            t = max(0.0, min(1.0, (0.74 - y) / (0.74 - 0.50)))
+            return 0.052 + (HAND["semilarghezza"] - 0.052) * math.sin(t * math.pi * 0.5)
+        C.append(_contorno_bordi(0.47, 2.00,
+            lambda y, s=s: s*(_arm_edge(y) if y >= 0.74 else HAND["centro_x"] + _palmo_w(y)),
+            lambda y, s=s: s*(_arm_edge(y, False) if y >= 0.74 else HAND["centro_x"] - _palmo_w(y)),
+            cap_alto=True, cap_basso=True))
+        # dita
+        for nome, xm, xt, yt, r in HAND["dita"]:
+            C.append(_capsula((s*xm, HAND["mcp_y"] + 0.01), (s*xt, yt), r, r*0.75))
+        P = HAND["pollice"]
+        C.append(_capsula((s*P["cmc"][0], P["cmc"][1]), (s*P["punta"][0], P["punta"][1]),
+                          P["raggio"], P["raggio"]*0.7))
+        # gamba
+        C.append(_contorno_bordi(-1.14, 0.70,
+            lambda y, s=s: s*_leg_edge(y), lambda y, s=s: s*_leg_edge(y, False), cap_alto=True))
+        # piede visto di fronte
+        C.append(_poly([(s*0.157,-1.14),(s*0.288,-1.14),(s*0.305,-1.30),(s*0.128,-1.30)]))
+    return C
+
+def dettagli_fronte():
+    D = []
+    A = lambda pts: D.append(_poly(pts))
+    zf = lambda x, y: 0
+    # viso
+    for s in (1, -1):
+        D.append(_arco(s*0.095, 2.605, 0.042, 0.026, 0, 2*math.pi))          # occhio
+        D.append(_arco(s*0.09, 2.655, 0.075, 0.035, math.pi*0.15, math.pi*0.85))  # sopracciglio
+        D.append(_arco(s*0.262, 2.60, 0.028, 0.062, -math.pi/2, math.pi/2))  # orecchio
+    A([(-0.03, 2.62), (0.0, 2.53), (0.03, 2.62)])                            # naso
+    A([(-0.055, 2.462), (0.0, 2.472), (0.055, 2.462)])                       # bocca
+    A([(-0.115, 2.60), (-0.14, 2.50), (-0.09, 2.415), (0.0, 2.398),
+       (0.09, 2.415), (0.14, 2.50), (0.115, 2.60)])                          # mandibola
+    # collo e clavicole
+    for s in (1, -1):
+        A([(s*0.05, 2.44), (s*0.10, 2.32), (s*0.16, 2.22)])                  # sternocleidomastoideo
+        A([(s*0.02, 2.15), (s*0.20, 2.16), (s*0.38, 2.11), (s*0.47, 2.04)])  # clavicola
+    # sterno + linea alba
+    A([(0.0, 2.12), (0.0, LAND.get("arcata", 1.55) if isinstance(LAND, dict) else 1.55)]) if False else None
+    A([(0.0, 2.12), (0.0, 1.58)])
+    A([(0.0, 1.52), (0.0, 0.86)])
+    # pettorali
+    for s in (1, -1):
+        A([(s*0.04, 2.02), (s*0.22, 1.96), (s*0.36, 1.86), (s*0.30, 1.74), (s*0.10, 1.72)])
+        D.append(_arco(s*0.24, 1.82, 0.026, 0.026, 0, 2*math.pi))            # capezzolo
+    # arcata costale
+    for s in (1, -1):
+        A([(s*0.02, 1.65), (s*0.20, 1.55), (s*0.34, 1.40)])
+    # coste
+    for k, yb in enumerate((1.72, 1.86, 2.00)):
+        for s in (1, -1):
+            A([(s*0.06, yb), (s*0.22, yb + 0.03), (s*0.36, yb - 0.03)])
+    # addominali
+    for s in (1, -1):
+        A([(s*0.075, 1.55), (s*0.075, 1.20)])
+    for y in (1.46, 1.36, 1.26):
+        A([(-0.075, y), (0.075, y)])
+    D.append(_arco(0.0, 1.28, 0.028, 0.028, 0, 2*math.pi))                   # ombelico
+    # creste iliache + inguine
+    for s in (1, -1):
+        A([(s*0.10, 0.96), (s*0.26, 1.00), (s*0.36, 1.06)])
+        A([(s*0.06, 0.80), (s*0.24, 0.90), (s*0.36, 1.00)])
+    D.append(_arco(0.0, 0.82, 0.14, 0.05, math.pi, 2*math.pi))               # arco pubico
+    # arti: rilievi
+    for s in (1, -1):
+        A([(s*0.10, 1.94), (s*0.03, 1.86)])                                  # solco sterno
+        A([(s*0.52, 1.90), (s*0.58, 1.72), (s*0.57, 1.50)])                  # bicipite
+        A([(s*0.50, 1.86), (s*0.49, 1.55)])
+        A([(s*0.545, 0.74), (s*0.545, 0.52)])                                # centro palmo
+        D.append(_arco(s*0.212, -0.135, 0.055, 0.06, 0, 2*math.pi))          # rotula
+        A([(s*0.13, 0.30), (s*0.17, -0.02)])                                 # vasto mediale
+        A([(s*0.30, 0.35), (s*0.28, 0.00)])                                  # vasto laterale
+        A([(s*0.205, -0.24), (s*0.212, -1.00)])                              # cresta tibiale
+        D.append(_arco(s*0.163, -1.155, 0.030, 0.030, 0, 2*math.pi))         # malleolo interno
+        D.append(_arco(s*0.272, -1.165, 0.028, 0.028, 0, 2*math.pi))         # malleolo esterno
+        for nome, x, zt, r in FOOT["dita"]:
+            A([(s*x, -1.30), (s*x, -1.26)])
+    return D
+
+def dettagli_retro():
+    D = []
+    A = lambda pts: D.append(_poly(pts))
+    # colonna
+    A([(0.0, 2.30), (0.0, 0.84)])
+    for i in range(17):
+        y = 2.28 - i*0.09
+        A([(-0.022, y), (0.022, y)])
+    # scapole
+    for s in (1, -1):
+        A([(s*0.09, 2.14), (s*0.34, 2.08), (s*0.30, 1.86), (s*0.12, 1.94), (s*0.09, 2.14)])
+        A([(s*0.11, 2.05), (s*0.32, 2.02)])
+    # coste posteriori
+    for yb in (1.60, 1.74, 1.88, 2.02):
+        for s in (1, -1):
+            A([(s*0.03, yb), (s*0.20, yb - 0.05), (s*0.33, yb - 0.13)])
+    # trapezio
+    A([(-0.42, 2.10), (-0.06, 2.32), (0.06, 2.32), (0.42, 2.10)])
+    # creste iliache + sacro
+    for s in (1, -1):
+        A([(s*0.06, 1.00), (s*0.24, 1.02), (s*0.35, 1.08)])
+    A([(-0.07, 1.00), (0.0, 0.80), (0.07, 1.00)])
+    # solco gluteo + pieghe
+    A([(0.0, 0.84), (0.0, 0.52)])
+    for s in (1, -1):
+        A([(s*0.03, 0.52), (s*0.18, 0.50), (s*0.31, 0.56)])
+        A([(s*0.10, -0.28), (s*0.32, -0.28)])                # piega poplitea
+        A([(s*0.215, -0.42), (s*0.215, -0.90)])              # solco dei gemelli
+        A([(s*0.16, -0.50), (s*0.215, -0.86)])
+        A([(s*0.27, -0.50), (s*0.215, -0.86)])
+        A([(s*0.215, -0.95), (s*0.215, -1.20)])              # tendine d'Achille
+        A([(s*0.14, 1.60), (s*0.30, 1.50)])                  # margine gran dorsale
+    return D
+
+def sagome_lato():
+    """contorni della vista laterale (piano z-y): profilo del corpo"""
+    def zmax(y):
+        v = 0.0
+        if 0.60 <= y <= 2.31: v = max(v, torso_r(y)*TORSO_ZSCALE + 0.02)
+        if 2.23 <= y <= 2.45: v = max(v, 0.12)
+        if 2.31 <= y <= 2.93: v = max(v, _head_z(y) + HC[2])
+        for (yy, zz) in ((2.40,0.235),(2.44,0.262),(2.47,0.278),(2.50,0.300),
+                         (2.53,0.330),(2.56,0.300),(2.60,0.272),(2.66,0.268),(2.72,0.245)):
+            if abs(y - yy) < 0.022: v = max(v, zz)      # profilo del viso (naso, labbra, mento)
+        if -1.30 <= y <= -1.10: v = max(v, 0.46)        # piede
+        if -1.14 <= y <= 0.92:
+            cx, cz, r = _interp(LEG_AXIS, y); v = max(v, cz + r)
+        return v
+    def zmin(y):
+        v = 0.0
+        if 0.60 <= y <= 2.31: v = min(v, -(torso_r(y)*TORSO_ZSCALE + 0.02))
+        if 2.23 <= y <= 2.45: v = min(v, -0.12)
+        if 2.31 <= y <= 2.93: v = min(v, -(_head_z(y) - HC[2]))
+        if 0.45 <= y <= 0.90: v = min(v, -0.34)         # glutei
+        if -1.30 <= y <= -1.14: v = min(v, -0.16)       # tallone
+        if -1.14 <= y <= 0.92:
+            cx, cz, r = _interp(LEG_AXIS, y); v = min(v, cz - r)
+        return v
+    C = [_contorno_bordi(-1.30, 2.93, zmax, zmin)]
+    # braccio di profilo
+    C.append(_contorno_bordi(0.47, 2.00,
+        lambda y: (_interp(ARM_AXIS, y)[1] + _interp(ARM_AXIS, y)[2]) if y >= 0.74 else 0.078,
+        lambda y: (_interp(ARM_AXIS, y)[1] - _interp(ARM_AXIS, y)[2]) if y >= 0.74 else 0.002,
+        cap_alto=True, cap_basso=True))
+    return C
+
+def dettagli_lato():
+    D = []
+    A = lambda pts: D.append(_poly(pts))
+    D.append(_arco(-0.01, 2.60, 0.030, 0.062, 0, 2*math.pi))     # orecchio
+    A([(0.20, 2.60), (0.26, 2.55), (0.24, 2.48), (0.18, 2.44)])  # zigomo/mascella
+    A([(0.22, 2.42), (0.10, 2.40), (0.02, 2.35)])                # mandibola
+    A([(-0.20, 2.30), (-0.19, 2.10), (-0.17, 1.80), (-0.20, 1.50),
+       (-0.19, 1.20), (-0.16, 0.95), (-0.13, 0.84)])             # colonna di profilo
+    A([(0.0, 2.14), (0.10, 2.10), (0.20, 2.00)])                 # clavicola di profilo
+    A([(0.24, 1.82), (0.30, 1.80)])                              # capezzolo
+    A([(0.235, 1.28), (0.26, 1.28)])                             # ombelico
+    A([(0.24, 1.55), (0.20, 1.42)])                              # arcata costale
+    A([(-0.30, 0.80), (-0.26, 0.60), (-0.16, 0.48)])             # gluteo
+    A([(0.14, -0.135), (0.18, -0.135)])                          # rotula
+    A([(-0.12, -0.90), (-0.09, -1.16)])                          # tendine d'Achille
+    A([(-0.12, -1.28), (0.44, -1.28)])                           # pianta
+    return D
+
+def sagoma_piede():
+    """dorso del piede visto dall'alto (piano x-z), lato sinistro"""
+    C = []
+    pts = []
+    zs = [i*0.02 - 0.12 for i in range(int((0.46+0.12)/0.02)+1)]
+    for z in zs: pts.append((FOOT["cx"] + _lerp_tab(FOOT["larghezza"], z), z))
+    for z in reversed(zs): pts.append((FOOT["cx"] - _lerp_tab(FOOT["larghezza"], z), z))
+    C.append(_poly(pts))
+    for nome, x, zt, r in FOOT["dita"]:
+        C.append(_capsula((x, zt - 0.11), (x, zt), r, r*0.8))
+    return C
+
+def dettagli_piede():
+    D = []
+    A = lambda pts: D.append(_poly(pts))
+    for nome, x, zt, r in FOOT["dita"]:
+        A([(x, zt - 0.11), (x, 0.06)])                 # metatarsi
+    A([(FOOT["cx"] - 0.05, -0.10), (FOOT["cx"] + 0.05, -0.10)])   # tallone
+    D.append(_arco(FOOT["cx"], -0.02, 0.055, 0.045, 0, 2*math.pi))  # caviglia
+    A([(0.150, 0.20), (0.282, 0.20)])                  # linea dei metatarsi
+    return D
+
+def tavole():
+    return {
+        "fronte":  {"contorni": sagome_fronte(), "dettagli": dettagli_fronte()},
+        "retro":   {"contorni": sagome_fronte(), "dettagli": dettagli_retro()},
+        "lato":    {"contorni": sagome_lato(),   "dettagli": dettagli_lato()},
+        "piede":   {"contorni": sagoma_piede(),  "dettagli": dettagli_piede()},
+    }
+
 def corpo():
     """dati anatomici condivisi con assets/js/manichino.js"""
     return {
@@ -902,6 +1198,7 @@ def corpo():
         "piede": FOOT,
         "spalla": [0.50, 2.02, 0.0],
         "anca": [0.185, 0.86, 0.0],
+        "tavole": tavole(),
     }
 
 def build():

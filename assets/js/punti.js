@@ -26,6 +26,7 @@
   let ORIGINAL = [];
   // meridiani MTC
   let merSel = null, merSelMesh = null, probeMesh = null, probePos = null, SAVED_MER = null;
+  let puntiVisibili = true;   // interruttore dei Punti Indicatori
 
   /* ---------- Persistenza locale (modifiche permanenti sul dispositivo) ----------
      Le posizioni/nomi modificati nell'editor sono salvati in localStorage e
@@ -349,9 +350,11 @@
   function pick(cx, cy) {
     ndc(cx, cy);
     raycaster.setFromCamera(pointer, camera);
-    // 1) punti indicatori
-    const hit = raycaster.intersectObjects(markerMeshes, false)[0];
-    if (hit) { selectPoint(hit.object.userData.punto); return; }
+    // 1) punti indicatori (solo se accesi)
+    if (puntiVisibili) {
+      const hit = raycaster.intersectObjects(markerMeshes, false)[0];
+      if (hit) { selectPoint(hit.object.userData.punto); return; }
+    }
     // 2) punti dei meridiani
     const mpts = merVisibleMeshes();
     if (mpts.length) {
@@ -430,6 +433,7 @@
   }
 
   function selectPoint(p) {
+    if (!puntiVisibili) setPuntiVisible(true);   // riaccende i punti se erano spenti
     picked = p; merSel = null;
     clearProbe();
     if (window.MeridianiMap) { try { window.MeridianiMap.highlight(null); } catch (e) {} }
@@ -444,6 +448,7 @@
       m.scale.setScalar(on ? 1.5 : 1);
     });
     renderInfo(p);
+    tavMark({ kind: "ind", id: p.id });
     // highlight list
     if (listEl) Array.from(listEl.children).forEach((li) => li.classList.toggle("active", li.dataset.id === p.id));
     // NB: nessuna rotazione automatica — la camera resta nel punto di vista scelto dall'utente.
@@ -824,6 +829,7 @@
     mm.highlight(m.id);
     syncChips();
     renderMerPointInfo(m, ref);
+    tavMark({ kind: "mer", merId: ref.merId, idx: ref.idx, ramo: ref.ramo });
   }
 
   function selectMeridiano(id) {
@@ -1039,6 +1045,52 @@
     });
   }
 
+  /* ---------- sincronia con la vista 2D (tavole) ---------- */
+  function tavRefresh() { if (window.Tavole && window.Tavole.refresh) window.Tavole.refresh(); }
+  function tavMark(sel) { if (window.Tavole && window.Tavole.mark) window.Tavole.mark(sel); }
+
+  /* ---------- sottoschede: Mappa 3D / Tavole 2D ---------- */
+  let stage = "3d";
+  function setStage(which) {
+    stage = which === "2d" ? "2d" : "3d";
+    const s3 = document.getElementById("stage3d"), s2 = document.getElementById("stage2d");
+    if (s3) s3.hidden = stage !== "3d";
+    if (s2) s2.hidden = stage !== "2d";
+    const tabs = document.getElementById("stageTabs");
+    if (tabs) Array.from(tabs.querySelectorAll("[data-stage]")).forEach(
+      (b) => b.classList.toggle("is-on", b.dataset.stage === stage));
+    if (stage === "2d") {
+      running = false; if (rafId) cancelAnimationFrame(rafId);
+      if (window.Tavole) { window.Tavole.activate(); tavMark(picked ? { kind: "ind", id: picked.id } :
+        (merSel ? { kind: "mer", merId: merSel.merId, idx: merSel.idx, ramo: merSel.ramo } : null)); }
+    } else {
+      if (window.Tavole) window.Tavole.deactivate();
+      if (inited) { running = true; resize(); loop(); }
+    }
+    return stage;
+  }
+  function initStageTabs() {
+    const tabs = document.getElementById("stageTabs");
+    if (!tabs || tabs.dataset.wired) return;
+    tabs.dataset.wired = "1";
+    tabs.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-stage]"); if (!b) return;
+      setStage(b.dataset.stage);
+    });
+  }
+
+  /* ---------- accensione/spegnimento dei Punti Indicatori ---------- */
+  function setPuntiVisible(on) {
+    puntiVisibili = !!on;
+    if (pointsGroup) pointsGroup.visible = puntiVisibili;
+    const ps = document.getElementById("puntiShow");
+    if (ps && ps.checked !== puntiVisibili) ps.checked = puntiVisibili;
+    if (listEl) listEl.classList.toggle("is-off", !puntiVisibili);
+    tavRefresh();
+    return puntiVisibili;
+  }
+  function puntiVisible() { return puntiVisibili; }
+
   /* ---------- pannello di controllo dei meridiani ---------- */
   function syncChips() {
     const mm = MM(); if (!mm) return;
@@ -1050,6 +1102,7 @@
       b.classList.toggle("is-hi", hi === id);
       b.setAttribute("aria-pressed", mm.isVisible(id) ? "true" : "false");
     });
+    tavRefresh();
   }
 
   let merUIdone = false;
@@ -1078,15 +1131,34 @@
       const p = document.getElementById("merPanel");
       if (p) p.classList.toggle("is-hidden", !show.checked);
     });
-    const pts = document.getElementById("merPointsMode");
-    if (pts) {
-      pts.value = mm.pointsMode();
-      pts.addEventListener("change", () => mm.setPointsMode(pts.value));
+    // segmentato "punti dei meridiani": principali / tutti / nessuno
+    const seg = document.getElementById("merPointsSeg");
+    if (seg) {
+      const sync = () => Array.from(seg.querySelectorAll("[data-pm]")).forEach(
+        (b) => b.classList.toggle("is-on", b.dataset.pm === mm.pointsMode()));
+      seg.addEventListener("click", (e) => {
+        const b = e.target.closest("[data-pm]"); if (!b) return;
+        mm.setPointsMode(b.dataset.pm);
+        mm.setLabels(mm.labelsEnabled());   // rigenera le sigle secondo la nuova modalità
+        sync(); tavRefresh();
+      });
+      sync();
+    }
+    const selOld = document.getElementById("merPointsMode");   // compatibilità
+    if (selOld) {
+      selOld.value = mm.pointsMode();
+      selOld.addEventListener("change", () => mm.setPointsMode(selOld.value));
+    }
+    // interruttore dei Punti Indicatori (marker rossi + riferimenti anatomici)
+    const ps = document.getElementById("puntiShow");
+    if (ps) {
+      ps.checked = puntiVisibili;
+      ps.addEventListener("change", () => setPuntiVisible(!!ps.checked));
     }
     const lab = document.getElementById("merLabels");
     if (lab) {
       lab.checked = mm.labelsEnabled();
-      lab.addEventListener("change", () => mm.setLabels(!!lab.checked));
+      lab.addEventListener("change", () => { mm.setLabels(!!lab.checked); tavRefresh(); });
     }
     const bar = document.getElementById("viewBar");
     if (bar) bar.addEventListener("click", (e) => {
@@ -1112,6 +1184,8 @@
         // seleziona il primo punto per dare contesto
         if (DATA[0]) selectPoint(DATA[0]);
       }
+      initStageTabs();
+      if (stage === "2d") { if (window.Tavole) window.Tavole.activate(); return; }
       running = true;
       resize();
       loop();
@@ -1132,6 +1206,12 @@
     probeAt: probeAt,
     setView: setView,
     focusOn: focusOn,
+    setPuntiVisible: setPuntiVisible,
+    puntiVisible: puntiVisible,
+    setStage: setStage,
+    stage: () => stage,
+    selectPunto: (id) => { const p = DATA.find((x) => x.id === id) || LANDMARKS.find((x) => x.id === id);
+                           if (p) selectPoint(p); return !!p; },
     meridianoDi: (pos) => (window.MeridianiMap ? window.MeridianiMap.nearest(pos) : null)
   };
 

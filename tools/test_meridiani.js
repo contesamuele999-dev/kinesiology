@@ -35,7 +35,8 @@ function boot(opts) {
   w.THREE = require("./three_stub.js");
   const files = ["assets/js/data.js", "assets/js/punti_data.js", "assets/js/corpo_data.js",
                  "assets/js/manichino.js", "assets/js/meridiani_data.js",
-                 "assets/js/meridiani.js", "assets/js/app.js", "assets/js/punti.js"];
+                 "assets/js/meridiani.js", "assets/js/tavole.js",
+                 "assets/js/app.js", "assets/js/punti.js"];
   files.forEach((f) => { try { w.eval(rd(f)); } catch (e) { console.log("ERR in " + f + ": " + e.message + "\n" + (e.stack||"").split("\n").slice(0,4).join("\n")); throw e; } });
   return { w, store };
 }
@@ -157,17 +158,82 @@ console.log("\n=== 4. Interfaccia: chip e visibilità ===");
   ok(MM.list().every((m) => !MM.isVisible(m.id)), "«Nessuno» nasconde tutto");
   d.getElementById("merAll").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
   ok(MM.list().every((m) => MM.isVisible(m.id)), "«Tutti» rimostra tutto");
-  const pts = d.getElementById("merPointsMode");
-  pts.value = "nessuno"; pts.dispatchEvent(new w.Event("change", { bubbles: true }));
-  ok(MM.pointMeshes.every((p) => !p.visible), "«nessuno» nasconde i marker MTC");
-  pts.value = "tutti"; pts.dispatchEvent(new w.Event("change", { bubbles: true }));
-  ok(MM.pointMeshes.every((p) => p.visible), "«tutti» mostra tutti i 361 punti");
-  pts.value = "chiave"; pts.dispatchEvent(new w.Event("change", { bubbles: true }));
+  const segB = (v) => d.querySelector('#merPointsSeg [data-pm="' + v + '"]');
+  segB("nessuno").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(MM.pointMeshes.every((p) => !p.visible), "«Nessuno» nasconde i marker MTC");
+  ok(segB("nessuno").classList.contains("is-on"), "il segmento attivo si evidenzia");
+  segB("tutti").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(MM.pointMeshes.every((p) => p.visible), "«Tutti» mostra tutti i 361 punti");
+  segB("chiave").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
   const vis = MM.pointMeshes.filter((p) => p.visible).length;
-  ok(vis > 0 && vis < MM.pointMeshes.length, "«principali» mostra solo i punti chiave", vis + "/" + MM.pointMeshes.length);
+  ok(vis > 0 && vis < MM.pointMeshes.length, "«Principali» mostra solo i punti chiave", vis + "/" + MM.pointMeshes.length);
+  ok(!segB("tutti").classList.contains("is-on"), "gli altri segmenti si spengono");
   const show = d.getElementById("merShow");
   show.checked = false; show.dispatchEvent(new w.Event("change", { bubbles: true }));
   ok(MM.group.visible === false, "toggle master nasconde il gruppo");
+}
+
+console.log("\n=== 4b. Interruttore Punti Indicatori ===");
+{
+  const { w } = boot();
+  const d = w.document;
+  const sw = d.getElementById("puntiShow");
+  ok(!!sw && sw.checked, "interruttore presente e acceso di default");
+  ok(d.querySelectorAll(".tgl").length === 3, "3 toggle nel pannello", d.querySelectorAll(".tgl").length);
+  sw.checked = false; sw.dispatchEvent(new w.Event("change", { bubbles: true }));
+  ok(w.PuntiMap.puntiVisible() === false, "spegnimento registrato");
+  ok(d.getElementById("puntiList").classList.contains("is-off"), "elenco attenuato quando sono spenti");
+  sw.checked = true; sw.dispatchEvent(new w.Event("change", { bubbles: true }));
+  ok(w.PuntiMap.puntiVisible() === true, "riaccensione");
+  ok(!d.getElementById("puntiList").classList.contains("is-off"), "elenco di nuovo pieno");
+  // spegnendo e selezionando un punto dalla lista, i punti si riaccendono da soli
+  w.PuntiMap.setPuntiVisible(false);
+  const p0 = w.PUNTI_INDICATORI.punti[0];
+  d.querySelector('#puntiList [data-id="' + p0.id + '"]').dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(w.PuntiMap.puntiVisible() === true, "selezionare un punto dalla lista lo riaccende");
+  ok(sw.checked === true, "l'interruttore si aggiorna da solo");
+}
+
+console.log("\n=== 4c. Tavole 2D ===");
+{
+  const { w } = boot();
+  const d = w.document;
+  ok(!!w.Tavole, "modulo Tavole disponibile");
+  ok(d.getElementById("stage3d") && !d.getElementById("stage3d").hidden, "si parte dalla Mappa 3D");
+  ok(d.getElementById("stage2d").hidden, "la vista 2D è nascosta all'avvio");
+  const tab2 = d.querySelector('#stageTabs [data-stage="2d"]');
+  tab2.dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(w.PuntiMap.stage() === "2d", "la sottoscheda passa a 2D");
+  ok(!d.getElementById("stage2d").hidden && d.getElementById("stage3d").hidden, "gli stage si scambiano");
+  ok(d.querySelectorAll("#plateTabs .platetab").length === 8, "8 tavole disponibili",
+     d.querySelectorAll("#plateTabs .platetab").length);
+  const svg = d.getElementById("tavolaSvg");
+  ok(svg.querySelectorAll(".tav__body path").length > 10, "sagome disegnate",
+     svg.querySelectorAll(".tav__body path").length);
+  ok(svg.querySelectorAll(".tav__det path").length > 20, "linee anatomiche disegnate",
+     svg.querySelectorAll(".tav__det path").length);
+  const nInd = svg.querySelectorAll("circle.tp--ind").length;
+  ok(nInd > 0 && nInd <= 18, "punti indicatori sulla tavola frontale", nInd);
+  const nTot = svg.querySelectorAll("circle.tp").length;
+  ok(nTot > nInd, "punti dei meridiani presenti", nTot);
+  // cambio tavola
+  d.querySelector('#plateTabs [data-plate="retro"]').dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(d.querySelector('#plateTabs [data-plate="retro"]').classList.contains("is-on"), "cambio tavola");
+  const retroInd = svg.querySelectorAll("circle.tp--ind").length;
+  ok(retroInd > 0 && retroInd < nInd, "la tavola retro mostra solo i punti posteriori", retroInd);
+  // spegnendo i punti indicatori spariscono anche dalla tavola
+  w.PuntiMap.setPuntiVisible(false);
+  ok(svg.querySelectorAll("circle.tp--ind").length === 0, "l'interruttore vale anche in 2D");
+  w.PuntiMap.setPuntiVisible(true);
+  // click su un punto del meridiano apre la scheda
+  d.querySelector('#plateTabs [data-plate="fronte"]').dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  const merC = Array.from(svg.querySelectorAll("circle.tp")).filter((c) => !c.classList.contains("tp--ind"))[0];
+  merC.dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(/Meridiano/.test(d.getElementById("puntiInfo").innerHTML), "clic su un punto 2D apre la scheda");
+  ok(svg.querySelectorAll("circle.is-sel").length >= 1, "il punto selezionato è evidenziato");
+  // ritorno al 3D
+  d.querySelector('#stageTabs [data-stage="3d"]').dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(w.PuntiMap.stage() === "3d" && !d.getElementById("stage3d").hidden, "ritorno alla Mappa 3D");
 }
 
 console.log("\n=== 5. Schede informative ===");

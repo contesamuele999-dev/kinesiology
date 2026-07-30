@@ -1,6 +1,6 @@
 /* sw.js — service worker per PWA offline (app shell + dati).
    Bump CACHE ad ogni release per invalidare la cache. */
-const CACHE = "fisiologia-v20";
+const CACHE = "fisiologia-v22";
 const ASSETS = [
   "./",
   "./index.html",
@@ -13,6 +13,7 @@ const ASSETS = [
   "./assets/js/manichino.js",
   "./assets/js/meridiani_data.js",
   "./assets/js/meridiani.js",
+  "./assets/js/tavole.js",
   "./assets/js/app.js",
   "./assets/js/punti.js",
   "./assets/favicon.svg",
