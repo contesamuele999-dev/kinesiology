@@ -424,9 +424,27 @@
 
   /* ---------- Editor punti (wiring UI) ---------- */
   (function initEditorUI() {
+    const menuBtn = el("puntiMenuToggle"), menu = el("puntiMenu");
     const toggle = el("editToggle"), tools = el("editTools"), hint = el("editHint");
     const exportBtn = el("editExport"), resetBtn = el("editReset");
     if (!toggle) return;
+
+    if (menuBtn && menu) {
+      function setMenuOpen(open) {
+        menu.hidden = !open;
+        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+      menuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setMenuOpen(menu.hidden);
+      });
+      document.addEventListener("click", (e) => {
+        if (!menu.hidden && !menu.contains(e.target) && e.target !== menuBtn) setMenuOpen(false);
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !menu.hidden) setMenuOpen(false);
+      });
+    }
     function setOn(on) {
       toggle.setAttribute("aria-pressed", on ? "true" : "false");
       toggle.textContent = on ? "✓ Fine modifica" : "✎ Modifica punti";

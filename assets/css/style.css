@@ -341,8 +341,12 @@ body.installpop-open{ overflow:hidden; }
 }
 
 /* ---- Editor punti ---- */
-.punti__toolbar{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 2px 10px; }
-.edittools{ display:flex; gap:8px; flex-wrap:wrap; }
+.punti__toolbar{ position:relative; display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 2px 10px; }
+.punti__menu{ position:absolute; top:calc(100% + 6px); left:0; z-index:20; display:flex; flex-direction:column;
+  gap:8px; min-width:220px; padding:12px; border-radius:12px; border:1px solid var(--line);
+  background:var(--card); box-shadow:var(--shadow); }
+.edittools{ display:flex; flex-direction:column; gap:8px; }
+.edittools .ebtn{ width:100%; text-align:left; }
 .ebtn{ font:inherit; font-weight:700; font-size:.88rem; padding:8px 14px; border-radius:10px;
   border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer; }
 .ebtn:hover{ border-color:var(--brand); }
