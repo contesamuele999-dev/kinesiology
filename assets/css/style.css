@@ -381,3 +381,54 @@ body.editing .punti__canvas{ cursor:crosshair; outline:2px solid color-mix(in sr
 .pinfo__vista span{ color:var(--muted); font-size:.82rem; margin-right:2px; }
 .ebtn--seg{ padding:6px 12px; font-size:.85rem; }
 .ebtn--seg.is-on{ background:var(--brand); color:#fff; border-color:var(--brand); }
+
+/* ================== MERIDIANI MTC ================== */
+.merpanel{ margin:0 2px 12px; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:var(--card); }
+.merpanel.is-hidden .merchips{ opacity:.35; pointer-events:none; }
+.merpanel__head{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; }
+.merswitch{ display:inline-flex; align-items:center; gap:6px; font-size:.86rem; font-weight:700; cursor:pointer; }
+.merswitch input{ width:16px; height:16px; accent-color:var(--brand); cursor:pointer; }
+.ebtn--mini{ padding:5px 10px; font-size:.78rem; border-radius:8px; }
+.ebtn--link{ text-decoration:none; display:inline-flex; align-items:center; }
+.merchips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.merchip{ display:inline-flex; align-items:center; gap:6px; font:inherit; font-size:.76rem; font-weight:700;
+  padding:5px 9px 5px 6px; border-radius:999px; border:1px solid var(--line); background:var(--bg);
+  color:var(--ink); cursor:pointer; line-height:1.1; }
+.merchip:hover{ border-color:var(--brand); }
+.merchip.is-off{ opacity:.4; filter:grayscale(.8); }
+.merchip.is-hi{ border-color:var(--brand); box-shadow:0 0 0 2px color-mix(in srgb,var(--brand) 30%, transparent); }
+.merchip__dot{ width:12px; height:12px; border-radius:50%; flex:0 0 auto; }
+.merchip__sig{ font-weight:800; letter-spacing:.02em; }
+.merchip__nm{ font-weight:600; color:var(--muted); max-width:11ch; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.merpanel__hint{ margin:10px 0 0; font-size:.78rem; color:var(--muted); line-height:1.45; }
+
+/* pastiglia colorata nella scheda punto/meridiano */
+.pinfo__dot--mer{ width:auto; min-width:34px; height:26px; padding:0 8px; border-radius:13px; font-size:.78rem;
+  letter-spacing:.02em; box-shadow:none; border:1px solid rgba(0,0,0,.12); }
+.pinfo__dot--probe{ background:var(--muted); font-size:1rem; box-shadow:none; }
+
+/* azioni sotto la scheda */
+.meractions{ display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.merhint{ margin:10px 0 0; font-size:.8rem; color:var(--muted); }
+
+/* elenco punti / meridiani vicini dentro la scheda */
+.merpts{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.merpt{ display:inline-flex; align-items:center; gap:6px; font:inherit; font-size:.78rem; padding:5px 9px;
+  border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink); cursor:pointer; }
+.merpt:hover{ border-color:var(--brand); }
+.merpt b{ font-weight:800; }
+.merpt__dot{ width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
+.merpt__d{ color:var(--muted); font-weight:700; margin-left:4px; }
+.merpt--near{ width:100%; justify-content:flex-start; }
+
+/* blocco "Meridiani MTC" nella scheda di un punto indicatore */
+.merbox{ margin-top:14px; padding-top:10px; border-top:1px dashed var(--line); }
+.merbox__h{ margin:0 0 8px; font-size:.78rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); }
+.merrow{ display:flex; align-items:flex-start; gap:8px; padding:7px 8px; border-radius:9px; cursor:pointer;
+  border:1px solid transparent; }
+.merrow:hover{ border-color:var(--line); background:color-mix(in srgb,var(--brand) 6%, var(--card)); }
+.merrow__dot{ width:12px; height:12px; border-radius:50%; margin-top:3px; flex:0 0 auto; }
+.merrow__txt{ display:flex; flex-direction:column; gap:2px; font-size:.88rem; }
+.merrow__txt em{ font-style:normal; font-size:.78rem; color:var(--muted); }
+.mermatch{ margin:8px 0 0; padding:8px 10px; border-radius:9px; font-size:.85rem; line-height:1.45;
+  background:color-mix(in srgb,var(--brand) 9%, var(--card)); border:1px solid color-mix(in srgb,var(--brand) 25%, var(--line)); }

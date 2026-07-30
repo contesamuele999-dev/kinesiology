@@ -56,6 +56,19 @@
           usa la <strong>rotella</strong> (o i pulsanti +/−) mentre un punto è selezionato per regolare la profondità.
           Poi premi <strong>Esporta JSON</strong> e caricami il file.
         </p>
+        <!-- ===== Meridiani MTC: controlli ===== -->
+        <section class="merpanel" id="merPanel">
+          <div class="merpanel__head">
+            <label class="merswitch"><input type="checkbox" id="merShow" checked /> <span>Meridiani MTC</span></label>
+            <label class="merswitch"><input type="checkbox" id="merPointsShow" checked /> <span>Punti</span></label>
+            <button id="merAll" class="ebtn ebtn--mini" type="button">Tutti</button>
+            <button id="merNone" class="ebtn ebtn--mini" type="button">Nessuno</button>
+          </div>
+          <div class="merchips" id="merChips"></div>
+          <p class="merpanel__hint">Tocca un <strong>punto colorato</strong> o un <strong>tracciato</strong> per la scheda del meridiano;
+            tocca un <strong>punto qualsiasi del corpo</strong> per sapere a quale meridiano appartiene.</p>
+        </section>
+
         <div id="puntiInfo" class="pinfo" hidden></div>
         <h2 class="punti__listtitle">Punti d'Allarme</h2>
         <div id="puntiList" class="punti__list"></div>
@@ -105,6 +118,8 @@
   <script src="assets/vendor/three.min.js"></script>
   <script src="assets/js/data.js"></script>
   <script src="assets/js/punti_data.js"></script>
+  <script src="assets/js/meridiani_data.js"></script>
+  <script src="assets/js/meridiani.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/punti.js"></script>
 </body>

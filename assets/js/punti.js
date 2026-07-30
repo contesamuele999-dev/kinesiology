@@ -24,6 +24,8 @@
   // editor
   let editing = false, draggingPoint = null;
   let ORIGINAL = [];
+  // meridiani MTC
+  let merSel = null, probeMesh = null, probePos = null, SAVED_MER = null;
 
   /* ---------- Persistenza locale (modifiche permanenti sul dispositivo) ----------
      Le posizioni/nomi modificati nell'editor sono salvati in localStorage e
@@ -47,6 +49,7 @@
         window.PUNTI_INDICATORI.punti = saved.punti;
         window.PUNTI_INDICATORI.landmarks = saved.landmarks || window.PUNTI_INDICATORI.landmarks;
       }
+      if (saved && saved.meridiani) SAVED_MER = saved.meridiani;
     } catch(e){ /* JSON corrotto: ignoro e uso i default */ }
   })();
 
@@ -434,6 +437,16 @@
     bodyGroup = makeBody(); scene.add(bodyGroup);
     pointsGroup = makeMarkers(); scene.add(pointsGroup);
 
+    // ----- Meridiani MTC (tracciati + punti principali) -----
+    if (window.MeridianiMap) {
+      try {
+        const mg = window.MeridianiMap.init(THREE);
+        if (mg) scene.add(mg);
+        if (SAVED_MER) window.MeridianiMap.applyOverrides(SAVED_MER);
+        buildMerUI();
+      } catch (e) { /* i meridiani sono opzionali: la mappa funziona comunque */ }
+    }
+
     raycaster = new THREE.Raycaster();
     pointer = new THREE.Vector2();
 
@@ -459,6 +472,8 @@
       if (editing) {
         const m = markerAt(x, y);
         if (m) { draggingPoint = m; dragMoved = false; selectPoint(m.userData.punto); return; }
+        const mp = merMarkerAt(x, y);
+        if (mp) { draggingPoint = mp; dragMoved = false; selectMerPoint(mp.userData.merPunto); return; }
       }
       dragging = true; dragMoved = false; lastX = x; lastY = y;
     };
@@ -504,8 +519,26 @@
   function pick(cx, cy) {
     ndc(cx, cy);
     raycaster.setFromCamera(pointer, camera);
+    // 1) punti indicatori
     const hit = raycaster.intersectObjects(markerMeshes, false)[0];
-    if (hit) selectPoint(hit.object.userData.punto);
+    if (hit) { selectPoint(hit.object.userData.punto); return; }
+    // 2) punti dei meridiani
+    const mpts = merVisibleMeshes();
+    if (mpts.length) {
+      const h2 = raycaster.intersectObjects(mpts, false)[0];
+      if (h2) { selectMerPoint(h2.object.userData.merPunto); return; }
+    }
+    // 3) tracciato di un meridiano
+    const tubes = merVisibleTubes();
+    if (tubes.length) {
+      const h3 = raycaster.intersectObjects(tubes, false)[0];
+      if (h3) { selectMeridiano(h3.object.userData.meridiano); return; }
+    }
+    // 4) punto qualsiasi del corpo -> meridiano più vicino
+    if (bodyGroup) {
+      const h4 = raycaster.intersectObjects(bodyGroup.children, true)[0];
+      if (h4) probeAt(h4.point);
+    }
   }
 
   /* ---------- Editor: helper ---------- */
@@ -521,6 +554,7 @@
 
   // sposta il punto trascinato sulla superficie del corpo sotto il cursore
   function movePointTo(marker, cx, cy) {
+    if (marker.userData && marker.userData.merPunto) { moveMerPointTo(marker, cx, cy); return; }
     ndc(cx, cy);
     raycaster.setFromCamera(pointer, camera);
     const hits = raycaster.intersectObjects(bodyGroup.children, true);
@@ -566,7 +600,10 @@
   }
 
   function selectPoint(p) {
-    picked = p;
+    picked = p; merSel = null;
+    clearProbe();
+    if (window.MeridianiMap) { try { window.MeridianiMap.highlight(null); } catch (e) {} }
+    syncChips();
     const col = themeColors();
     markerMeshes.forEach((m) => {
       const q = m.userData.punto;
@@ -631,8 +668,9 @@
       (p.note ? '<p class="pinfo__note">' + esc(p.note) + '</p>' : '') +
       '<dl class="pinfo__dl">' +
       rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join("") +
-      '</dl>' + editHtml;
+      '</dl>' + merBlockFor(p) + editHtml;
     infoEl.hidden = false;
+    wireMerActions();
     if (editing) {
       const mn = document.getElementById("depthMinus"), pl = document.getElementById("depthPlus");
       if (mn) mn.addEventListener("click", () => nudgeDepth(-0.02));
@@ -723,6 +761,7 @@
       if (picked && m.userData.punto.id === picked.id) return;
       m.material.color.set(m.userData.punto.kind === "landmark" ? col.lmMarker : col.point);
     });
+    if (window.MeridianiMap) { try { window.MeridianiMap.retheme(); } catch (e) {} }
   }
 
   /* ---------- Editor: attiva/disattiva, export, reset ---------- */
@@ -746,7 +785,9 @@
       landmarks: LANDMARKS.map((p) => ({
         id: p.id, organo: p.organo,
         pos: { x: round3(p.pos.x), y: round3(p.pos.y), z: round3(p.pos.z) }
-      }))
+      })),
+      // modifiche ai tracciati dei meridiani (solo quelli ritoccati nell'editor)
+      meridiani: (window.MeridianiMap ? window.MeridianiMap.exportOverrides() : {})
     };
   }
 
@@ -778,6 +819,7 @@
     // ripristina i default "di fabbrica" e cancella le modifiche salvate
     if (!window.confirm("Ripristinare i punti ai valori iniziali? Le modifiche salvate su questo dispositivo verranno cancellate.")) return;
     lsDel(STORE_KEY);
+    if (window.MeridianiMap) { try { window.MeridianiMap.resetOverrides(); } catch (e) {} }
     applyData(FACTORY);
   }
 
@@ -846,9 +888,12 @@
         if (lm && l.pos) { lm.pos.x = +l.pos.x || 0; lm.pos.y = +l.pos.y || 0; lm.pos.z = +l.pos.z || 0; lm.vista = lm.pos.z < 0 ? "retro" : "fronte"; }
       });
     }
+    if (obj && obj.meridiani && window.MeridianiMap) {
+      try { window.MeridianiMap.applyOverrides(obj.meridiani); } catch (e) {}
+    }
     ITEMS = DATA.concat(LANDMARKS);
     ORIGINAL = ITEMS.map((p) => ({ id: p.id, x: p.pos.x, y: p.pos.y, z: p.pos.z }));
-    picked = null; if (infoEl) infoEl.hidden = true;
+    picked = null; merSel = null; clearProbe(); if (infoEl) infoEl.hidden = true;
     if (pointsGroup) rebuildMarkers();
     buildList();
     if (DATA[0]) selectPoint(DATA[0]);
@@ -870,6 +915,317 @@
     if (!picked) return;
     picked[field] = value;
     if (field === "organo") buildList();
+  }
+
+
+  /* ============================================================================
+     MERIDIANI MTC — selezione, schede informative e "a quale meridiano
+     appartiene questo punto?". La geometria vive in assets/js/meridiani.js.
+     ========================================================================== */
+  function MM() { return window.MeridianiMap || null; }
+
+  function merVisibleMeshes() {
+    const mm = MM(); if (!mm || !mm.pointMeshes) return [];
+    return mm.pointMeshes.filter((p) => p.visible && p.parent && p.parent.visible);
+  }
+  function merVisibleTubes() {
+    const mm = MM(); if (!mm || !mm.group) return [];
+    const out = [];
+    mm.group.children.forEach((g) => {
+      if (!g.visible) return;
+      (g.children || []).forEach((c) => { if (c.userData && c.userData.tratto) out.push(c); });
+    });
+    return out;
+  }
+  function merMarkerAt(cx, cy) {
+    const list = merVisibleMeshes(); if (!list.length) return null;
+    ndc(cx, cy); raycaster.setFromCamera(pointer, camera);
+    const hit = raycaster.intersectObjects(list, false)[0];
+    return hit ? hit.object : null;
+  }
+  // distanza in centimetri (manichino normalizzato: 1 unità ≈ 40 cm)
+  function cmOf(v) {
+    if (v == null) return "";
+    const mm = MM(); const c = v * ((mm && mm.UNIT_CM) || 40);
+    return (c < 10 ? Math.round(c * 10) / 10 : Math.round(c)) + " cm";
+  }
+  function merLabel(m) { return m.nome + " (" + m.sigla + ")"; }
+  function coordLabel(cid) {
+    try {
+      if (typeof COORDINATE !== "undefined" && COORDINATE && COORDINATE.length) {
+        const c = COORDINATE.find((x) => x.id === cid);
+        if (c) return c.muscolo;
+      }
+    } catch (e) {}
+    return cid;
+  }
+
+  /* ---------- editor: trascinamento di un punto del meridiano ---------- */
+  function moveMerPointTo(marker, cx, cy) {
+    const mm = MM(); if (!mm || !bodyGroup) return;
+    ndc(cx, cy); raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(bodyGroup.children, true);
+    let hit = null;
+    for (const h of hits) { if (h.object.userData && h.object.userData.landmark) continue; hit = h; break; }
+    if (!hit) return;
+    const ref = marker.userData.merPunto;
+    mm.moveNode(ref, hit.point.x, hit.point.y, hit.point.z);
+    marker.position.set(hit.point.x, hit.point.y, hit.point.z);
+    const m = mm.get(ref.merId);
+    if (m) renderMerPointInfo(m, ref);
+    persist();
+  }
+
+  /* ---------- selezione ---------- */
+  function selectMerPoint(ref) {
+    const mm = MM(); if (!mm) return;
+    const m = mm.get(ref.merId); if (!m) return;
+    merSel = ref; picked = null; clearProbe();
+    const col = themeColors();
+    markerMeshes.forEach((x) => {
+      x.scale.setScalar(1);
+      x.material.color.set(x.userData.punto.kind === "landmark" ? col.lmMarker : col.point);
+    });
+    if (listEl) Array.from(listEl.children).forEach((li) => li.classList && li.classList.remove("active"));
+    mm.highlight(m.id);
+    syncChips();
+    renderMerPointInfo(m, ref);
+  }
+
+  function selectMeridiano(id) {
+    const mm = MM(); if (!mm) return;
+    const m = mm.get(id); if (!m) return;
+    merSel = { merId: id, idx: -1, side: 1 };
+    picked = null; clearProbe();
+    mm.highlight(id);
+    syncChips();
+    renderMerInfo(m);
+  }
+
+  /* ---------- probe: click su un punto qualsiasi del corpo ---------- */
+  function probeAt(pt) {
+    const mm = MM(); if (!mm) return;
+    probePos = { x: round3(pt.x), y: round3(pt.y), z: round3(pt.z) };
+    if (!probeMesh && THREE) {
+      probeMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.045, 18, 14),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x555555, roughness: 0.3 })
+      );
+      probeMesh.userData.probe = true;
+      scene.add(probeMesh);
+    }
+    if (probeMesh) { probeMesh.visible = true; probeMesh.position.set(probePos.x, probePos.y, probePos.z); }
+    picked = null; merSel = null;
+    mm.highlight(null);
+    syncChips();
+    renderProbeInfo(probePos);
+  }
+  function clearProbe() { if (probeMesh) probeMesh.visible = false; probePos = null; }
+
+  /* ---------- schede ---------- */
+  function merDot(m, txt) {
+    return '<span class="pinfo__dot pinfo__dot--mer" style="background:' + esc(m.colore) + '">' + esc(txt || m.sigla) + '</span>';
+  }
+  function merMetaRows(m) {
+    const rows = [];
+    if (m.elemento && m.elemento !== "—") rows.push(["Elemento", m.elemento]);
+    if (m.natura) rows.push(["Natura", m.natura]);
+    if (m.orario && m.orario !== "—") rows.push(["Massima energia", m.orario]);
+    if (m.coppia) rows.push(["Accoppiato con", m.coppia]);
+    return rows;
+  }
+  function dlOf(rows) {
+    if (!rows.length) return "";
+    return '<dl class="pinfo__dl">' + rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join("") + '</dl>';
+  }
+  function merActions(m) {
+    let h = '<div class="meractions">';
+    h += '<button type="button" class="ebtn ebtn--mini" data-mact="iso" data-mid="' + esc(m.id) + '">Mostra solo questo</button>';
+    h += '<button type="button" class="ebtn ebtn--mini" data-mact="all">Mostra tutti</button>';
+    (m.coordinate || []).forEach((cid) => {
+      h += '<a class="ebtn ebtn--mini ebtn--link" href="#/' + encodeURIComponent(cid) + '">Coordinata: ' + esc(coordLabel(cid)) + '</a>';
+    });
+    return h + '</div>';
+  }
+
+  function renderMerPointInfo(m, ref) {
+    if (!infoEl) return;
+    const mm = MM();
+    const n = m.nodi[ref.idx] || {};
+    const rows = [["Meridiano", m.nome + " (" + m.sigla + " / " + m.siglaInt + ")"]];
+    if (n.ruolo) rows.push(["Ruolo", n.ruolo]);
+    if (m.bilaterale) rows.push(["Lato", mm.latoLabel(ref.side)]);
+    merMetaRows(m).forEach((r) => rows.push(r));
+    let editHtml = "";
+    if (editing) {
+      editHtml = '<p class="merhint">Trascina il punto sul corpo per riposizionarlo: la modifica è salvata su questo dispositivo ed esportata nel JSON.</p>' +
+        '<dl class="pinfo__dl pinfo__coords"><dt>x</dt><dd>' + (n.x != null ? n.x.toFixed(3) : "") + '</dd>' +
+        '<dt>y</dt><dd>' + (n.y != null ? n.y.toFixed(3) : "") + '</dd>' +
+        '<dt>z</dt><dd>' + (n.z != null ? n.z.toFixed(3) : "") + '</dd></dl>';
+    }
+    infoEl.innerHTML =
+      '<div class="pinfo__head">' + merDot(m, n.sigla) + '<h3>' + esc((n.sigla || "") + (n.nome ? " · " + n.nome : "")) + '</h3></div>' +
+      (n.note ? '<p class="pinfo__note">' + esc(n.note) + '</p>' : '') +
+      dlOf(rows) + merActions(m) + editHtml;
+    infoEl.hidden = false;
+    wireMerActions();
+  }
+
+  function renderMerInfo(m) {
+    if (!infoEl) return;
+    const punti = (m.nodi || []).filter((n) => n.sigla);
+    const chips = punti.map((n, i) => '<button type="button" class="merpt" data-mpt="' + m.nodi.indexOf(n) + '" data-mid="' + esc(m.id) + '">' +
+      '<b>' + esc(n.sigla) + '</b> ' + esc(n.nome || "") + '</button>').join("");
+    infoEl.innerHTML =
+      '<div class="pinfo__head">' + merDot(m) + '<h3>' + esc(m.nome) + '</h3></div>' +
+      (m.descrizione ? '<p class="pinfo__note">' + esc(m.descrizione) + '</p>' : '') +
+      dlOf(merMetaRows(m).concat([["Punti mappati", String(punti.length) + (m.bilaterale ? " per lato" : "")]])) +
+      '<div class="merpts">' + chips + '</div>' +
+      merActions(m);
+    infoEl.hidden = false;
+    wireMerActions();
+  }
+
+  function renderProbeInfo(pos) {
+    if (!infoEl) return;
+    const mm = MM(); if (!mm) return;
+    const near = mm.nearest(pos);
+    if (!near) { infoEl.hidden = true; return; }
+    const vicini = (near.vicini || []).map((v) =>
+      '<button type="button" class="merpt merpt--near" data-msel="' + esc(v.mer.id) + '">' +
+      '<span class="merpt__dot" style="background:' + esc(v.mer.colore) + '"></span>' +
+      '<b>' + esc(v.mer.sigla) + '</b> ' + esc(v.mer.nome) +
+      '<span class="merpt__d">' + esc(cmOf(v.dist)) + '</span></button>').join("");
+    const sul = near.dist * ((mm.UNIT_CM || 40)) <= 3.5;
+    const rows = [
+      [sul ? "Sei sul meridiano" : "Meridiano più vicino", merLabel(near.mer)],
+      ["Distanza dal tracciato", cmOf(near.dist)]
+    ];
+    if (near.mer.bilaterale && near.latoNome) rows.push(["Lato", near.latoNome]);
+    if (near.punto) rows.push(["Punto MTC più vicino", near.punto.sigla + " · " + (near.punto.nome || "") + " (" + cmOf(near.puntoDist) + ")"]);
+    merMetaRows(near.mer).forEach((r) => rows.push(r));
+    infoEl.innerHTML =
+      '<div class="pinfo__head"><span class="pinfo__dot pinfo__dot--probe">◎</span><h3>Punto sul corpo</h3></div>' +
+      '<p class="pinfo__note">Posizione toccata: x ' + pos.x.toFixed(2) + ' · y ' + pos.y.toFixed(2) + ' · z ' + pos.z.toFixed(2) +
+      ' — ' + (pos.z < 0 ? 'lato posteriore' : 'lato anteriore') + ', ' + (Math.abs(pos.x) < 0.03 ? 'linea mediana' : (pos.x > 0 ? 'sinistra del soggetto' : 'destra del soggetto')) + '.</p>' +
+      dlOf(rows) +
+      '<h4 class="merbox__h">Meridiani più vicini</h4><div class="merpts">' + vicini + '</div>' +
+      merActions(near.mer);
+    infoEl.hidden = false;
+    wireMerActions();
+  }
+
+  /* ---------- blocco "Meridiani MTC" dentro la scheda di un punto indicatore ---------- */
+  function merBlockFor(p) {
+    const mm = MM();
+    if (!mm || !p || p.kind === "landmark") return "";
+    let dich = null;
+    try { dich = p.meridiano ? mm.byName(p.meridiano) : null; } catch (e) { dich = null; }
+    let near = null;
+    try { near = mm.nearest(p.pos); } catch (e) { near = null; }
+    if (!dich && !near) return "";
+    let h = '<div class="merbox"><h4 class="merbox__h">Meridiani MTC</h4>';
+    // 1) il meridiano dell'organo a cui il punto d'allarme si riferisce
+    if (dich) {
+      const pt = mm.nearestPoint(p.pos, { merId: dich.id });
+      h += merRow(dich, 'meridiano dell\u2019organo' +
+        (pt ? ' \u00b7 punto pi\u00f9 vicino di questo meridiano: ' + pt.nodo.sigla + ' (' + cmOf(pt.dist) + ')' : ''));
+    }
+    // 2) su quale tracciato cade fisicamente il punto (spesso NON è quello dell'organo:
+    //    p.es. il Mu dello Stomaco è VC12, sul Vaso Concezione)
+    if (near && (!dich || near.mer.id !== dich.id)) {
+      const sul = near.dist * ((mm.UNIT_CM || 40)) <= 3.5;
+      h += merRow(near.mer, (sul ? 'il punto cade su questo tracciato' : 'tracciato pi\u00f9 vicino') +
+        ' \u00b7 ' + cmOf(near.dist) +
+        (near.punto ? ' \u00b7 punto ' + near.punto.sigla + ' ' + (near.punto.nome || '') + ' a ' + cmOf(near.puntoDist) : ''));
+    }
+    // 3) corrispondenza diretta con un punto MTC classico
+    const glob = mm.nearestPoint(p.pos);
+    if (glob && glob.dist * ((mm.UNIT_CM || 40)) <= 3) {
+      h += '<p class="mermatch">Corrisponde a <b>' +
+        esc(glob.nodo.sigla + (glob.nodo.nome ? " \u00b7 " + glob.nodo.nome : "")) + '</b>' +
+        (glob.nodo.ruolo ? ' \u2014 ' + esc(glob.nodo.ruolo) : '') + ' (' + esc(cmOf(glob.dist)) + ').</p>';
+    }
+    return h + '</div>';
+  }
+
+  function merRow(m, testo) {
+    return '<div class="merrow" data-msel="' + esc(m.id) + '">' +
+      '<span class="merrow__dot" style="background:' + esc(m.colore) + '"></span>' +
+      '<span class="merrow__txt"><b>' + esc(merLabel(m)) + '</b><em>' + esc(testo) + '</em></span></div>';
+  }
+
+  /* ---------- wiring dei bottoni generati via innerHTML ---------- */
+  function wireMerActions() {
+    if (!infoEl) return;
+    const mm = MM(); if (!mm) return;
+    infoEl.querySelectorAll("[data-mact]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const a = b.dataset.mact;
+        if (a === "all") { mm.setAllVisible(true); mm.highlight(null); }
+        else if (a === "iso") { mm.setAllVisible(false); mm.setVisible(b.dataset.mid, true); mm.highlight(b.dataset.mid); }
+        syncChips();
+      });
+    });
+    infoEl.querySelectorAll("[data-msel]").forEach((b) => {
+      b.addEventListener("click", () => selectMeridiano(b.dataset.msel));
+    });
+    infoEl.querySelectorAll("[data-mpt]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const id = b.dataset.mid, idx = parseInt(b.dataset.mpt, 10);
+        mm.setVisible(id, true);
+        selectMerPoint({ merId: id, idx: idx, side: 1 });
+      });
+    });
+  }
+
+  /* ---------- pannello di controllo dei meridiani ---------- */
+  function syncChips() {
+    const mm = MM(); if (!mm) return;
+    const wrap = document.getElementById("merChips"); if (!wrap) return;
+    const hi = mm.highlighted();
+    Array.from(wrap.children).forEach((b) => {
+      const id = b.dataset.mer;
+      b.classList.toggle("is-off", !mm.isVisible(id));
+      b.classList.toggle("is-hi", hi === id);
+      b.setAttribute("aria-pressed", mm.isVisible(id) ? "true" : "false");
+    });
+  }
+
+  let merUIdone = false;
+  function buildMerUI() {
+    const mm = MM(); if (!mm || merUIdone) return;
+    const wrap = document.getElementById("merChips");
+    if (wrap) {
+      wrap.innerHTML = "";
+      mm.list().forEach((m) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "merchip";
+        b.dataset.mer = m.id;
+        b.title = m.nome + " — clic: mostra/nascondi · doppio clic: scheda";
+        b.innerHTML = '<span class="merchip__dot" style="background:' + esc(m.colore) + '"></span>' +
+          '<span class="merchip__sig">' + esc(m.sigla) + '</span>' +
+          '<span class="merchip__nm">' + esc(m.nome) + '</span>';
+        b.addEventListener("click", () => { mm.setVisible(m.id, !mm.isVisible(m.id)); syncChips(); });
+        b.addEventListener("dblclick", () => { mm.setVisible(m.id, true); selectMeridiano(m.id); });
+        wrap.appendChild(b);
+      });
+    }
+    const show = document.getElementById("merShow");
+    if (show) show.addEventListener("change", () => {
+      if (mm.group) mm.group.visible = !!show.checked;
+      const p = document.getElementById("merPanel");
+      if (p) p.classList.toggle("is-hidden", !show.checked);
+    });
+    const pts = document.getElementById("merPointsShow");
+    if (pts) pts.addEventListener("change", () => mm.setPointsVisible(!!pts.checked));
+    const bAll = document.getElementById("merAll");
+    if (bAll) bAll.addEventListener("click", () => { mm.setAllVisible(true); mm.highlight(null); syncChips(); });
+    const bNone = document.getElementById("merNone");
+    if (bNone) bNone.addEventListener("click", () => { mm.setAllVisible(false); mm.highlight(null); syncChips(); });
+    merUIdone = true;
+    syncChips();
   }
 
   // API pubblica usata dal router in app.js
@@ -896,7 +1252,12 @@
     resetPositions: resetPositions,
     addPoint: addPoint,
     removePoint: removePoint,
-    importJSON: importJSON
+    importJSON: importJSON,
+    // meridiani
+    selectMeridiano: selectMeridiano,
+    selectMerPoint: selectMerPoint,
+    probeAt: probeAt,
+    meridianoDi: (pos) => (window.MeridianiMap ? window.MeridianiMap.nearest(pos) : null)
   };
 
   /* Se la pagina viene aperta DIRETTAMENTE sulla sezione Punti, app.js ha già
