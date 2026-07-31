@@ -51,9 +51,9 @@ ok($(w, "#puntiView").hidden === true && $(w, "#listView").hidden === true, "le 
 ok($(w, '.macronav__tab[data-sec="costituzioni"]').classList.contains("active"), "la tab risulta attiva");
 ok($(w, "#searchWrap").hidden === false, "la ricerca è visibile nella home");
 ok($(w, "#backBtn").hidden === true, "nessun «Indietro» nella home");
-ok($$(w, ".coblock").length === 5, "5 blocchi in home (3 principali + tabella + approfondimenti)", $$(w, ".coblock").length);
+ok($$(w, ".coblock").length === 6, "6 blocchi in home (coppia + 3 principali + tabella + approfondimenti)", $$(w, ".coblock").length);
 const cards = $$(w, ".cocard");
-ok(cards.length === 13, "13 schede in home (3 biotipi + 6 costituzioni + 2 test + 2 extra)", cards.length);
+ok(cards.length === 14, "14 schede in home (coppia + 3 biotipi + 6 costituzioni + 2 test + 2 extra)", cards.length);
 ok($$(w, ".cotab tbody tr").length === 6, "tabella riassuntiva con 6 righe", $$(w, ".cotab tbody tr").length);
 ok(/Ectomorfo[\s\S]*Mesomorfo[\s\S]*Endomorfo/.test($(w, "#costView").textContent), "i 3 biotipi compaiono in home");
 ok(/TAI YANG[\s\S]*SHAO YANG[\s\S]*TAI YIN[\s\S]*YANG MING[\s\S]*JUE YIN[\s\S]*SHAO YIN/.test($(w, "#costView").textContent),
@@ -131,14 +131,14 @@ go(w, "#costituzioni");
 w.Cost.filter("cavallo");
 ok(/TAI YANG/.test($(w, "#costView").textContent), "cerca «cavallo» → Tai Yang");
 w.Cost.filter("polsi");
-ok(/TEMPERAMENTI/.test($(w, "#costView").textContent) && $$(w, ".cocard").length === 1,
-   "cerca «polsi» → solo la procedura Temperamenti", $$(w, ".cocard").length);
+ok(/TEMPERAMENTI/.test($(w, "#costView").textContent) && $$(w, ".cocard").length === 2,
+   "cerca «polsi» → procedura Temperamenti + percorso guidato", $$(w, ".cocard").length);
 w.Cost.filter("emorroidi");
 ok(/MESOMORFO/.test($(w, "#costView").textContent), "cerca «emorroidi» → Mesomorfo");
 w.Cost.filter("zzzz");
 ok(!!$(w, ".noresults"), "nessun risultato per una parola inesistente");
 w.Cost.filter("");
-ok($$(w, ".cocard").length === 13, "svuotando la ricerca torna la home");
+ok($$(w, ".cocard").length === 14, "svuotando la ricerca torna la home", $$(w, ".cocard").length);
 
 console.log("\n== 7. Immagini presenti su disco ==");
 const D = w.COSTITUZIONI;
@@ -156,7 +156,7 @@ const w2 = boot("#cost/costituzione/shao-yin");
 ok($(w2, "#costView").hidden === false && /SHAO YIN/.test($(w2, "#costView").textContent),
    "link diretto #cost/costituzione/shao-yin funziona al primo caricamento");
 const w3 = boot("#costituzioni");
-ok($$(w3, ".cocard").length === 13, "link diretto #costituzioni apre la home");
+ok($$(w3, ".cocard").length === 14, "link diretto #costituzioni apre la home", $$(w3, ".cocard").length);
 go(w3, "#coordinate");
 ok($(w3, "#listView").hidden === false && $(w3, "#costView").hidden === true, "→ Coordinate: elenco visibile");
 ok($$(w3, "#grid .card").length === 16, "16 meridiani nell'elenco Coordinate", $$(w3, "#grid .card").length);
@@ -173,6 +173,88 @@ ok(w4.location.hash === "#costituzioni", "dal dettaglio torna alla home Costituz
 const w5 = boot("#cost/teoria/t3");
 $(w5, "#backBtn").dispatchEvent(new w5.Event("click"));
 ok(w5.location.hash === "#cost/teoria", "da un capitolo torna all'indice della teoria", w5.location.hash);
+
+console.log("\n== 10. Coppia Costituzione + Temperamento ==");
+const wc = boot("#costituzioni");
+ok(!!$(wc, '.cocard[href="#cost/coppia"]'), "in home c'è la card del percorso guidato");
+
+go(wc, "#cost/coppia");
+ok($$(wc, ".costep").length === 3, "passo 1: indicatore a 3 passi", $$(wc, ".costep").length);
+ok($(wc, ".costep.is-now .costep__t").textContent === "Costituzione", "passo 1 è quello attivo");
+ok($$(wc, '.cocard[href^="#cost/coppia/"]').length === 6, "passo 1: 6 costituzioni fra cui scegliere",
+   $$(wc, '.cocard[href^="#cost/coppia/"]').length);
+ok($(wc, "#backBtn").hidden === false, "il pulsante Indietro compare fuori dalla home");
+
+go(wc, "#cost/coppia/tai-yang");
+ok($(wc, ".costep.is-now .costep__t").textContent === "Temperamento", "passo 2 è quello attivo");
+ok($$(wc, '.cocard[href^="#cost/coppia/tai-yang/"]').length === 6, "passo 2: 6 temperamenti fra cui scegliere",
+   $$(wc, '.cocard[href^="#cost/coppia/tai-yang/"]').length);
+ok(/Mano destra[\s\S]*Mano sinistra/.test($(wc, "#costView").textContent), "i temperamenti sono divisi per polso");
+
+go(wc, "#cost/coppia/tai-yang/bilioso");
+const tc = $(wc, "#costView").textContent;
+ok(/TAI YANG \+ Bilioso/.test(tc), "risultato: intestazione della coppia");
+ok(/Profilo misto/.test(tc), "coppia divergente → profilo misto");
+ok($$(wc, ".cotab--coppia thead th").length === 3, "sintesi a 3 colonne (voce + 2 profili)",
+   $$(wc, ".cotab--coppia thead th").length);
+ok($$(wc, ".cotab--coppia tbody tr").length === 10, "10 voci di confronto",
+   $$(wc, ".cotab--coppia tbody tr").length);
+ok(/SHAO YANG/.test(tc), "cita la costituzione nativa del temperamento scelto");
+ok(/Convergenze e divergenze/.test(tc), "blocco convergenze/divergenze presente");
+ok(/V62/.test(tc) && /mano sinistra/.test(tc), "riporta punto chiave e polso della coppia");
+ok(!/insofferenza/i.test(tc) && !/Ergopsichica/i.test(tc), "niente contenuti estranei alla coppia");
+ok($$(wc, ".cocard").length === 2, "solo i link alle 2 schede complete", $$(wc, ".cocard").length);
+
+go(wc, "#cost/coppia/tai-yang/nervoso");
+const tp = $(wc, "#costView").textContent;
+ok(/Profilo coerente/.test(tp), "coppia coincidente → profilo coerente");
+ok($$(wc, ".cotab--coppia thead th").length === 2, "profilo coerente: sintesi a 1 sola colonna",
+   $$(wc, ".cotab--coppia thead th").length);
+ok($$(wc, ".cocard").length === 1, "profilo coerente: una sola scheda completa", $$(wc, ".cocard").length);
+
+const wb = boot("#cost/coppia/tai-yin/linfatico");
+$(wb, "#backBtn").dispatchEvent(new wb.Event("click"));
+ok(wb.location.hash === "#cost/coppia/tai-yin", "Indietro dal risultato torna al passo 2", wb.location.hash);
+$(wb, "#backBtn").dispatchEvent(new wb.Event("click"));
+ok(wb.location.hash === "#cost/coppia", "Indietro dal passo 2 torna al passo 1", wb.location.hash);
+$(wb, "#backBtn").dispatchEvent(new wb.Event("click"));
+ok(wb.location.hash === "#costituzioni", "Indietro dal passo 1 torna alla home", wb.location.hash);
+
+console.log("\n== 11. Test discriminante Milza / Pancreas ==");
+const wm = boot("");
+wm.PuntiMap.selectPunto("milza");
+const info = $(wm, "#puntiInfo");
+ok(/Milza o Pancreas\?/.test(info.textContent), "il punto Milza propone il test discriminante");
+ok($$(wm, "#puntiInfo .mpopt").length === 2, "due muscoli indicatori proposti", $$(wm, "#puntiInfo .mpopt").length);
+ok(/Trapezio Medio[\s\S]*MILZA/.test(info.textContent), "Trapezio Medio → Milza");
+ok(/Gran Dorsale[\s\S]*PANCREAS/.test(info.textContent), "Gran Dorsale → Pancreas");
+
+$(wm, '#puntiInfo .mpopt[data-mp="pancreas"]').dispatchEvent(new wm.Event("click"));
+const tx = $(wm, "#puntiInfo").textContent;
+ok(/Organo: Pancreas/.test(tx), "scelto Gran Dorsale → mostra il Pancreas");
+ok(/meato uditivo esterno/.test(tx), "NV del Pancreas (non quelli della Milza)");
+ok(!/sutura lambdoidea/.test(tx), "nessun punto della Milza in vista");
+ok(/neuro-linfatici/i.test(tx) && /neurovascolari/i.test(tx) && /Reflessologia/i.test(tx),
+   "NL + NV + reflessologia dell'organo scelto");
+ok($$(wm, "#puntiInfo .mpfig img").length === 3, "3 immagini: NL, NV, ruota energetica",
+   $$(wm, "#puntiInfo .mpfig img").length);
+ok(!!$(wm, '#puntiInfo a[href="#/milza-pancreas-gran-dorsale"]'), "link alla coordinata Gran Dorsale");
+
+$(wm, "#puntiInfo [data-mpreset]").dispatchEvent(new wm.Event("click"));
+ok($$(wm, "#puntiInfo .mpopt").length === 2, "«Rifai il test» riporta alla scelta");
+
+$(wm, '#puntiInfo .mpopt[data-mp="milza"]').dispatchEvent(new wm.Event("click"));
+const tx2 = $(wm, "#puntiInfo").textContent;
+ok(/Organo: Milza/.test(tx2) && /sutura lambdoidea/.test(tx2), "scelto Trapezio Medio → mostra la Milza");
+ok(!!$(wm, '#puntiInfo a[href="#/milza-trapezio-medio"]'), "link alla coordinata Trapezio Medio");
+
+wm.PuntiMap.selectPunto("milza-dx");
+ok(/Organo: Milza/.test($(wm, "#puntiInfo").textContent), "la scelta resta passando all'altro punto Milza");
+wm.PuntiMap.selectPunto("fegato");
+ok(!/Milza o Pancreas\?/.test($(wm, "#puntiInfo").textContent), "su un altro organo il test non compare");
+wm.PuntiMap.selectPunto("milza");
+ok($$(wm, "#puntiInfo .mpopt").length === 2, "tornando alla Milza il test riparte da zero",
+   $$(wm, "#puntiInfo .mpopt").length);
 
 console.log("\n" + (fail ? "✗ " : "✓ ") + pass + "/" + (pass + fail) + " test superati");
 process.exit(fail ? 1 : 0);

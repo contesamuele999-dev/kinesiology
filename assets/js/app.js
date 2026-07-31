@@ -528,7 +528,10 @@
   backBtn.addEventListener("click", () => {
     if (costView && !costView.hidden) {
       const v = window.Cost ? window.Cost.parse(location.hash) : { tipo: "home" };
-      location.hash = (v.tipo === "teoria" && v.id) ? "#cost/teoria" : "#costituzioni";
+      if (v.tipo === "teoria" && v.id) location.hash = "#cost/teoria";
+      else if (v.tipo === "coppia" && v.id2) location.hash = "#cost/coppia/" + v.id;
+      else if (v.tipo === "coppia" && v.id) location.hash = "#cost/coppia";
+      else location.hash = "#costituzioni";
       return;
     }
     if (!coordView.hidden) location.hash = "#/" + pair[0].id;

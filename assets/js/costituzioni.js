@@ -25,6 +25,22 @@
   }
   var BIO = { ecto: "Ectomorfo", meso: "Mesomorfo", endo: "Endomorfo" };
 
+  /* I 6 temperamenti: ognuno è "nativo" di una costituzione ed è rilevato su un polso.
+     L'ordine segue la procedura del manuale (3 polsi per mano). */
+  var TEMPERAMENTI = [
+    { id: "nervoso",     nome: "Nervoso",     cost: "tai-yang",  mano: "destra"   },
+    { id: "flemmatico",  nome: "Flemmatico",  cost: "tai-yin",   mano: "destra"   },
+    { id: "linfatico",   nome: "Linfatico",   cost: "yang-ming", mano: "destra"   },
+    { id: "melanconico", nome: "Melanconico", cost: "shao-yin",  mano: "sinistra" },
+    { id: "bilioso",     nome: "Bilioso",     cost: "shao-yang", mano: "sinistra" },
+    { id: "sanguigno",   nome: "Sanguigno",   cost: "jue-yin",   mano: "sinistra" }
+  ];
+  function tempById(id) { return byId(TEMPERAMENTI, id); }
+  function tempDi(costId) {
+    for (var i = 0; i < TEMPERAMENTI.length; i++) if (TEMPERAMENTI[i].cost === costId) return TEMPERAMENTI[i];
+    return null;
+  }
+
   /* ------------------------------------------------- frammenti di markup */
   function img(src, alt, cls) {
     if (!src) return "";
@@ -95,17 +111,25 @@
       '<div class="cohero"><h2>Costituzioni &amp; Temperamenti</h2>' +
       "<p>Scegli da dove partire. Tocca una scheda per aprirla.</p></div>" +
 
-      '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">1</span>I 3 Biotipi</h3>' +
+      '<section class="coblock coblock--hi"><h3 class="coblock__h"><span class="coblock__n">▶</span>Trova il profilo</h3>' +
+      '<p class="coblock__d">Percorso guidato: prima la costituzione, poi il temperamento. ' +
+      "Alla fine vedi solo ciò che riguarda la coppia.</p>" +
+      '<div class="cogrid cogrid--2">' +
+        cardHtml("#cost/coppia", "Costituzione + Temperamento",
+                 "2 passi · sintesi della coppia", "", "Inizia") +
+      "</div></section>" +
+
+      '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">1</span>Come si testa</h3>' +
+      '<p class="coblock__d">Le due procedure del manuale, passo per passo.</p>' +
+      '<div class="cogrid cogrid--2">' + b3 + "</div></section>" +
+
+      '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">2</span>I 3 Biotipi</h3>' +
       '<p class="coblock__d">La struttura del corpo: Ectomorfo, Mesomorfo, Endomorfo.</p>' +
       '<div class="cogrid cogrid--3">' + b1 + "</div></section>" +
 
-      '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">2</span>Le 6 Costituzioni MTC</h3>' +
+      '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">3</span>Le 6 Costituzioni MTC</h3>' +
       '<p class="coblock__d">Il livello energetico: Tai Yang, Shao Yang, Tai Yin, Yang Ming, Jue Yin, Shao Yin.</p>' +
       '<div class="cogrid">' + b2 + "</div></section>" +
-
-      '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">3</span>Come si testa</h3>' +
-      '<p class="coblock__d">Le due procedure del manuale, passo per passo.</p>' +
-      '<div class="cogrid cogrid--2">' + b3 + "</div></section>" +
 
       sinotticaHtml(true) +
 
@@ -342,6 +366,161 @@
       "</div>";
   }
 
+  /* ------------------------------------ coppia costituzione + temperamento
+     Flusso guidato a 2 passi: prima la costituzione (6 punti chiave),
+     poi il temperamento (6 polsi). Il risultato mostra SOLO ciò che riguarda
+     la coppia: sintesi di confronto, convergenze/divergenze, come è stata
+     rilevata, motti. Le schede complete restano raggiungibili a parte. */
+
+  function passi(n) {
+    var voci = [
+      { n: 1, t: "Costituzione", d: "6 punti chiave" },
+      { n: 2, t: "Temperamento", d: "6 polsi" },
+      { n: 3, t: "La coppia", d: "sintesi" }
+    ];
+    return '<ol class="costeps">' + voci.map(function (v) {
+      var cls = v.n < n ? "is-done" : (v.n === n ? "is-now" : "");
+      return '<li class="costep ' + cls + '"><span class="costep__n">' +
+        (v.n < n ? "✓" : v.n) + '</span><span class="costep__t">' + esc(v.t) +
+        '</span><span class="costep__d">' + esc(v.d) + "</span></li>";
+    }).join("") + "</ol>";
+  }
+
+  function coppiaStep1Html() {
+    var cards = D.costituzioni.map(function (c) {
+      return cardHtml("#cost/coppia/" + c.id, c.nome,
+        "Punto chiave " + c.puntoTest.sigla + " · " + c.animale,
+        c.immagini.profiling, "Codice " + c.codice);
+    }).join("");
+    return '<div class="cohome"><div class="cohero"><h2>Costituzione + Temperamento</h2>' +
+      "<p>Due test, un solo profilo. Comincia dalla costituzione: mentre la persona tocca " +
+      "<strong>VC8 (Ombelico)</strong>, testa i 6 punti chiave e scegli qui quello che ha risposto.</p></div>" +
+      passi(1) +
+      '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">1</span>Scegli la costituzione</h3>' +
+      '<p class="coblock__d">Il livello energetico MTC emerso dal test dei 6 punti chiave.</p>' +
+      '<div class="cogrid">' + cards + "</div></section>" +
+      '<p class="cohint">' + link("#cost/test/costituzioni", "Rivedi la procedura completa") + "</p></div>";
+  }
+
+  function coppiaStep2Html(c) {
+    function gruppo(mano) {
+      var voci = TEMPERAMENTI.filter(function (t) { return t.mano === mano; });
+      return '<div class="cocol"><h4>Mano ' + esc(mano) + "</h4>" +
+        '<div class="cogrid cogrid--3">' + voci.map(function (t) {
+          var orig = byId(D.costituzioni, t.cost);
+          return cardHtml("#cost/coppia/" + c.id + "/" + t.id, t.nome,
+            "Temperamento di " + (orig ? orig.nome : ""),
+            orig ? orig.immagini.profiling : "",
+            t.cost === c.id ? "coincide" : "");
+        }).join("") + "</div></div>";
+    }
+    return '<div class="cohome"><div class="cohero"><h2>' + esc(c.nome) +
+      " + quale temperamento?</h2>" +
+      "<p>Costituzione scelta: <strong>" + esc(c.nome) + "</strong> (codice " + esc(c.codice) +
+      "). Ora, sempre con una mano su <strong>VC8</strong>, testa i 6 polsi e scegli il temperamento che ha risposto.</p></div>" +
+      passi(2) +
+      '<p class="cohint">' + link("#cost/coppia", "‹ Cambia costituzione") + "</p>" +
+      '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">2</span>Scegli il temperamento</h3>' +
+      '<p class="coblock__d">3 polsi per mano, come nella procedura del manuale.</p>' +
+      '<div class="cocols">' + gruppo("destra") + gruppo("sinistra") + "</div></section>" +
+      '<p class="cohint">' + link("#cost/test/temperamenti", "Rivedi la procedura completa") + "</p></div>";
+  }
+
+  /* righe della sintesi: [etichetta, valore per una costituzione] */
+  var COPPIA_ROWS = [
+    ["Livello MTC",          function (c) { return c.nome; }],
+    ["Codice di riferimento",function (c) { return c.codice; }],
+    ["Temperamento nativo",  function (c) { return c.temperamento; }],
+    ["Somatotipo",           function (c) { return BIO[c.biotipo]; }],
+    ["Foglietto embriologico", function (c) { return c.foglietto; }],
+    ["Neurotipo",            function (c) { return c.neurotipo; }],
+    ["Meridiani",            function (c) { return c.meridiani; }],
+    ["Animale",              function (c) { return c.animale; }],
+    ["Popolazione",          function (c) { return c.popolazione; }],
+    ["Punto di test",        function (c) { return c.puntoTest.sigla; }]
+  ];
+
+  function coppiaHtml(c, t) {
+    var orig = byId(D.costituzioni, t.cost);          // costituzione "proprietaria" del temperamento
+    var puro = orig && orig.id === c.id;              // costituzione e temperamento coincidono
+
+    var righe = COPPIA_ROWS.map(function (r) {
+      var a = r[1](c) || "", b = orig ? (r[1](orig) || "") : "";
+      var uguali = norm(a) === norm(b) && a !== "";
+      return '<tr class="' + (uguali ? "is-same" : "is-diff") + '">' +
+        '<th scope="row">' + esc(r[0]) + "</th><td>" + esc(a || "—") + "</td>" +
+        (puro ? "" : "<td>" + esc(b || "—") + "</td>") + "</tr>";
+    }).join("");
+
+    var capi = '<tr><th></th><th>Costituzione<br><span class="cocap">' + esc(c.nome) + "</span></th>" +
+      (puro ? "" : '<th>Temperamento<br><span class="cocap">' + esc(t.nome) +
+        (orig ? " · " + esc(orig.nome) : "") + "</span></th>") + "</tr>";
+
+    var comuni = [], diverse = [];
+    COPPIA_ROWS.forEach(function (r) {
+      var a = r[1](c) || "", b = orig ? (r[1](orig) || "") : "";
+      if (!a && !b) return;
+      if (norm(a) === norm(b)) comuni.push(r[0] + ": " + a);
+      else diverse.push(r[0] + ": " + (a || "—") + " / " + (b || "—"));
+    });
+
+    var esito = puro
+      ? '<div class="coesito coesito--puro"><h4>Profilo coerente</h4><p>Costituzione e temperamento ' +
+        "appartengono allo stesso livello: il quadro è omogeneo, senza tensioni fra struttura energetica " +
+        "e tono di fondo. Vale il profilo di <strong>" + esc(c.nome) + "</strong>.</p></div>"
+      : '<div class="coesito coesito--misto"><h4>Profilo misto</h4><p>La costituzione è <strong>' +
+        esc(c.nome) + "</strong>, ma il temperamento rilevato è <strong>" + esc(t.nome) +
+        "</strong>, nativo di <strong>" + (orig ? esc(orig.nome) : "") + "</strong>. " +
+        "Il corpo si muove su un livello energetico e il tono di fondo su un altro: leggere " +
+        "la coppia, non i due profili separatamente.</p></div>";
+
+    var rilevata = '<div class="cocols">' +
+      '<div class="cocol"><h4>Costituzione — punto chiave</h4>' +
+      "<p>Con una mano su <strong>VC8 (Ombelico)</strong>, ha risposto <strong>" +
+      esc(c.puntoTest.sigla) + "</strong>.</p>" +
+      figura(c.puntoTest.immagine, c.puntoTest.sigla + " — " + c.nome) + "</div>" +
+      '<div class="cocol"><h4>Temperamento — polso</h4>' +
+      "<p>Sempre con una mano su <strong>VC8</strong>, ha risposto il polso <strong>" +
+      esc(t.nome) + "</strong>, <strong>mano " + esc(t.mano) + "</strong>.</p></div></div>";
+
+    var motti = '<div class="cocols">' +
+      '<div class="cocol"><h4>Dalla costituzione · ' + esc(c.nome) + "</h4>" +
+      '<p class="comotto">« ' + esc(c.difesa.motto) + " »</p></div>" +
+      (puro ? "" : '<div class="cocol"><h4>Dal temperamento · ' + esc(t.nome) + "</h4>" +
+        '<p class="comotto">« ' + esc(orig ? orig.difesa.motto : "") + " »</p></div>") +
+      "</div>";
+
+    var schede = '<div class="cogrid cogrid--2">' +
+      cardHtml("#cost/costituzione/" + c.id, c.nome, "Scheda completa della costituzione",
+               c.immagini.profiling, "Codice " + c.codice) +
+      (puro ? "" : cardHtml("#cost/costituzione/" + orig.id, orig.nome,
+               "Scheda completa del temperamento " + t.nome, orig.immagini.profiling,
+               "Codice " + orig.codice)) + "</div>";
+
+    return head(c.nome + " + " + t.nome,
+                "Coppia costituzione · temperamento", c.immagini.profiling) +
+      passi(3) +
+      '<p class="cohint">' + link("#cost/coppia/" + c.id, "‹ Cambia temperamento") + " " +
+      link("#cost/coppia", "‹ Ricomincia") + "</p>" +
+      ancore([["k-esito", "Esito"], ["k-sint", "Sintesi"], ["k-conv", "Convergenze"],
+              ["k-ril", "Come è stata rilevata"], ["k-motti", "Motti"]]) +
+      '<div class="sections">' +
+      sezione("Esito della coppia", esito, "k-esito") +
+      sezione("Sintesi di confronto",
+        '<div class="cotab-wrap"><table class="cotab cotab--coppia"><thead>' + capi +
+        "</thead><tbody>" + righe + "</tbody></table></div>" +
+        (puro ? "" : '<p class="cohint">Le righe evidenziate sono i punti in cui costituzione e temperamento coincidono.</p>'),
+        "k-sint") +
+      (puro ? "" : sezione("Convergenze e divergenze",
+        '<div class="cocols"><div class="cocol"><h4>In comune</h4>' +
+        (comuni.length ? elenco(comuni) : "<p>Nessuna voce in comune.</p>") + "</div>" +
+        '<div class="cocol"><h4>Dove divergono</h4>' + elenco(diverse) + "</div></div>", "k-conv")) +
+      sezione("Come è stata rilevata", rilevata, "k-ril") +
+      sezione("Motti della coppia", motti, "k-motti") +
+      sezione("Schede complete", schede, "k-schede") +
+      "</div>";
+  }
+
   /* ---------------------------------------------------- intestazione */
   function head(titolo, sotto, immagine) {
     return '<div class="cohead">' +
@@ -374,6 +553,10 @@
     D.teoria.forEach(function (t) {
       out.push({ hash: "#cost/teoria/" + t.id, t: t.titolo, s: "Teoria", img: "", q: t._search });
     });
+    out.push({ hash: "#cost/coppia", t: "Costituzione + Temperamento",
+               s: "Percorso guidato · sintesi della coppia", img: "",
+               q: norm("coppia costituzione temperamento profilo guidato polsi punti chiave " +
+                       TEMPERAMENTI.map(function (x) { return x.nome; }).join(" ")) });
     return out;
   }
   var INDICE = tuttiGliElementi();
@@ -400,6 +583,12 @@
 
   function titolo(hash) {
     var v = parse(hash);
+    if (v.tipo === "coppia") {
+      var cc = v.id ? byId(D.costituzioni, v.id) : null, tt = v.id2 ? tempById(v.id2) : null;
+      if (cc && tt) return cc.nome + " + " + tt.nome;
+      if (cc) return cc.nome + " + temperamento?";
+      return "Costituzione + Temperamento";
+    }
     if (v.tipo === "biotipo") { var b = byId(D.biotipi, v.id); return b ? b.nome : ""; }
     if (v.tipo === "costituzione") { var c = byId(D.costituzioni, v.id); return c ? c.nome : ""; }
     if (v.tipo === "test") { var p = byId(D.procedure, v.id); return p ? p.titolo : ""; }
@@ -410,13 +599,23 @@
   }
 
   function parse(hash) {
-    var m = /^#cost\/([a-z]+)(?:\/([-a-z0-9]+))?/.exec(hash || "");
-    if (!m) return { tipo: "home", id: "" };
-    return { tipo: m[1], id: m[2] || "" };
+    var m = /^#cost\/([a-z]+)(?:\/([-a-z0-9]+))?(?:\/([-a-z0-9]+))?/.exec(hash || "");
+    if (!m) return { tipo: "home", id: "", id2: "" };
+    return { tipo: m[1], id: m[2] || "", id2: m[3] || "" };
   }
 
   function show(hash) {
     var v = parse(hash), html;
+    if (v.tipo === "coppia") {
+      var cc = v.id ? byId(D.costituzioni, v.id) : null;
+      var tt = v.id2 ? tempById(v.id2) : null;
+      if (cc && tt) html = coppiaHtml(cc, tt);
+      else if (cc) html = coppiaStep2Html(cc);
+      else html = coppiaStep1Html();
+      mount.innerHTML = html;
+      mount.hidden = false;
+      return "coppia";
+    }
     if (v.tipo === "biotipo" && byId(D.biotipi, v.id)) html = biotipoHtml(byId(D.biotipi, v.id));
     else if (v.tipo === "costituzione" && byId(D.costituzioni, v.id)) html = costituzioneHtml(byId(D.costituzioni, v.id));
     else if (v.tipo === "test" && byId(D.procedure, v.id)) html = proceduraHtml(byId(D.procedure, v.id));

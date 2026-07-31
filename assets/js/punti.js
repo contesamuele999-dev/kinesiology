@@ -501,6 +501,8 @@
 
   function selectPoint(p) {
     if (!puntiVisibili) setPuntiVisible(true);   // riaccende i punti se erano spenti
+    // uscendo dai punti Milza/Pancreas il test discriminante riparte da zero
+    if (!isMilzaPoint(p)) mpScelta = null;
     picked = p; merSel = null;
     clearProbe();
     if (window.MeridianiMap) { try { window.MeridianiMap.highlight(null); } catch (e) {} }
@@ -570,9 +572,10 @@
       (p.note ? '<p class="pinfo__note">' + esc(p.note) + '</p>' : '') +
       '<dl class="pinfo__dl">' +
       rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join("") +
-      '</dl>' + merBlockFor(p) + editHtml;
+      '</dl>' + mpBlockFor(p) + merBlockFor(p) + editHtml;
     infoEl.hidden = false;
     wireMerActions();
+    wireMpActions(p);
     if (editing) {
       const mn = document.getElementById("depthMinus"), pl = document.getElementById("depthPlus");
       if (mn) mn.addEventListener("click", () => nudgeDepth(-0.02));
@@ -1071,6 +1074,108 @@
         (glob.nodo.ruolo ? ' \u2014 ' + esc(glob.nodo.ruolo) : '') + ' (' + esc(cmOf(glob.dist)) + ').</p>';
     }
     return h + '</div>';
+  }
+
+  /* ============================================================================
+     ECCEZIONE MILZA / PANCREAS
+     Il punto d'allarme dell'elemento Terra-yin non distingue Milza da Pancreas.
+     Si discrimina con due muscoli indicatori:
+        Trapezio Medio  → MILZA     (coordinata milza-trapezio-medio)
+        Gran Dorsale    → PANCREAS  (coordinata milza-pancreas-gran-dorsale)
+     Scelto l'organo, si mostrano SOLO i suoi punti: neurolinfatici,
+     neurovascolari e reflessologia, presi dalla coordinata corrispondente.
+     ========================================================================== */
+  const MP = {
+    milza:    { organo: "Milza",    coord: "milza-trapezio-medio",        muscolo: "Trapezio Medio" },
+    pancreas: { organo: "Pancreas", coord: "milza-pancreas-gran-dorsale", muscolo: "Gran Dorsale" }
+  };
+  let mpScelta = null;            // "milza" | "pancreas" | null (per il punto selezionato)
+
+  function isMilzaPoint(p) {
+    if (!p || p.kind === "landmark") return false;
+    const m = (p.meridiano || "").toLowerCase();
+    const o = (p.organo || "").toLowerCase();
+    return m.indexOf("milza") === 0 || m.indexOf("pancreas") !== -1 ||
+           o.indexOf("milza") === 0 || o.indexOf("pancreas") !== -1;
+  }
+  function coordOf(cid) {
+    try {
+      if (typeof COORDINATE !== "undefined" && COORDINATE && COORDINATE.length)
+        return COORDINATE.find((x) => x.id === cid) || null;
+    } catch (e) {}
+    return null;
+  }
+  function mpFig(src, cap) {
+    if (!src) return "";
+    return '<figure class="mpfig"><img class="pageimg" src="' + esc(src) + '" loading="lazy" alt="' +
+      esc(cap || "") + '" />' + (cap ? '<figcaption>' + esc(cap) + '</figcaption>' : '') + '</figure>';
+  }
+  function mpZone(list) {
+    const arr = (list || []).filter((x) => x && (x.zona || x.note));
+    if (!arr.length) return '<p class="mphint">Non disponibile nel manuale per questo organo.</p>';
+    return '<ul class="mpzone">' + arr.map((x) =>
+      '<li><b>' + esc(x.zona || "") + '</b>' + (x.note ? ' — ' + esc(x.note) : '') + '</li>'
+    ).join("") + '</ul>';
+  }
+
+  function mpRisultato(key) {
+    const cfg = MP[key]; if (!cfg) return "";
+    const c = coordOf(cfg.coord);
+    if (!c) return '<p class="mphint">Dati della coordinata «' + esc(cfg.coord) + '» non disponibili.</p>';
+    return '<div class="mpres">' +
+      '<div class="mpres__head"><span class="mpres__tag">' + esc(cfg.organo) + '</span>' +
+      '<span class="mpres__sub">indicato dal ' + esc(cfg.muscolo) + '</span></div>' +
+      (c.storiaMeridiano ? '<p class="mphint">' + esc(c.storiaMeridiano) + '</p>' : '') +
+
+      '<h5 class="mpsub">Punti neuro-linfatici (NL)</h5>' + mpZone(c.neuroLinfatici) +
+      mpFig(c.schedaNL, "NL · " + cfg.organo + " (ant. &amp; post.)") +
+
+      '<h5 class="mpsub">Punti neurovascolari (NV)</h5>' + mpZone(c.neurovascolari) +
+      mpFig(c.schedaNV, "NV · " + cfg.organo) +
+
+      '<h5 class="mpsub">Reflessologia (Basket Weaver)</h5>' +
+      (c.ruota ? mpFig(c.ruota, "Ruota energetica · " + cfg.organo)
+               : '<p class="mphint">Ruota energetica non disponibile per questo organo.</p>') +
+
+      '<div class="meractions">' +
+      '<a class="ebtn ebtn--mini ebtn--link" href="#/' + encodeURIComponent(cfg.coord) +
+      '">Apri la coordinata: ' + esc(c.muscolo) + '</a>' +
+      '<button type="button" class="ebtn ebtn--mini" data-mpreset="1">↺ Rifai il test</button>' +
+      '</div></div>';
+  }
+
+  function mpBlockFor(p) {
+    if (!isMilzaPoint(p)) return "";
+    let h = '<div class="merbox mpbox"><h4 class="merbox__h">Milza o Pancreas?</h4>';
+    if (!mpScelta) {
+      h += '<p class="mphint">Il punto d’allarme non distingue i due organi. ' +
+        'Testa i due muscoli indicatori: quello che risulta <b>debole</b> individua l’organo.</p>' +
+        '<div class="mpchoice">' +
+        '<button type="button" class="mpopt" data-mp="milza">' +
+        '<b>Trapezio Medio</b><span>debole → MILZA</span></button>' +
+        '<button type="button" class="mpopt" data-mp="pancreas">' +
+        '<b>Gran Dorsale</b><span>debole → PANCREAS</span></button></div>';
+    } else {
+      h += mpRisultato(mpScelta);
+    }
+    return h + '</div>';
+  }
+
+  function wireMpActions(p) {
+    if (!infoEl) return;
+    infoEl.querySelectorAll("[data-mp]").forEach((b) => {
+      b.addEventListener("click", () => { mpScelta = b.dataset.mp; renderInfo(p); });
+    });
+    infoEl.querySelectorAll("[data-mpreset]").forEach((b) => {
+      b.addEventListener("click", () => { mpScelta = null; renderInfo(p); });
+    });
+    infoEl.querySelectorAll(".mpbox .pageimg").forEach((im) => {
+      im.addEventListener("click", () => {
+        if (!window.openLightbox) return;
+        const thumbs = Array.from(infoEl.querySelectorAll(".mpbox .pageimg"));
+        window.openLightbox(thumbs.map((t) => t.getAttribute("src")), thumbs.indexOf(im));
+      });
+    });
   }
 
   function merRow(m, testo) {

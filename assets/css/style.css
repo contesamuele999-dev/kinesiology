@@ -645,3 +645,62 @@ body.editing .punti__canvas{ cursor:crosshair; outline:2px solid color-mix(in sr
 .colink:hover{ text-decoration:underline; }
 .cohint{ margin-top:12px; }
 .conav{ display:flex; justify-content:space-between; gap:14px; padding:18px 4px 0; flex-wrap:wrap; }
+
+/* ---- footer ---- */
+.footer{ text-align:center; color:var(--muted); font-size:.78rem; padding:10px 0 16px; }
+
+/* ============================================================================
+   Coppia Costituzione + Temperamento (percorso guidato a 2 passi)
+   ========================================================================== */
+.coblock--hi{ padding:16px 16px 18px; border-radius:16px; border:1px solid var(--line);
+  border-left:6px solid var(--brand); background:color-mix(in srgb, var(--brand) 7%, var(--card)); }
+.coblock--hi .coblock__d{ margin-left:46px; }
+
+.costeps{ display:flex; gap:10px; list-style:none; margin:0 0 18px; padding:0 2px; flex-wrap:wrap; }
+.costep{ flex:1 1 150px; display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto;
+  column-gap:10px; align-items:center; padding:10px 12px; border-radius:12px;
+  border:1px solid var(--line); background:var(--card); opacity:.55; }
+.costep__n{ grid-row:1 / span 2; width:28px; height:28px; border-radius:9px; background:var(--line);
+  color:var(--ink); display:flex; align-items:center; justify-content:center; font-weight:800; }
+.costep__t{ font-weight:800; font-size:.98rem; }
+.costep__d{ color:var(--muted); font-size:.82rem; }
+.costep.is-now{ opacity:1; border-color:var(--brand); }
+.costep.is-now .costep__n{ background:var(--brand); color:#fff; }
+.costep.is-done{ opacity:.9; }
+.costep.is-done .costep__n{ background:color-mix(in srgb, var(--brand) 30%, var(--card)); color:var(--brand); }
+
+.coesito{ padding:14px 16px; border-radius:14px; border:1px solid var(--line); border-left:6px solid var(--brand); }
+.coesito h4{ font-size:1.02rem; font-weight:800; }
+.coesito p{ margin-top:6px; }
+.coesito--puro{ border-left-color:#2f9e6b; background:color-mix(in srgb,#2f9e6b 7%, var(--card)); }
+.coesito--misto{ border-left-color:#d79a26; background:color-mix(in srgb,#d79a26 8%, var(--card)); }
+
+.cotab--coppia tbody th{ font-size:.82rem; font-weight:800; letter-spacing:.03em; color:var(--muted); white-space:nowrap; }
+.cotab--coppia thead th{ vertical-align:bottom; }
+.cocap{ display:block; font-size:1.02rem; font-weight:800; letter-spacing:0; text-transform:none; color:var(--ink); }
+.cotab--coppia tr.is-same td{ background:color-mix(in srgb,#2f9e6b 12%, transparent); font-weight:700; }
+
+/* ============================================================================
+   Test discriminante Milza / Pancreas (scheda del punto d'allarme)
+   ========================================================================== */
+.mpbox .mphint{ color:var(--muted); font-size:.86rem; margin:0 0 10px; }
+.mpchoice{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); }
+.mpopt{ display:flex; flex-direction:column; gap:3px; align-items:flex-start; text-align:left;
+  padding:10px 12px; border-radius:12px; border:1px solid var(--line); background:var(--card);
+  color:var(--ink); cursor:pointer; font:inherit; }
+.mpopt:hover{ border-color:var(--brand); }
+.mpopt b{ font-size:.95rem; font-weight:800; }
+.mpopt span{ color:var(--muted); font-size:.8rem; font-weight:700; }
+
+.mpres__head{ display:flex; align-items:baseline; gap:9px; flex-wrap:wrap; margin-bottom:8px; }
+.mpres__tag{ padding:4px 10px; border-radius:999px; background:var(--brand); color:#fff;
+  font-weight:800; font-size:.82rem; letter-spacing:.03em; text-transform:uppercase; }
+.mpres__sub{ color:var(--muted); font-size:.82rem; font-weight:700; }
+.mpsub{ margin:14px 0 4px; font-size:.76rem; font-weight:800; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--brand); }
+.mpzone{ margin:0 0 4px 18px; padding:0; }
+.mpzone li{ margin:4px 0; font-size:.88rem; }
+.mpzone b{ font-weight:800; }
+.mpfig{ margin:8px 0 0; }
+.mpfig img{ width:100%; border-radius:10px; background:#fff; border:1px solid var(--line); cursor:zoom-in; }
+.mpfig figcaption{ color:var(--muted); font-size:.78rem; margin-top:4px; }

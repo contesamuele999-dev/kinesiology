@@ -9,6 +9,10 @@
 - [x] Sezione **Costituzioni & Temperamenti** (manuale Costituzioni-Finale-2014): 3 biotipi,
       6 costituzioni MTC, 2 procedure di test, tabella riassuntiva, confronto, 8 capitoli di teoria
 - [x] Essenze (nome+tipo) per tutti i 16; dettagli (squilibri + "Mi impegno") per Vaso Concezione
+- [x] Percorso guidato **Costituzione + Temperamento** (`#cost/coppia`): 2 passi (6 punti chiave →
+      6 polsi) e sintesi della sola coppia (confronto, convergenze/divergenze, motti)
+- [x] Eccezione **Milza / Pancreas** sui Punti d'Allarme: test Trapezio Medio (Milza) vs
+      Gran Dorsale (Pancreas); scelto l'organo mostra solo i suoi NL, NV e reflessologia
 
 ## Da fare
 - [ ] Dettagli essenze (squilibri + affermazione) per gli altri 15 meridiani
@@ -22,4 +26,5 @@ Tutti i contenuti stanno in tools/*.json (atteggiamenti, essenze_dettaglio, stor
 generate_data.py. Rigenerare: `python tools/generate_data.py`.
 Costituzioni: `tools/costituzioni.json` (prodotto da `tools/extract_costituzioni.py`, che rilegge il
 PDF) → `python tools/generate_costituzioni.py` → `assets/js/costituzioni_data.js`.
-Test: `node tools/test_costituzioni.js` (jsdom installato fuori dal mount).
+Test: `node tools/test_costituzioni.js` (jsdom installato fuori dal mount) — 104 test, coprono anche
+il percorso coppia e il test discriminante Milza/Pancreas.
