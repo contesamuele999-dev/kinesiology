@@ -15,6 +15,7 @@
   const backBtn = el("backBtn"), themeBtn = el("themeBtn");
   const coordHead = el("coordHead"), coordTabs = el("coordTabs"), sections = el("sections");
   const puntiView = el("puntiView"), macronav = el("macronav");
+  const costView = el("costView");
 
   const esc = (s) => String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -138,7 +139,10 @@
     if (firstMeridian) location.hash = "#/" + firstMeridian.id + "+" + id;
     else location.hash = "#/" + id;
   });
-  searchInput.addEventListener("input", () => renderList(searchInput.value));
+  searchInput.addEventListener("input", () => {
+    if (costView && !costView.hidden) { if (window.Cost) window.Cost.filter(searchInput.value); return; }
+    renderList(searchInput.value);
+  });
 
   /* ---------- Blocchi di rendering ---------- */
   function muscleBlock(c) {
@@ -377,6 +381,7 @@
     const multi = lbList.length > 1;
     lbPrev.hidden = !multi; lbNext.hidden = !multi; lbCount.hidden = !multi;
   }
+  window.openLightbox = (list, i) => lbOpen(list, i);
   function lbOpen(list, i) { lbList = list; lightbox.hidden = false; document.body.classList.add("lb-open"); lbShow(i); }
   function lbCloseFn() { lightbox.hidden = true; document.body.classList.remove("lb-open"); lbImg.src = ""; }
   sections.addEventListener("click", (e) => {
@@ -414,11 +419,28 @@
     puntiView.hidden = true;
     if (window.PuntiMap) window.PuntiMap.deactivate();
   }
+  /* --- Costituzioni & Temperamenti --- */
+  function showCost(hash) {
+    setActiveTab("costituzioni");
+    listView.hidden = true; coordView.hidden = true; puntiView.hidden = true;
+    if (window.PuntiMap) window.PuntiMap.deactivate();
+    if (!costView) return;
+    costView.hidden = false;
+    const tipo = window.Cost ? window.Cost.show(hash) : "home";
+    const home = tipo === "home";
+    searchWrap.hidden = !home;
+    backBtn.hidden = home;
+    if (home && window.Cost) window.Cost.filter(searchInput.value);
+    window.scrollTo(0, 0); updateStick();
+  }
+  function leaveCost() { if (costView) costView.hidden = true; }
   if (macronav) {
     macronav.addEventListener("click", (e) => {
       const t = e.target.closest(".macronav__tab"); if (!t) return;
-      if (t.dataset.sec === "punti") location.hash = "";       // Punti = default
-      else location.hash = "#coordinate";                        // Coordinate
+      const sec = t.dataset.sec;
+      if (sec === "punti") location.hash = "";                     // Punti = default
+      else if (sec === "costituzioni") location.hash = "#costituzioni";
+      else location.hash = "#coordinate";                          // Coordinate
     });
   }
 
@@ -486,9 +508,11 @@
   function route() {
     const h = location.hash;
     // Default (nessun hash) o esplicito #punti => sezione Punti Indicatori
-    if (h === "" || h === "#" || h === "#punti") { firstMeridian = null; showPunti(); return; }
+    if (h === "" || h === "#" || h === "#punti") { firstMeridian = null; leaveCost(); showPunti(); return; }
+    // Sezione Costituzioni & Temperamenti
+    if (h === "#costituzioni" || h.indexOf("#cost/") === 0) { firstMeridian = null; showCost(h); return; }
     // Da qui in poi siamo nella sezione Coordinate
-    leavePunti(); setActiveTab("coordinate");
+    leavePunti(); leaveCost(); setActiveTab("coordinate");
     const mPair = h.match(/^#\/([^+]+)\+(.+)$/);
     if (mPair) {
       const a = find(mPair[1]), b = find(mPair[2]);
@@ -502,6 +526,11 @@
     firstMeridian = null; showList();  // "#coordinate" => home Coordinate
   }
   backBtn.addEventListener("click", () => {
+    if (costView && !costView.hidden) {
+      const v = window.Cost ? window.Cost.parse(location.hash) : { tipo: "home" };
+      location.hash = (v.tipo === "teoria" && v.id) ? "#cost/teoria" : "#costituzioni";
+      return;
+    }
     if (!coordView.hidden) location.hash = "#/" + pair[0].id;
     else location.hash = "#coordinate";
   });

@@ -519,3 +519,129 @@ body.editing .punti__canvas{ cursor:crosshair; outline:2px solid color-mix(in sr
 .viewbar__row{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
 .viewbar__lb{ font-size:.74rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
   color:var(--muted); min-width:44px; }
+
+/* ==========================================================================
+   Sezione «Costituzioni & Temperamenti»
+   Testo grande, bersagli ampi, nessun gesto nascosto.
+   ========================================================================== */
+.costview{ max-width:1100px; margin:0 auto; padding:0 0 90px; }
+.cohome{ padding:20px 18px 0; }
+
+.cohero{ padding:6px 2px 18px; }
+.cohero h2{ font-size:1.9rem; font-weight:800; letter-spacing:-.02em; }
+.cohero p{ color:var(--muted); margin-top:6px; font-size:1.05rem; }
+
+.coblock{ margin:0 0 30px; }
+.coblock__h{ display:flex; align-items:center; gap:12px; font-size:1.3rem; font-weight:800; }
+.coblock__n{ flex:0 0 auto; width:34px; height:34px; border-radius:10px; background:var(--brand);
+  color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:1.05rem; }
+.coblock__d{ color:var(--muted); margin:6px 0 14px 46px; }
+
+.cogrid{ display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); }
+.cogrid--2{ grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+.cogrid--3{ grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+
+.cocard{ display:flex; align-items:center; gap:14px; text-decoration:none; color:var(--ink);
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 16px; min-height:96px; box-shadow:var(--shadow);
+  transition:transform .08s ease, box-shadow .15s, border-color .15s; }
+.cocard:hover{ box-shadow:0 6px 18px rgba(20,40,60,.14); border-color:var(--brand); }
+.cocard:active{ transform:scale(.985); }
+.cocard__img{ flex:0 0 68px; width:68px; height:68px; border-radius:12px; overflow:hidden;
+  background:var(--input-bg); display:flex; align-items:center; justify-content:center; }
+.cocard__img img{ max-width:100%; max-height:100%; object-fit:contain; }
+.cocard__body{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.cocard__t{ font-size:1.15rem; font-weight:800; letter-spacing:-.01em; }
+.cocard__s{ color:var(--muted); font-size:.95rem; }
+.cocard__b{ align-self:flex-start; margin-top:4px; font-size:.78rem; font-weight:800;
+  letter-spacing:.03em; text-transform:uppercase; color:var(--brand);
+  background:color-mix(in srgb, var(--brand) 15%, var(--card)); padding:3px 10px; border-radius:999px; }
+
+/* ---- intestazione scheda ---- */
+.cohead{ display:flex; align-items:center; gap:16px; padding:22px 18px 16px; }
+.cohead__img{ flex:0 0 76px; width:76px; height:76px; object-fit:contain;
+  background:var(--card); border:1px solid var(--line); border-radius:14px; padding:4px; }
+.cohead h2{ font-size:1.75rem; font-weight:800; letter-spacing:-.02em; line-height:1.15; }
+.cohead p{ color:var(--muted); margin-top:4px; }
+.coanchors{ margin-bottom:4px; }
+
+/* ---- coppie chiave/valore ---- */
+.kv{ margin-top:12px; border-top:1px solid var(--line); }
+.kv__row{ display:grid; grid-template-columns:minmax(150px,34%) 1fr; gap:10px 18px;
+  padding:11px 2px; border-bottom:1px solid var(--line); align-items:start; }
+.kv__row dt{ font-size:.82rem; font-weight:800; letter-spacing:.03em; text-transform:uppercase;
+  color:var(--muted); }
+.kv__row dd{ font-weight:600; }
+.kv__vuoto{ color:var(--muted); }
+@media (max-width:560px){ .kv__row{ grid-template-columns:1fr; gap:2px; padding:10px 2px; } }
+
+/* ---- elenchi ---- */
+.colist{ margin:10px 0 0 20px; }
+.colist li{ margin:5px 0; }
+.colist--fitta{ columns:2; column-gap:26px; }
+.colist--fitta li{ break-inside:avoid; }
+.colist--forte li{ font-weight:800; }
+@media (max-width:560px){ .colist--fitta{ columns:1; } }
+
+.cocols{ display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); margin-top:6px; }
+.cocol h4{ font-size:1rem; font-weight:800; color:var(--brand); }
+.cosub{ margin-top:18px; font-size:1.05rem; font-weight:800; color:var(--brand); }
+
+/* ---- ergopsichica ---- */
+.coergo{ margin-top:14px; padding:14px 16px; border-radius:14px; border:1px solid var(--line);
+  background:var(--input-bg); border-left:6px solid var(--line); }
+.coergo h4{ font-size:1rem; font-weight:800; text-transform:capitalize; }
+.coergo__e{ font-size:.78rem; font-weight:800; color:var(--muted); letter-spacing:.03em; }
+.coergo--alto{ border-left-color:#2f9e6b; }
+.coergo--medio{ border-left-color:#d79a26; }
+.coergo--basso{ border-left-color:#c15353; }
+
+/* ---- tabelle ---- */
+.cotab-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:12px;
+  border:1px solid var(--line); border-radius:14px; background:var(--card); }
+.cotab{ border-collapse:collapse; width:100%; min-width:620px; font-size:1rem; }
+.cotab th,.cotab td{ padding:12px 14px; text-align:left; border-bottom:1px solid var(--line);
+  vertical-align:top; }
+.cotab thead th{ background:var(--input-bg); font-size:.8rem; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--muted); position:sticky; top:0; }
+.cotab tbody tr:last-child th,.cotab tbody tr:last-child td{ border-bottom:none; }
+.cotab a{ color:var(--brand); font-weight:700; text-decoration:none; }
+.cotab a:hover{ text-decoration:underline; }
+.cotab--conf tbody th{ font-size:.82rem; font-weight:800; letter-spacing:.03em;
+  text-transform:uppercase; color:var(--muted); white-space:nowrap; background:var(--input-bg); }
+.cotab--conf thead th a{ font-size:1.05rem; }
+.cotab--conf .colist{ margin-left:16px; }
+.cotab--conf .colist--fitta{ columns:1; }
+
+/* ---- figure ---- */
+.cofigs{ display:flex; flex-wrap:wrap; gap:16px; margin-top:14px; align-items:flex-end; }
+.cofig{ flex:0 1 auto; max-width:100%; text-align:center; }
+.cofig img{ max-width:100%; max-height:340px; border-radius:12px; background:#fff;
+  border:1px solid var(--line); cursor:zoom-in; }
+.cofig figcaption{ color:var(--muted); font-size:.9rem; margin-top:6px; }
+.section > .cofig{ display:block; margin-top:14px; }
+
+/* ---- motto / procedure ---- */
+.comotto{ margin-top:10px; font-size:1.25rem; font-weight:800; color:var(--brand);
+  background:color-mix(in srgb, var(--brand) 10%, var(--card));
+  border-radius:14px; padding:14px 18px; text-align:center; }
+.copassi{ margin:12px 0 0 24px; font-size:1.08rem; }
+.copassi li{ margin:8px 0; }
+
+.copunti{ display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); margin-top:12px; }
+.copunto{ display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none;
+  color:var(--ink); background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:12px; box-shadow:var(--shadow); }
+.copunto:hover{ border-color:var(--brand); }
+.copunto img{ width:100%; max-height:170px; object-fit:contain; background:#fff; border-radius:10px; }
+.copunto__t{ font-size:1.2rem; font-weight:800; color:var(--brand); margin-top:6px; }
+.copunto__s{ font-weight:700; }
+
+.copolsi{ display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); margin-top:6px; }
+.copolsi__col h4{ font-size:1.05rem; font-weight:800; color:var(--brand); }
+
+/* ---- link e navigazione ---- */
+.colink{ color:var(--brand); font-weight:800; text-decoration:none; }
+.colink:hover{ text-decoration:underline; }
+.cohint{ margin-top:12px; }
+.conav{ display:flex; justify-content:space-between; gap:14px; padding:18px 4px 0; flex-wrap:wrap; }

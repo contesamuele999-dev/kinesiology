@@ -6,6 +6,8 @@
 - [x] Storia del problema (Basket Weaver): pagine-immagine per 9 coordinate
 - [x] Storia del meridiano: elemento/organo/yin-yang/funzione per tutti i 16
 - [x] Atteggiamenti: tabella 14 posizioni per tutti i 16
+- [x] Sezione **Costituzioni & Temperamenti** (manuale Costituzioni-Finale-2014): 3 biotipi,
+      6 costituzioni MTC, 2 procedure di test, tabella riassuntiva, confronto, 8 capitoli di teoria
 - [x] Essenze (nome+tipo) per tutti i 16; dettagli (squilibri + "Mi impegno") per Vaso Concezione
 
 ## Da fare
@@ -18,3 +20,6 @@
 ## Pipeline dati
 Tutti i contenuti stanno in tools/*.json (atteggiamenti, essenze_dettaglio, storia) + ESS in
 generate_data.py. Rigenerare: `python tools/generate_data.py`.
+Costituzioni: `tools/costituzioni.json` (prodotto da `tools/extract_costituzioni.py`, che rilegge il
+PDF) → `python tools/generate_costituzioni.py` → `assets/js/costituzioni_data.js`.
+Test: `node tools/test_costituzioni.js` (jsdom installato fuori dal mount).
