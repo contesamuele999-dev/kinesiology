@@ -1,6 +1,6 @@
 /* sw.js — service worker per PWA offline (app shell + dati).
    Bump CACHE ad ogni release per invalidare la cache. */
-const CACHE = "fisiologia-v30";
+const CACHE = "fisiologia-v31";
 const ASSETS = [
   "./",
   "./index.html",
@@ -27,7 +27,17 @@ const ASSETS = [
   "./assets/modi/acutouch_anteriore.png",
   "./assets/modi/acutouch_posteriore.png",
   "./assets/modi/matrice_genealogia.png",
-  "./assets/modi/modi_digitali.png"
+  "./assets/modi/modi_digitali.png",
+  "./assets/modi/mano_agopressione.png",
+  "./assets/modi/mano_amore.png",
+  "./assets/modi/mano_essenze.png",
+  "./assets/modi/mano_more_mode.png",
+  "./assets/modi/mano_more_other.png",
+  "./assets/modi/mano_more_same.png",
+  "./assets/modi/mano_ologramma.png",
+  "./assets/modi/mano_priorita.png",
+  "./assets/modi/mano_suono.png",
+  "./assets/modi/mano_tempo.png"
 ];
 
 self.addEventListener("install", (e) => {

@@ -306,9 +306,11 @@ body.installpop-open{ overflow:hidden; }
 .modi__title{ font-size:.76rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
   color:var(--brand); margin-bottom:6px; }
 .modi__list{ list-style:none; margin:0; padding:0; display:grid; gap:6px; }
-.modi__list li{ display:flex; flex-wrap:wrap; gap:4px 8px; align-items:baseline; }
+.modi__list li{ display:flex; gap:10px; align-items:flex-start; }
+.modi__body{ display:flex; flex-wrap:wrap; gap:4px 8px; align-items:baseline; }
+.modi__img{ flex:0 0 auto; width:64px; border:1px solid var(--line); border-radius:6px;
+  background:#fff; cursor:zoom-in; }
 .modi__name{ font-weight:800; }
-.modi__name::after{ content:":"; }
 .modi__touch{ color:var(--muted); font-size:.95rem; }
 .modi__note{ color:var(--muted); font-size:.9rem; margin:0 0 8px; }
 .frase__lab{ font-weight:800; color:var(--brand); }

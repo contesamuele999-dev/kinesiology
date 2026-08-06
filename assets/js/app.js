@@ -339,9 +339,13 @@
     const rows = (list || []).filter((m) => has(m.nome));
     if (!rows.length) return "";
     const h = titolo ? `<p class="modi__title">${esc(titolo)}</p>` : "";
-    return `<div class="modi">${h}<ul class="modi__list">` + rows.map((m) =>
-      `<li><span class="modi__name">${esc(m.nome)}</span><span class="modi__touch">${esc(m.tocco)}</span></li>`
-    ).join("") + "</ul></div>";
+    return `<div class="modi">${h}<ul class="modi__list">` + rows.map((m) => {
+      const src = (MODI.mani || {})[m.nome];
+      const img = src
+        ? `<img class="pageimg modi__img" src="${esc(src)}" loading="lazy" alt="Modo ${esc(m.nome)}" />` : "";
+      return `<li>${img}<div class="modi__body"><span class="modi__name">${esc(m.nome)}${has(m.tocco) ? ":" : ""}</span>` +
+             `<span class="modi__touch">${esc(m.tocco)}</span></div></li>`;
+    }).join("") + "</ul></div>";
   }
   /* Frase da compilare: il vuoto si riempie con una delle 2 voci IrF / IoF. */
   function fraseBlock(frase, voci) {

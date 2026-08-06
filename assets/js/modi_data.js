@@ -65,8 +65,33 @@ window.MODI = {
     { nome: "Acu-touch", tocco: "Strofinare i palmi delle mani e mettere in circuito" },
     { nome: "Amore", tocco: "Estremità di indice, medio e anulare a lato del pollice, tra l'estremità di esso e la nocca distale" },
     { nome: "Genealogia", tocco: "Mano a pugno, pollice su glabella" },
-    { nome: "Tempo", tocco: "Mano a pugno, polpastrello del pollice su dito medio, sulla seconda falange" }
+    { nome: "Tempo", tocco: "Mano a pugno, polpastrello del pollice su dito medio, sulla seconda falange" },
+    { nome: "More Mode", tocco: "" },
+    { nome: "More of same", tocco: "" },
+    { nome: "More of something else", tocco: "" }
   ],
+
+  /* Immagine della mano per ogni modo (ritagli della tavola «Modi Digitali»).
+     Più modi condividono lo stesso gesto: cambia solo la pressione. */
+  mani: {
+    "Ologramma": "assets/modi/mano_ologramma.png",
+    "Can Opener": "assets/modi/mano_ologramma.png",
+    "Basket Weaver": "assets/modi/mano_ologramma.png",
+    "Priorità": "assets/modi/mano_priorita.png",
+    "Essenze": "assets/modi/mano_essenze.png",
+    "Atteggiamenti": "assets/modi/mano_essenze.png",
+    "Modo delle Essenze": "assets/modi/mano_essenze.png",
+    "Modo degli Atteggiamenti": "assets/modi/mano_essenze.png",
+    "Suono": "assets/modi/mano_suono.png",
+    "Tempo": "assets/modi/mano_tempo.png",
+    "Agopressione 5 Elementi": "assets/modi/mano_agopressione.png",
+    "Agopressione 7 Elementi": "assets/modi/mano_agopressione.png",
+    "Amore": "assets/modi/mano_amore.png",
+    "Modo dell'Amore": "assets/modi/mano_amore.png",
+    "More Mode": "assets/modi/mano_more_mode.png",
+    "More of same": "assets/modi/mano_more_same.png",
+    "More of something else": "assets/modi/mano_more_other.png"
+  },
 
   img: {
     tabella: "assets/modi/tabella_riferimento.png",

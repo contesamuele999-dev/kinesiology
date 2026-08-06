@@ -39,6 +39,13 @@ check("modo genealogia", txt().includes("VG 24.5"));
 check("tabella zona/tocco", txt().includes("Coppettazione"));
 check("modi digitali completi", w.MODI.digitali.every((m) => txt().includes(m.nome)));
 check("immagini modi", !!$('#sec-genealogia img[src*="matrice_genealogia"]'));
+check("mano del Basket Weaver in reflessologia",
+  !!$('#sec-reflessologia .modi__img[src*="mano_ologramma"]'));
+check("una mano per ogni modo digitale mappato",
+  w.document.querySelectorAll("#sec-modi .modi__img").length ===
+  w.MODI.digitali.filter((m) => w.MODI.mani[m.nome]).length);
+check("nessun due punti sui modi senza tocco",
+  !/More Mode:/.test($("#sec-modi").textContent));
 
 // le 2 voci IrF/IoF della posizione finiscono nelle frasi
 const c1 = w.COORDINATE[0], c2 = w.COORDINATE[1];
