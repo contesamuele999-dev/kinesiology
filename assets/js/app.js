@@ -140,9 +140,88 @@
     else location.hash = "#/" + id;
   });
   searchInput.addEventListener("input", () => {
-    if (costView && !costView.hidden) { if (window.Cost) window.Cost.filter(searchInput.value); return; }
-    renderList(searchInput.value);
+    if (costView && !costView.hidden) { if (window.Cost) window.Cost.filter(searchInput.value); }
+    else if (!listView.hidden) renderList(searchInput.value);
+    applyHighlight(true);
   });
+
+  /* ---------- Evidenziazione della ricerca (in ogni sezione) ----------
+     La barra resta sempre visibile: dove non c'è un elenco da filtrare
+     (coordinata, punti, sottopagine costituzioni) evidenziamo il testo. */
+  const FOLD = { "à":"a","á":"a","â":"a","ä":"a","ã":"a","è":"e","é":"e","ê":"e","ë":"e",
+                 "ì":"i","í":"i","î":"i","ï":"i","ò":"o","ó":"o","ô":"o","ö":"o","õ":"o",
+                 "ù":"u","ú":"u","û":"u","ü":"u","ç":"c","ñ":"n" };
+  /* fold conserva la lunghezza 1:1 (niente NFD): gli indici restano validi. */
+  const fold = (s) => s.toLowerCase().replace(/[àáâäãèéêëìíîïòóôöõùúûüçñ]/g, (c) => FOLD[c] || c);
+  const searchInfo = el("searchInfo");
+
+  function clearHighlight(root) {
+    root.querySelectorAll("mark.shl").forEach((m) => {
+      const p = m.parentNode;
+      p.replaceChild(document.createTextNode(m.textContent), m);
+      p.normalize();
+    });
+  }
+  function highlightIn(root, terms) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(n) {
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const p = n.parentNode;
+        if (!p || /^(SCRIPT|STYLE|TEXTAREA|MARK)$/.test(p.nodeName)) return NodeFilter.FILTER_REJECT;
+        if (p.namespaceURI && p.namespaceURI !== "http://www.w3.org/1999/xhtml") return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const nodes = [];
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) nodes.push(n);
+    let count = 0;
+    nodes.forEach((node) => {
+      const f = fold(node.nodeValue);
+      const hits = [];
+      terms.forEach((t) => {
+        for (let i = f.indexOf(t); i !== -1; i = f.indexOf(t, i + t.length)) hits.push([i, i + t.length]);
+      });
+      if (!hits.length) return;
+      hits.sort((a, b) => a[0] - b[0]);
+      // unisce le sovrapposizioni, poi spezza il nodo da destra a sinistra
+      const merged = [];
+      hits.forEach((h) => {
+        const last = merged[merged.length - 1];
+        if (last && h[0] <= last[1]) last[1] = Math.max(last[1], h[1]);
+        else merged.push(h.slice());
+      });
+      count += merged.length;
+      let cur = node;
+      for (let i = merged.length - 1; i >= 0; i--) {
+        cur.splitText(merged[i][1]);
+        const hit = cur.splitText(merged[i][0]);
+        const mk = document.createElement("mark");
+        mk.className = "shl";
+        hit.parentNode.replaceChild(mk, hit);
+        mk.appendChild(hit);
+      }
+    });
+    return count;
+  }
+  function activeView() {
+    return [coordView, costView, puntiView, listView]
+      .filter((v) => v && !v.hidden)[0] || null;
+  }
+  function applyHighlight(scroll) {
+    [coordView, costView, puntiView, listView].forEach((v) => { if (v) clearHighlight(v); });
+    const view = activeView();
+    const terms = fold(searchInput.value).split(/\s+/).filter((t) => t.length >= 2);
+    let n = 0;
+    if (view && terms.length) n = highlightIn(view, terms);
+    if (searchInfo) {
+      searchInfo.hidden = !terms.length;
+      searchInfo.textContent = n ? n + (n === 1 ? " risultato" : " risultati") : "nessun risultato";
+    }
+    if (scroll && n) {
+      const first = view.querySelector("mark.shl");
+      if (first) first.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+  }
 
   /* ---------- Blocchi di rendering ---------- */
   function muscleBlock(c) {
@@ -237,16 +316,60 @@
   }
 
   /* Parsing dello stress "IrF: X / IoF: Y" in coppia leggibile */
+  function stressPair(stress) {
+    if (!has(stress)) return [];
+    return String(stress).split("/").map((s) => s.trim()).filter(Boolean).map((p) => {
+      const m = p.match(/^([^:]+):\s*(.*)$/);
+      return { lab: m ? m[1].trim() : "", val: m ? m[2].trim() : p };
+    });
+  }
   function stressBlock(stress) {
     if (!has(stress)) return "";
-    const parts = String(stress).split("/").map((s) => s.trim()).filter(Boolean);
+    const parts = stressPair(stress);
     if (parts.length < 2) return `<p class="stress-line">${esc(stress)}</p>`;
-    return '<div class="stress">' + parts.map((p) => {
-      const m = p.match(/^([^:]+):\s*(.*)$/);
-      const lab = m ? m[1].trim() : "";
-      const val = m ? m[2].trim() : p;
-      return `<div class="stress__item"><span class="stress__lab">${esc(lab)}</span><span class="stress__sep">–</span><span class="stress__val">${esc(val)}</span></div>`;
-    }).join("") + "</div>";
+    return '<div class="stress">' + parts.map((p) =>
+      `<div class="stress__item"><span class="stress__lab">${esc(p.lab)}</span><span class="stress__sep">–</span><span class="stress__val">${esc(p.val)}</span></div>`
+    ).join("") + "</div>";
+  }
+
+  /* ---------- Modi (uguali per tutte le coordinate) ---------- */
+  const MODI = window.MODI || { img: {} };
+  if (!MODI.img) MODI.img = {};
+  function modiBlock(list, titolo) {
+    const rows = (list || []).filter((m) => has(m.nome));
+    if (!rows.length) return "";
+    const h = titolo ? `<p class="modi__title">${esc(titolo)}</p>` : "";
+    return `<div class="modi">${h}<ul class="modi__list">` + rows.map((m) =>
+      `<li><span class="modi__name">${esc(m.nome)}</span><span class="modi__touch">${esc(m.tocco)}</span></li>`
+    ).join("") + "</ul></div>";
+  }
+  /* Frase da compilare: il vuoto si riempie con una delle 2 voci IrF / IoF. */
+  function fraseBlock(frase, voci) {
+    const opz = voci.length
+      ? '<ul class="ess__sq">' + voci.map((v) =>
+          `<li><span class="ess__box">☐</span> <span class="frase__lab">${esc(v.lab)}</span> ${esc(v.val)}</li>`).join("") + "</ul>"
+      : '<p><span class="placeholder">Nessuna voce IrF / IoF per questa posizione.</span></p>';
+    return `<div class="ess">${essScelgoBlock()}
+      <p class="ess__label">${esc(frase)}…</p>${opz}
+      <p class="ess__label">… in una responsabile espressione di amore senza limiti.</p>
+      <p class="frase__hint">Alla fine ne resta <strong>una sola</strong> delle due.</p></div>`;
+  }
+  function pensieroBlock(row) {
+    const voci = stressPair(row && row.stress);
+    return (MODI.pensiero || []).map((m) =>
+      `${modiBlock([m], "Modo")}${fraseBlock(m.frase, voci)}`
+    ).join("");
+  }
+  function tabellaBlock() {
+    const t = MODI.tabella;
+    if (!t) return "";
+    return `<h4 class="subh">Tabella di riferimento — zona e tocco</h4>
+      <p class="modi__note">${esc(t.testaOggetto)}<br />${esc(t.testaRif)}</p>
+      <table class="modtab"><tbody>` + t.righe.map((r) =>
+        `<tr><th>${esc(r[0])}</th><td>${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join("") +
+      `</tbody></table>` +
+      imgGrid([MODI.img.tabella, MODI.img.acuAnt, MODI.img.acuPost], "Acu Touch",
+              ["Tabella di riferimento", "Tabella Acu Touch · anteriore (Yin)", "Tabella Acu Touch · posteriore (Yang)"]);
   }
 
   /* ---------- Vista coordinata (muscolo + posizione) ---------- */
@@ -299,12 +422,24 @@
       { id: "muscolo", label: "Muscolo & come testarlo",
         html: muscleBlock(c1) + imgGrid(c1.immaginiMonitoraggio, "Monitoraggio", MON_CAP) + ampHtml },
       { id: "posizione", label: "Posizione di test", html: posHtml },
-      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)", html: nlScheda + nlList + nlImg },
-      { id: "neurovascolari", label: "Punti neurovascolari (NV)", html: nvScheda + nvList + nvImg },
-      { id: "modi", label: "Modi", html: pointsBlock(c1.modi) || PH },
-      { id: "meridiani", label: "Meridiani coinvolti", html: merHtml },
-      { id: "fiore", label: "Fiori / essenze", html: fioreBlock(c1, row ? row.posizione : null) },
-      { id: "reflessologia", label: "Reflessologia (Basket Weaver)", html: reflexHtml }
+      { id: "neurolinfatici", label: "Punti neuro-linfatici (NL)",
+        html: modiBlock(MODI.neurolinfatici, "Modo") + nlScheda + nlList + nlImg },
+      { id: "neurovascolari", label: "Punti neurovascolari (NV)",
+        html: modiBlock(MODI.neurovascolari, "Modo") + nvScheda + nvList + nvImg },
+      { id: "fiore", label: "Fiori / Atteggiamenti",
+        html: modiBlock(MODI.fiori, "Modi") + fioreBlock(c1, row ? row.posizione : null) },
+      { id: "pensiero", label: "Forme Pensiero & Sensazioni", html: pensieroBlock(row) },
+      { id: "reflessologia", label: "Reflessologia (Basket Weaver)",
+        html: modiBlock(MODI.reflessologia, "Modi") + reflexHtml },
+      { id: "acutouch", label: "Acu Touch & Modo dell'Amore",
+        html: modiBlock(MODI.acutouch, "Modi") + tabellaBlock() },
+      { id: "genealogia", label: "Ologramma della Genealogia",
+        html: modiBlock(MODI.genealogia, "Modo") +
+              imgGrid([MODI.img.matrice], "Genealogia", ["Matrice olografica dell'energia genealogica"]) },
+      { id: "modi", label: "Modi digitali",
+        html: modiBlock(MODI.digitali) + pointsBlock(c1.modi) +
+              imgGrid([MODI.img.digitali], "Modi digitali", ["Tavola dei modi digitali"]) },
+      { id: "meridiani", label: "Meridiani coinvolti", html: merHtml }
     ];
   }
 
@@ -354,7 +489,7 @@
     pair = [c1, c2];
     coordTabs.innerHTML = "";
     listView.hidden = true; coordView.hidden = false;
-    backBtn.hidden = false; searchWrap.hidden = true;
+    backBtn.hidden = false; searchWrap.hidden = false;
     renderCoordHead();
     renderSections();
     window.scrollTo(0, 0);
@@ -411,7 +546,7 @@
   function showPunti() {
     setActiveTab("punti");
     listView.hidden = true; coordView.hidden = true; puntiView.hidden = false;
-    searchWrap.hidden = true; backBtn.hidden = true;
+    searchWrap.hidden = false; backBtn.hidden = true;
     if (window.PuntiMap) window.PuntiMap.activate();
     window.scrollTo(0, 0); updateStick();
   }
@@ -428,7 +563,7 @@
     costView.hidden = false;
     const tipo = window.Cost ? window.Cost.show(hash) : "home";
     const home = tipo === "home";
-    searchWrap.hidden = !home;
+    searchWrap.hidden = false;
     backBtn.hidden = home;
     if (home && window.Cost) window.Cost.filter(searchInput.value);
     window.scrollTo(0, 0); updateStick();
@@ -505,7 +640,8 @@
   })();
 
   /* ---------- Router (hash) ---------- */
-  function route() {
+  function route() { routeTo(); applyHighlight(false); }
+  function routeTo() {
     const h = location.hash;
     // Default (nessun hash) o esplicito #punti => sezione Punti Indicatori
     if (h === "" || h === "#" || h === "#punti") { firstMeridian = null; leaveCost(); showPunti(); return; }

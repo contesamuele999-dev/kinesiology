@@ -14,6 +14,14 @@
 - [x] Eccezione **Milza / Pancreas** sui Punti d'Allarme: test Trapezio Medio (Milza) vs
       Gran Dorsale (Pancreas); scelto l'organo mostra solo i suoi NL, NV e reflessologia
 
+- [x] **Modi** (PDF «Modi Per Samuele») su ogni sezione della coordinata: NL, NV,
+      Fiori/Atteggiamenti, Forme Pensiero & Sensazioni (frasi con le 2 voci IrF/IoF),
+      Reflessologia, Acu Touch + tabella zona/tocco, Ologramma della Genealogia,
+      elenco completo dei Modi digitali. Dati in `assets/js/modi_data.js`, immagini in
+      `assets/modi/`. Test: `node tools/test_modi_ricerca.js`.
+- [x] Barra di ricerca sempre visibile: fuori dagli elenchi evidenzia il testo
+      (`mark.shl`) in qualunque sezione, con contatore risultati.
+
 ## Da fare
 - [ ] Dettagli essenze (squilibri + affermazione) per gli altri 15 meridiani
       → in `tools/essenze_dettaglio.json`, dalle pagine-essenza del manuale Atteggiamenti.

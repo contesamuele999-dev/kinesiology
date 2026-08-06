@@ -1,6 +1,6 @@
 /* sw.js — service worker per PWA offline (app shell + dati).
    Bump CACHE ad ogni release per invalidare la cache. */
-const CACHE = "fisiologia-v29";
+const CACHE = "fisiologia-v30";
 const ASSETS = [
   "./",
   "./index.html",
@@ -8,6 +8,7 @@ const ASSETS = [
   "./assets/css/style.css",
   "./assets/vendor/three.min.js",
   "./assets/js/data.js",
+  "./assets/js/modi_data.js",
   "./assets/js/punti_data.js",
   "./assets/js/corpo_data.js",
   "./assets/js/manichino.js",
@@ -21,7 +22,12 @@ const ASSETS = [
   "./assets/favicon.svg",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
-  "./assets/apple-touch-icon.png"
+  "./assets/apple-touch-icon.png",
+  "./assets/modi/tabella_riferimento.png",
+  "./assets/modi/acutouch_anteriore.png",
+  "./assets/modi/acutouch_posteriore.png",
+  "./assets/modi/matrice_genealogia.png",
+  "./assets/modi/modi_digitali.png"
 ];
 
 self.addEventListener("install", (e) => {

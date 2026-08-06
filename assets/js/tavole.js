@@ -219,9 +219,46 @@
     svg.addEventListener("mousedown", down);
     window.addEventListener("mousemove", move);
     window.addEventListener("mouseup", up);
-    svg.addEventListener("touchstart", down, { passive: true });
-    svg.addEventListener("touchmove", move, { passive: true });
-    svg.addEventListener("touchend", up);
+
+    /* Touch: un dito = trascina, due dita = pinch (zoom + pan insieme).
+       Senza questo, con due dita entrambi i tocchi finivano nel drag a un dito
+       e l'inquadratura schizzava via. */
+    var pinch = null;
+    function touchMid(e) {
+      var r = svg.getBoundingClientRect();
+      var a = e.touches[0], b = e.touches[1];
+      var px = (a.clientX + b.clientX) / 2 - r.left, py = (a.clientY + b.clientY) / 2 - r.top;
+      return { px: px, py: py, rw: r.width, rh: r.height,
+               d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) };
+    }
+    svg.addEventListener("touchstart", function (e) {
+      if (e.touches.length >= 2) {
+        var m = touchMid(e);
+        dragging = false; moved = true;      // niente click dopo un pinch
+        pinch = { d0: Math.max(m.d, 1), w0: view.w, h0: view.h,
+                  wx: view.x + (m.px / m.rw) * view.w,
+                  wy: view.y + (m.py / m.rh) * view.h };
+      } else { pinch = null; down(e); }
+    }, { passive: false });
+    svg.addEventListener("touchmove", function (e) {
+      if (pinch && e.touches.length >= 2) {
+        e.preventDefault();
+        var m = touchMid(e);
+        var nw = Math.max(0.10, Math.min(6, pinch.w0 * (pinch.d0 / Math.max(m.d, 1))));
+        view.w = nw; view.h = nw * (pinch.h0 / pinch.w0);
+        view.x = pinch.wx - (m.px / m.rw) * view.w;   // il punto iniziale resta sotto le dita
+        view.y = pinch.wy - (m.py / m.rh) * view.h;
+        applyView(); render();
+        return;
+      }
+      if (dragging) e.preventDefault();
+      move(e);
+    }, { passive: false });
+    svg.addEventListener("touchend", function (e) {
+      if (e.touches.length === 0) { pinch = null; up(); }
+      else if (pinch && e.touches.length < 2) { pinch = null; dragging = false; }
+    });
+    svg.addEventListener("touchcancel", function () { pinch = null; up(); });
 
     svg.addEventListener("click", function (e) {
       if (moved) return;

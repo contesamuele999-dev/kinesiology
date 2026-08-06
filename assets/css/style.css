@@ -27,7 +27,12 @@ html,body{ background:var(--bg); color:var(--ink);
   background:var(--input-bg); border:1px solid var(--line); border-radius:999px;
   width:42px; height:42px; display:inline-flex; align-items:center; justify-content:center; }
 .themebtn:hover{ border-color:var(--brand); }
-.search{ margin-top:12px; }
+.search{ margin-top:12px; position:relative; }
+.search__info{ position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  font-size:.8rem; font-weight:700; color:var(--muted); pointer-events:none;
+  background:var(--input-bg); padding-left:8px; }
+mark.shl{ background:#ffe066; color:#111; border-radius:3px; padding:0 1px; }
+body.dark mark.shl{ background:#8a6d00; color:#fff; }
 .search input{ width:100%; font-size:1.1rem; padding:14px 16px; border:2px solid var(--line);
   border-radius:14px; background:var(--input-bg); color:var(--ink); outline:none; transition:border-color .15s; }
 .search input:focus{ border-color:var(--brand); }
@@ -286,6 +291,31 @@ body.installpop-open{ overflow:hidden; }
 .ess__label{ margin:8px 0 4px; color:var(--muted); }
 .ess__sq{ list-style:none; margin:4px 0 0 4px; padding:0; }
 .ess__box{ display:inline-block; margin-right:6px; color:var(--brand); font-size:1.05em; line-height:1; }
+
+/* Barre di schede: su schermi stretti scorrono invece di sbordare */
+.macronav, .subtabs, .coordtabs{ overflow-x:auto; overflow-y:hidden;
+  scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.macronav::-webkit-scrollbar, .subtabs::-webkit-scrollbar,
+.coordtabs::-webkit-scrollbar{ display:none; }
+.macronav__tab, .subtab{ flex:0 0 auto; white-space:nowrap; }
+
+/* ============ MODI ============ */
+.modi{ border:1px solid var(--line); border-left:4px solid var(--brand);
+  border-radius:10px; padding:10px 14px; margin:0 0 14px;
+  background:color-mix(in srgb, var(--brand) 6%, var(--card)); }
+.modi__title{ font-size:.76rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--brand); margin-bottom:6px; }
+.modi__list{ list-style:none; margin:0; padding:0; display:grid; gap:6px; }
+.modi__list li{ display:flex; flex-wrap:wrap; gap:4px 8px; align-items:baseline; }
+.modi__name{ font-weight:800; }
+.modi__name::after{ content:":"; }
+.modi__touch{ color:var(--muted); font-size:.95rem; }
+.modi__note{ color:var(--muted); font-size:.9rem; margin:0 0 8px; }
+.frase__lab{ font-weight:800; color:var(--brand); }
+.frase__hint{ margin-top:8px; color:var(--muted); font-size:.88rem; }
+.modtab{ width:100%; border-collapse:collapse; margin:0 0 14px; font-size:.95rem; }
+.modtab th, .modtab td{ border:1px solid var(--line); padding:7px 10px; text-align:left; }
+.modtab th{ width:5.5rem; font-weight:800; background:color-mix(in srgb, var(--brand) 8%, var(--card)); }
 
 /* ============ MACRONAV (Coordinate / Punti Indicatori) ============ */
 .macronav{ display:flex; gap:8px; padding:8px 16px 0; }

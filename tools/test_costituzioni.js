@@ -64,7 +64,7 @@ go(w, "#cost/biotipo/ecto");
 let t = $(w, "#costView").textContent;
 ok($(w, ".cohead h2").textContent === "ECTOMORFO", "titolo della scheda", $(w, ".cohead h2").textContent);
 ok($(w, "#backBtn").hidden === false, "«Indietro» visibile nel dettaglio");
-ok($(w, "#searchWrap").hidden === true, "ricerca nascosta nel dettaglio");
+ok($(w, "#searchWrap").hidden === false, "ricerca visibile anche nel dettaglio");
 ok($$(w, "#costView .section").length === 10, "10 sezioni nella scheda biotipo", $$(w, "#costView .section").length);
 ok(/TAI YANG – SHAO YIN/.test(t), "sintesi: livelli MTC");
 ok(/Piccoli, Secchi/.test(t) && /DOLORE/.test(t), "scheda fisica e sintomo chiave");
