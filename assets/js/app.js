@@ -318,7 +318,10 @@
   /* Parsing dello stress "IrF: X / IoF: Y" in coppia leggibile */
   function stressPair(stress) {
     if (!has(stress)) return [];
-    return String(stress).split("/").map((s) => s.trim()).filter(Boolean).map((p) => {
+    /* Si divide solo sulla "/" che separa le due voci (quella seguita da
+       un'etichetta tipo "IoF:"), non sulle "/" dentro ai valori
+       ("Estroverso/Inespressivo", "(da altri/o)"). */
+    return String(stress).split(/\s*\/\s*(?=I[ro]\w*\s*:)/i).map((s) => s.trim()).filter(Boolean).map((p) => {
       const m = p.match(/^([^:]+):\s*(.*)$/);
       return { lab: m ? m[1].trim() : "", val: m ? m[2].trim() : p };
     });

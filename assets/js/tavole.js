@@ -212,7 +212,11 @@
       if (Math.abs(dx) + Math.abs(dy) > 0.004) moved = true;
       var im = IMG[plate.id];
       if (imgMode && im) { im.x += dx; im.y += dy; render(); }
-      else { view.x -= dx; view.y -= dy; applyView(); lastX = p.x + dx; lastY = p.y + dy; return; }
+      else {
+        /* p è in coordinate mondo, che dipendono dalla view: spostandola, il
+           punto afferrato resta lo stesso (lastX/lastY NON si aggiornano). */
+        view.x -= dx; view.y -= dy; applyView(); return;
+      }
       lastX = p.x; lastY = p.y;
     };
     var up = function () { if (dragging && imgMode) salva(); dragging = false; };
