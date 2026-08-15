@@ -25,6 +25,8 @@ body.dark .pz-warn{ background:#3a2f0a; border-color:#7a6413; color:#f4dd94; }
   background:var(--input-bg); color:var(--ink); }
 .pz-lock input:focus{ border-color:var(--brand); outline:none; }
 .pz-lock button{ padding:13px 16px; font-size:1rem; }
+.pz-sep{ border:none; border-top:1px solid var(--line); margin:20px 0 16px; }
+.pz-lock .ebtn{ display:inline-block; margin-top:8px; }
 
 /* --- Riquadri --- */
 .pz-box{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius);

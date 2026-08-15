@@ -30,6 +30,11 @@
       durante la seduta, timeline e confronto con la precedente, agenda con stati ed
       export `.ics`, backup cifrato `.kin`, stampa scheda/riepilogo, export ed
       eliminazione per singolo paziente. Test: `node tools/test_vault.js`.
+- [x] **Sync fra dispositivi**, end-to-end cifrato: Cloudflare Workers + D1 (piano gratuito).
+      Il server vede solo ciphertext; token = seconda metà della derivazione PBKDF2.
+      Conflitti last-write-wins, cancellazioni con lapidi. Codice e istruzioni in `sync/`.
+      Test: `node tools/test_sync.js`, `node tools/test_worker.js`.
+      Per aggiungere un dispositivo serve importare il backup (il salt viaggia lì).
 
 ## Da fare
 - [ ] Dettagli essenze (squilibri + affermazione) per gli altri 15 meridiani

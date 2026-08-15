@@ -29,6 +29,8 @@
     q: ""
   };
   var LS_ACTIVE = "kapp-sessione-attiva", LS_BACKUP = "kapp-ultimo-backup";
+  var LS_SYNC = "kapp-sync-url", LS_SYNC_AUTO = "kapp-sync-auto", LS_SYNC_LAST = "kapp-sync-ultimo";
+  var LS_SYNC_INVITE = "kapp-sync-invito";
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }
 
@@ -122,6 +124,14 @@
       view.innerHTML = setUp ? lockHtml() : setupHtml();
       var f = view.querySelector("form");
       if (f) f.addEventListener("submit", setUp ? doUnlock : doSetup);
+      var join = document.getElementById("pzJoin");
+      if (join) join.addEventListener("change", function () {
+        var file = this.files && this.files[0];
+        if (!file) return;
+        file.text().then(function (txt) { return V.importBackup(txt); })
+          .then(function (n) { showErr(""); alert(n + " record importati. Ora sblocca con la passphrase di quel dispositivo."); render(); })
+          .catch(function (e) { showErr("File non valido: " + e.message); });
+      });
     });
   }
   function lockHtml() {
@@ -140,7 +150,13 @@
       '<form><input type="password" id="pzPass" autocomplete="new-password" placeholder="Passphrase (min. 8 caratteri)" />' +
       '<input type="password" id="pzPass2" autocomplete="new-password" placeholder="Ripeti la passphrase" />' +
       '<button class="ebtn ebtn--primary" type="submit">Crea area protetta</button></form>' +
-      '<p class="pz-err" id="pzErr" hidden></p></div>';
+      '<p class="pz-err" id="pzErr" hidden></p>' +
+      '<hr class="pz-sep" />' +
+      "<p class=\"pz-muted\">Hai già l'area su un altro dispositivo? Non ricrearla: " +
+      "<strong>importa il backup</strong> di quel dispositivo, poi sblocca con la sua passphrase. " +
+      "Da lì in poi il sync fa il resto.</p>" +
+      '<label class="ebtn" for="pzJoin">⬆ Importa backup da un altro dispositivo</label>' +
+      '<input id="pzJoin" type="file" accept=".kin,application/json" hidden /></div>';
   }
   function showErr(msg) {
     var e = document.getElementById("pzErr");
@@ -155,7 +171,7 @@
     busy(true, "Sblocco…");
     V.unlock(document.getElementById("pzPass").value).then(function () {
       return refresh();
-    }).then(render).catch(function (err) {
+    }).then(function () { render(); autoSync(); }).catch(function (err) {
       busy(false); document.querySelector('button[type="submit"]').textContent = "Sblocca";
       showErr(err && err.message === "passphrase-errata" ? "Passphrase errata." : "Errore: " + (err && err.message));
     });
@@ -166,7 +182,8 @@
     if (p.length < 8) return showErr("Servono almeno 8 caratteri.");
     if (p !== p2) return showErr("Le due passphrase non coincidono.");
     busy(true, "Creazione…");
-    V.setup(p).then(refresh).then(render).catch(function (err) { busy(false); showErr("Errore: " + err.message); });
+    V.setup(p).then(refresh).then(function () { render(); autoSync(); })
+      .catch(function (err) { busy(false); showErr("Errore: " + err.message); });
   }
 
   /* ================= HOME: elenco pazienti ================= */
@@ -565,6 +582,22 @@
         '<input id="pzImp" type="file" accept=".kin,application/json" hidden />' +
       "</section>" +
 
+      '<section class="pz-box"><h3>Sync fra dispositivi</h3>' +
+        '<p class="pz-muted">Facoltativo. I dati viaggiano <strong>già cifrati</strong>: il server non può leggerli. ' +
+        'Istruzioni per attivarlo: cartella <code>sync/</code>.</p>' +
+        '<p class="pz-warn">Per aggiungere un dispositivo: <strong>esporta il backup da qui e importalo là</strong> ' +
+        "(schermata iniziale dell'area pazienti), poi incolla lo stesso indirizzo. " +
+        "Ricreare l'area con la stessa passphrase <strong>non basta</strong>: sarebbe uno spazio separato e vuoto.</p>" +
+        '<label class="pz-f"><span>Indirizzo del server</span>' +
+          '<input type="url" id="pzSyncUrl" placeholder="https://kin-sync.tuonome.workers.dev" value="' + esc(lsGet(LS_SYNC) || "") + '" /></label>' +
+        '<label class="pz-f"><span>Codice di invito (solo se il server lo richiede, la prima volta)</span>' +
+          '<input type="text" id="pzSyncInvite" value="' + esc(lsGet(LS_SYNC_INVITE) || "") + '" /></label>' +
+        '<p class="pz-muted" id="pzSyncState">' + esc(syncStato()) + "</p>" +
+        '<button class="ebtn ebtn--primary" data-act="sync-now">⇅ Sincronizza adesso</button> ' +
+        '<label class="pz-f pz-f--check"><input type="checkbox" id="pzSyncAuto"' + (lsGet(LS_SYNC_AUTO) ? " checked" : "") + " />" +
+          "<span>Sincronizza da solo (allo sblocco e ogni 5 minuti)</span></label>" +
+      "</section>" +
+
       '<section class="pz-box"><h3>Sicurezza</h3>' +
         '<label class="pz-f"><span>Blocco automatico dopo (minuti)</span>' +
           '<input type="number" id="pzLockMin" min="1" max="60" value="' + esc(lsGet("kapp-lock-min") || 5) + '" /></label>' +
@@ -593,9 +626,21 @@
 
       '<section class="pz-box"><h3>Zona pericolosa</h3>' +
         '<p class="pz-muted">Cancella <strong>tutti</strong> i pazienti, le sessioni e gli appuntamenti di questo dispositivo. I backup già esportati non vengono toccati.</p>' +
+        (lsGet(LS_SYNC) ? '<p class="pz-warn">Il sync è attivo: se cancelli solo qui, i dati tornano al prossimo sync. Svuota <strong>prima</strong> il server.</p>' +
+          '<button class="ebtn ebtn--danger" data-act="wipe-remote">Cancella anche sul server</button> ' : "") +
         '<button class="ebtn ebtn--danger" data-act="wipe">Cancella tutto</button>' +
       "</section></div>";
 
+    document.getElementById("pzSyncUrl").addEventListener("change", function () {
+      lsSet(LS_SYNC, this.value.trim() || null);
+    });
+    document.getElementById("pzSyncInvite").addEventListener("change", function () {
+      lsSet(LS_SYNC_INVITE, this.value.trim() || null);
+    });
+    document.getElementById("pzSyncAuto").addEventListener("change", function () {
+      lsSet(LS_SYNC_AUTO, this.checked ? "1" : null);
+      autoSync();
+    });
     document.getElementById("pzLockMin").addEventListener("change", function () {
       var m = Math.max(1, Math.min(60, Number(this.value) || 5));
       lsSet("kapp-lock-min", m); V.setLockMinutes(m);
@@ -732,6 +777,13 @@
           renderSettings();
         });
         break;
+      case "sync-now": syncNow(true); break;
+      case "wipe-remote":
+        if (!confirm("Svuotare lo spazio di sync sul server? Gli altri dispositivi non riceveranno più questi dati.")) return;
+        V.wipeRemote(lsGet(LS_SYNC))
+          .then(function (r) { alert(r.deleted + " record rimossi dal server."); })
+          .catch(function (e) { alert("Errore: " + e.message); });
+        break;
       case "lock-now": V.lock(); break;
       case "cambia-pass": {
         var o = document.getElementById("pzOld").value, n = document.getElementById("pzNew").value;
@@ -847,6 +899,56 @@
     save("sessions", s, true);
   }
 
+  /* ---------- Sync ---------- */
+  function syncStato() {
+    if (!lsGet(LS_SYNC)) return "Non configurato: i dati restano solo su questo dispositivo.";
+    var t = lsGet(LS_SYNC_LAST);
+    return t ? "Ultima sincronizzazione: " + fmtShort(t) + " alle " + fmtTime(t) + "." : "Mai sincronizzato.";
+  }
+  function setSyncState(txt) {
+    var e = document.getElementById("pzSyncState");
+    if (e) e.textContent = txt;
+  }
+  function syncNow(manuale) {
+    var url = (document.getElementById("pzSyncUrl") ? document.getElementById("pzSyncUrl").value.trim() : "") || lsGet(LS_SYNC);
+    if (!url) { if (manuale) setSyncState("Inserisci prima l'indirizzo del server."); return Promise.resolve(); }
+    lsSet(LS_SYNC, url);
+    var inv = document.getElementById("pzSyncInvite");
+    if (inv) lsSet(LS_SYNC_INVITE, inv.value.trim() || null);
+    if (manuale) setSyncState("Sincronizzazione in corso…");
+    return V.sync(url, lsGet(LS_SYNC_INVITE)).then(function (r) {
+      lsSet(LS_SYNC_LAST, r.quando);
+      return refresh().then(function () {
+        if (st.route.name === "impostazioni") setSyncState("Fatto: " + r.inviati + " inviati, " + r.ricevuti + " ricevuti. " + syncStato());
+        else render();
+      });
+    }).catch(function (e) {
+      /* "Failed to fetch" non dice niente a chi usa l'app: server spento,
+         indirizzo sbagliato o niente rete sono tutti questo caso. */
+      var msg = /fetch/i.test(e.message)
+        ? "Server irraggiungibile: controlla l'indirizzo e la connessione."
+        : e.status === 403 ? "Serve un codice di invito valido per attivare il sync su questo server."
+        : e.status === 507 ? "Spazio pieno sul server: esporta un backup e fai pulizia."
+        : "Sync fallito: " + e.message;
+      if (manuale) setSyncState(msg); else console.warn(msg);
+    });
+  }
+  /* Timer unico: riparte a ogni cambio di impostazione, non si accumula. */
+  var autoTimer = null;
+  function autoSync() {
+    clearInterval(autoTimer); autoTimer = null;
+    if (!lsGet(LS_SYNC_AUTO) || !lsGet(LS_SYNC)) return;
+    autoTimer = setInterval(function () { if (puoSincronizzare()) syncNow(false); }, 5 * 60 * 1000);
+    if (puoSincronizzare()) syncNow(false);
+  }
+  /* Non sincronizzare mentre si sta scrivendo: il refresh sostituisce gli
+     oggetti in memoria e le modifiche in corso finirebbero su un record vecchio. */
+  function puoSincronizzare() {
+    if (!V.unlocked()) return false;
+    var a = document.activeElement;
+    return !(a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
+  }
+
   /* ---------- Appuntamenti ---------- */
   function creaAppuntamento() {
     var pid = document.getElementById("apPat").value;
@@ -942,6 +1044,7 @@
   }
 
   V.onLock(function () {
+    clearInterval(autoTimer); autoTimer = null;
     st.patients = []; st.sessions = []; st.appts = []; st.loaded = false;
     if (!view.hidden) renderLock();
     sessionBar();
