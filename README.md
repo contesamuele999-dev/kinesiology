@@ -21,9 +21,19 @@ solo ciphertext e non può leggere nulla. Installazione e limiti in [`sync/READM
 Per aggiungere un dispositivo si importa il backup `.kin` e poi si sincronizza: ricreare
 l'area con la stessa passphrase **non** basta (ogni area ha un salt casuale).
 
+## Testi legali
+`privacy.html` e `termini.html` sono **modelli da far rivedere a un legale**: compila i campi
+tra parentesi quadre (nome, P.IVA, indirizzo, email, foro, date) prima di pubblicare.
+La sezione 6 dei Termini è la nomina a responsabile ex art. 28 GDPR: vale come contratto solo
+se l'operatore l'accetta, e l'app registra l'accettazione (versione + data) sul dispositivo e
+sul server di sync. Se cambi i testi in modo sostanziale, alza `LEGAL_VER` in
+`assets/js/pazienti.js` per richiedere una nuova accettazione.
+
 ## Struttura
 ```
 index.html               → pagina unica
+privacy.html             → informativa privacy (modello)
+termini.html             → termini d'uso + nomina a responsabile (modello)
 assets/css/style.css     → grafica
 assets/css/pazienti.css  → grafica area pazienti
 assets/js/data.js        → CONTENUTI (da compilare dai manuali)

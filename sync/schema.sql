@@ -1,8 +1,14 @@
 -- Schema del sync. Nessun dato leggibile: solo id, timestamp e ciphertext.
 CREATE TABLE IF NOT EXISTS spaces (
-  space TEXT PRIMARY KEY,
-  seq   INTEGER NOT NULL DEFAULT 0
+  space        TEXT PRIMARY KEY,
+  seq          INTEGER NOT NULL DEFAULT 0,
+  -- Prova dell'accettazione dei termini (nomina a responsabile, art. 28 GDPR).
+  accepted_ver TEXT,
+  accepted_at  TEXT
 );
+-- Se la tabella esisteva già senza queste colonne, aggiungile una volta sola:
+--   ALTER TABLE spaces ADD COLUMN accepted_ver TEXT;
+--   ALTER TABLE spaces ADD COLUMN accepted_at  TEXT;
 
 CREATE TABLE IF NOT EXISTS records (
   space      TEXT NOT NULL,

@@ -321,7 +321,7 @@
     }, Promise.resolve()).then(function () { return n; });
   }
 
-  function sync(url, invito) {
+  function sync(url, invito, accettazione) {
     need();
     if (!url) return Promise.reject(new Error("sync-non-configurato"));
     var startedAt = new Date().toISOString();
@@ -336,7 +336,7 @@
               "content-type": "application/json", authorization: "Bearer " + token,
               "x-kin-invite": invito || ""
             },
-            body: JSON.stringify({ cursor: cursor, changes: push })
+            body: JSON.stringify({ cursor: cursor, changes: push, accetto: accettazione || null })
           }).then(function (res) {
             if (!res.ok) return res.json().catch(function () { return {}; }).then(function (b) {
               var e = new Error(b.error || ("server " + res.status));

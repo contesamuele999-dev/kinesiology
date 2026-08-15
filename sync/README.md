@@ -37,8 +37,55 @@ npx wrangler deploy
 
 Wrangler stampa l'indirizzo, del tipo `https://kin-sync.<tuo-nome>.workers.dev`.
 
-6. Nell'app: **Pazienti → Impostazioni → Sync fra dispositivi**, incolla
-   l'indirizzo e premi «Sincronizza adesso».
+6. Apri `assets/js/config.js` e incolla l'indirizzo in `syncUrl`. Da quel momento
+   **tutti** quelli che installano l'app trovano il sync già impostato: non devono
+   incollare niente. Il campo in Impostazioni serve solo a chi vuole un server proprio.
+
+```js
+window.KIN_CONFIG = {
+  syncUrl: "https://kin-sync.tuonome.workers.dev",
+  syncInvito: "",
+  syncAuto: true
+};
+```
+
+7. Ripubblica l'app (`push.bat`) e alza `CACHE` in `sw.js` se non l'hai già fatto.
+
+## Più operatori sullo stesso server
+
+Non serve creare account né tabelle: lo spazio di ogni operatore è
+`SHA-256("kin-space|" + token)`, quindi nasce da solo al primo sync ed è isolato
+dagli altri. Un operatore non può leggere né toccare i dati di un altro.
+
+Due protezioni da attivare se pubblichi l'app oltre il tuo studio:
+
+**Codici di invito** — senza, chiunque conosca l'indirizzo può aprire spazi nel
+tuo database. Il codice serve solo alla *prima* attivazione di ogni operatore:
+chi ha già il suo spazio continua a sincronizzare anche se poi li cambi.
+
+```bash
+npx wrangler secret put INVITE_CODES
+```
+
+Valore: codici separati da virgola, per esempio `STUDIO-ROMA,STUDIO-MILANO`.
+Poi mettili in `config.js` (`syncInvito`) oppure falli inserire a mano nel campo
+«Codice di invito» delle Impostazioni.
+
+**Cruscotto** — per vedere quanti spazi esistono e quanto occupano, senza vedere
+alcun dato:
+
+```bash
+npx wrangler secret put ADMIN_TOKEN
+```
+
+```bash
+curl -X POST -H "Authorization: Bearer IL-TUO-ADMIN-TOKEN" https://kin-sync.tuonome.workers.dev/admin/stats
+```
+
+Limiti per spazio già attivi nel Worker: 20.000 righe e 200 MB, oltre i quali il
+sync risponde «spazio pieno». D1 gratuito regge 5 GB in tutto: con foto negli
+allegati conta grosso modo qualche decina di operatori, poi si passa al piano a
+5 $/mese o a un database per gruppo.
 
 ## Aggiungere un secondo dispositivo
 

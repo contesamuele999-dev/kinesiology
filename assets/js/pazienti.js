@@ -30,7 +30,27 @@
   };
   var LS_ACTIVE = "kapp-sessione-attiva", LS_BACKUP = "kapp-ultimo-backup";
   var LS_SYNC = "kapp-sync-url", LS_SYNC_AUTO = "kapp-sync-auto", LS_SYNC_LAST = "kapp-sync-ultimo";
-  var LS_SYNC_INVITE = "kapp-sync-invito";
+  var LS_SYNC_INVITE = "kapp-sync-invito", LS_LEGAL = "kapp-accettazione";
+  /* La configurazione della copia pubblicata (config.js) fa da default:
+     l'operatore non deve incollare niente, ma se cambia qualcosa vince lui. */
+  var CFG = window.KIN_CONFIG || {};
+  function syncUrl() { return lsGet(LS_SYNC) || CFG.syncUrl || ""; }
+  function syncInvito() { return lsGet(LS_SYNC_INVITE) || CFG.syncInvito || ""; }
+  /* Versione dei testi legali: cambiala quando modifichi privacy/termini in
+     modo sostanziale, così l'accettazione viene richiesta di nuovo. */
+  var LEGAL_VER = "1";
+  function accettazione() {
+    try { return JSON.parse(lsGet(LS_LEGAL) || "null"); } catch (e) { return null; }
+  }
+  function accettato() {
+    var a = accettazione();
+    return !!(a && a.ver === LEGAL_VER);
+  }
+  function syncAutoOn() {
+    var v = lsGet(LS_SYNC_AUTO);
+    if (v !== null) return v === "1";
+    return !!(CFG.syncUrl && CFG.syncAuto);
+  }
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }
 
@@ -589,12 +609,15 @@
         "(schermata iniziale dell'area pazienti), poi incolla lo stesso indirizzo. " +
         "Ricreare l'area con la stessa passphrase <strong>non basta</strong>: sarebbe uno spazio separato e vuoto.</p>" +
         '<label class="pz-f"><span>Indirizzo del server</span>' +
-          '<input type="url" id="pzSyncUrl" placeholder="https://kin-sync.tuonome.workers.dev" value="' + esc(lsGet(LS_SYNC) || "") + '" /></label>' +
+          '<input type="url" id="pzSyncUrl" placeholder="https://kin-sync.tuonome.workers.dev" value="' + esc(syncUrl()) + '" /></label>' +
         '<label class="pz-f"><span>Codice di invito (solo se il server lo richiede, la prima volta)</span>' +
-          '<input type="text" id="pzSyncInvite" value="' + esc(lsGet(LS_SYNC_INVITE) || "") + '" /></label>' +
+          '<input type="text" id="pzSyncInvite" value="' + esc(syncInvito()) + '" /></label>' +
+        '<label class="pz-f pz-f--check"><input type="checkbox" id="pzAccetto"' + (accettato() ? " checked" : "") + " />" +
+          '<span>Ho letto <a href="privacy.html">privacy</a> e <a href="termini.html">termini</a> ' +
+          "e accetto la nomina del fornitore a responsabile del trattamento (art. 28 GDPR).</span></label>" +
         '<p class="pz-muted" id="pzSyncState">' + esc(syncStato()) + "</p>" +
         '<button class="ebtn ebtn--primary" data-act="sync-now">⇅ Sincronizza adesso</button> ' +
-        '<label class="pz-f pz-f--check"><input type="checkbox" id="pzSyncAuto"' + (lsGet(LS_SYNC_AUTO) ? " checked" : "") + " />" +
+        '<label class="pz-f pz-f--check"><input type="checkbox" id="pzSyncAuto"' + (syncAutoOn() ? " checked" : "") + " />" +
           "<span>Sincronizza da solo (allo sblocco e ogni 5 minuti)</span></label>" +
       "</section>" +
 
@@ -613,7 +636,9 @@
 
       '<section class="pz-box"><h3>Come sono protetti i dati</h3>' +
         "<ul class=\"pz-ul\">" +
-        "<li>I dati stanno <strong>solo su questo dispositivo</strong> (IndexedDB del browser). Nessun server, nessun account, nessuna statistica.</li>" +
+        (syncUrl()
+          ? "<li>I dati stanno su <strong>questo dispositivo</strong> (IndexedDB del browser) e, se attivi il sync, in copia <strong>cifrata</strong> sul server. Nessun account, nessuna statistica: il server riceve testo cifrato che non può leggere.</li>"
+          : "<li>I dati stanno <strong>solo su questo dispositivo</strong> (IndexedDB del browser). Nessun server, nessun account, nessuna statistica.</li>") +
         "<li>Ogni record è cifrato con <strong>AES-GCM 256</strong>; la chiave deriva dalla passphrase con <strong>PBKDF2-SHA256, 600.000 iterazioni</strong>, e resta solo in memoria.</li>" +
         "<li><strong>Nessun recupero della passphrase</strong>: se la perdi, i dati non sono recuperabili da nessuno.</li>" +
         "<li><strong>Limite:</strong> la cifratura protegge i dati a riposo, cioè da chi mette le mani su questo dispositivo. " +
@@ -622,11 +647,15 @@
         "raccogli il consenso e conserva il modulo firmato.</li>" +
         "<li>Da ogni scheda paziente puoi <strong>esportare</strong> (diritto di accesso e portabilità) ed <strong>eliminare</strong> tutti i suoi dati.</li>" +
         "</ul>" +
+        '<p><a href="privacy.html">Informativa privacy completa</a> · ' +
+        '<a href="termini.html">Termini d\'uso e nomina a responsabile</a></p>' +
+        (accettato() ? '<p class="pz-muted">Termini versione ' + esc(LEGAL_VER) + " accettati il " +
+          esc(fmtShort(accettazione().at)) + ".</p>" : "") +
       "</section>" +
 
       '<section class="pz-box"><h3>Zona pericolosa</h3>' +
         '<p class="pz-muted">Cancella <strong>tutti</strong> i pazienti, le sessioni e gli appuntamenti di questo dispositivo. I backup già esportati non vengono toccati.</p>' +
-        (lsGet(LS_SYNC) ? '<p class="pz-warn">Il sync è attivo: se cancelli solo qui, i dati tornano al prossimo sync. Svuota <strong>prima</strong> il server.</p>' +
+        (syncUrl() ? '<p class="pz-warn">Il sync è attivo: se cancelli solo qui, i dati tornano al prossimo sync. Svuota <strong>prima</strong> il server.</p>' +
           '<button class="ebtn ebtn--danger" data-act="wipe-remote">Cancella anche sul server</button> ' : "") +
         '<button class="ebtn ebtn--danger" data-act="wipe">Cancella tutto</button>' +
       "</section></div>";
@@ -637,8 +666,11 @@
     document.getElementById("pzSyncInvite").addEventListener("change", function () {
       lsSet(LS_SYNC_INVITE, this.value.trim() || null);
     });
+    document.getElementById("pzAccetto").addEventListener("change", function () {
+      lsSet(LS_LEGAL, this.checked ? JSON.stringify({ ver: LEGAL_VER, at: new Date().toISOString() }) : null);
+    });
     document.getElementById("pzSyncAuto").addEventListener("change", function () {
-      lsSet(LS_SYNC_AUTO, this.checked ? "1" : null);
+      lsSet(LS_SYNC_AUTO, this.checked ? "1" : "0");
       autoSync();
     });
     document.getElementById("pzLockMin").addEventListener("change", function () {
@@ -780,7 +812,7 @@
       case "sync-now": syncNow(true); break;
       case "wipe-remote":
         if (!confirm("Svuotare lo spazio di sync sul server? Gli altri dispositivi non riceveranno più questi dati.")) return;
-        V.wipeRemote(lsGet(LS_SYNC))
+        V.wipeRemote(syncUrl())
           .then(function (r) { alert(r.deleted + " record rimossi dal server."); })
           .catch(function (e) { alert("Errore: " + e.message); });
         break;
@@ -901,7 +933,7 @@
 
   /* ---------- Sync ---------- */
   function syncStato() {
-    if (!lsGet(LS_SYNC)) return "Non configurato: i dati restano solo su questo dispositivo.";
+    if (!syncUrl()) return "Non configurato: i dati restano solo su questo dispositivo.";
     var t = lsGet(LS_SYNC_LAST);
     return t ? "Ultima sincronizzazione: " + fmtShort(t) + " alle " + fmtTime(t) + "." : "Mai sincronizzato.";
   }
@@ -910,13 +942,19 @@
     if (e) e.textContent = txt;
   }
   function syncNow(manuale) {
-    var url = (document.getElementById("pzSyncUrl") ? document.getElementById("pzSyncUrl").value.trim() : "") || lsGet(LS_SYNC);
+    var url = (document.getElementById("pzSyncUrl") ? document.getElementById("pzSyncUrl").value.trim() : "") || syncUrl();
     if (!url) { if (manuale) setSyncState("Inserisci prima l'indirizzo del server."); return Promise.resolve(); }
+    /* Niente dati verso il server finché l'operatore non ha accettato:
+       è l'accettazione a costituire il contratto ex art. 28. */
+    if (!accettato()) {
+      if (manuale) setSyncState("Per attivare il sync devi accettare privacy e termini qui sopra.");
+      return Promise.resolve();
+    }
     lsSet(LS_SYNC, url);
     var inv = document.getElementById("pzSyncInvite");
     if (inv) lsSet(LS_SYNC_INVITE, inv.value.trim() || null);
     if (manuale) setSyncState("Sincronizzazione in corso…");
-    return V.sync(url, lsGet(LS_SYNC_INVITE)).then(function (r) {
+    return V.sync(url, syncInvito(), accettazione()).then(function (r) {
       lsSet(LS_SYNC_LAST, r.quando);
       return refresh().then(function () {
         if (st.route.name === "impostazioni") setSyncState("Fatto: " + r.inviati + " inviati, " + r.ricevuti + " ricevuti. " + syncStato());
@@ -937,7 +975,7 @@
   var autoTimer = null;
   function autoSync() {
     clearInterval(autoTimer); autoTimer = null;
-    if (!lsGet(LS_SYNC_AUTO) || !lsGet(LS_SYNC)) return;
+    if (!syncAutoOn() || !syncUrl()) return;
     autoTimer = setInterval(function () { if (puoSincronizzare()) syncNow(false); }, 5 * 60 * 1000);
     if (puoSincronizzare()) syncNow(false);
   }
