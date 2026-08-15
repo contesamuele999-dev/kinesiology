@@ -77,7 +77,8 @@ per ogni coordinata (ordine eccellente e prevedibile).
 ## 8. Ambito MVP
 - ✅ Consultazione del materiale con il flusso coordinata → tutto il correlato.
 - ✅ Ricerca/filtro istantaneo, navigazione a sezioni, responsive tablet.
-- ⬜ (fuori MVP) editing dei contenuti in-app, note per paziente, account, sincronizzazione cloud.
+- ⬜ (fuori MVP) editing dei contenuti in-app, account, sincronizzazione cloud.
+- ➡️ Pazienti, sessioni datate e agenda: specifica separata in [PROMPT_SESSIONI.md](PROMPT_SESSIONI.md).
 
 ## 9. Stack tecnico
 HTML + CSS + JavaScript vanilla, nessun build step. Dati in un file `data.js` facile da

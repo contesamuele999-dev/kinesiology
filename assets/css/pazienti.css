@@ -1,0 +1,156 @@
+/* pazienti.css — area Pazienti / Sessioni / Agenda.
+   Usa le variabili e i bottoni (.ebtn) già definiti in style.css. */
+
+.pazview{ max-width:1000px; margin:0 auto; padding:18px 18px 120px; }
+.pz-wrap{ display:flex; flex-direction:column; gap:16px; }
+.pz-muted{ color:var(--muted); }
+.pz-empty{ text-align:center; padding:40px 0; }
+.pz-err{ color:#c0392b; font-weight:700; margin-top:10px; }
+.pz-warn{ background:#fff4d6; border:1px solid #e6c65c; color:#6b4f00;
+  padding:10px 12px; border-radius:10px; margin:10px 0; }
+body.dark .pz-warn{ background:#3a2f0a; border-color:#7a6413; color:#f4dd94; }
+
+/* --- Barra titolo di sezione --- */
+.pz-bar{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.pz-bar h2{ font-size:1.4rem; font-weight:800; letter-spacing:-.01em; }
+.pz-bar__actions{ margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; }
+.pz-end{ margin-left:0; }
+
+/* --- Sblocco --- */
+.pz-lock{ max-width:460px; margin:8vh auto; background:var(--card); border:1px solid var(--line);
+  border-radius:var(--radius); padding:26px 22px; box-shadow:var(--shadow); }
+.pz-lock h2{ font-size:1.3rem; font-weight:800; margin-bottom:8px; }
+.pz-lock form{ display:flex; flex-direction:column; gap:10px; margin-top:16px; }
+.pz-lock input{ font:inherit; padding:13px 14px; border:2px solid var(--line); border-radius:12px;
+  background:var(--input-bg); color:var(--ink); }
+.pz-lock input:focus{ border-color:var(--brand); outline:none; }
+.pz-lock button{ padding:13px 16px; font-size:1rem; }
+
+/* --- Riquadri --- */
+.pz-box{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:18px 18px; box-shadow:var(--shadow); }
+.pz-box h3{ font-size:1.1rem; font-weight:800; margin-bottom:10px; }
+.pz-box h4{ font-size:.95rem; font-weight:800; margin:16px 0 8px; }
+.pz-box > .ebtn{ margin-top:10px; }
+.pz-prev{ border-left:5px solid var(--brand); }
+.pz-hl{ background:var(--input-bg); border-radius:10px; padding:8px 10px; margin-top:6px; }
+
+/* --- Campi --- */
+.pz-grid{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
+.pz-f{ display:flex; flex-direction:column; gap:5px; margin-top:10px; }
+.pz-f > span{ font-size:.82rem; font-weight:700; color:var(--muted); }
+.pz-f input, .pz-f textarea, .pz-f select{ font:inherit; padding:11px 12px; border:1px solid var(--line);
+  border-radius:10px; background:var(--input-bg); color:var(--ink); width:100%; }
+.pz-f input:focus, .pz-f textarea:focus, .pz-f select:focus{ border-color:var(--brand); outline:none; }
+.pz-f textarea{ resize:vertical; }
+.pz-f--check{ flex-direction:row; align-items:center; gap:10px; }
+.pz-f--check input{ width:22px; height:22px; }
+.pz-f--inline{ flex-direction:row; align-items:center; gap:8px; margin:0; }
+.pz-f--inline input{ width:auto; }
+.pz-search{ font:inherit; width:100%; padding:13px 14px; border:2px solid var(--line);
+  border-radius:12px; background:var(--input-bg); color:var(--ink); }
+.pz-search:focus{ border-color:var(--brand); outline:none; }
+
+/* --- Elenco pazienti --- */
+.pz-list{ display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); }
+.pz-card{ display:flex; align-items:center; gap:14px; text-align:left; cursor:pointer;
+  background:var(--card); color:var(--ink); border:1px solid var(--line);
+  border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); min-height:92px; }
+.pz-card:active{ transform:scale(.99); }
+.pz-card:hover{ border-color:var(--brand); }
+.pz-avatar{ flex:0 0 46px; width:46px; height:46px; border-radius:50%; background:var(--c,var(--brand));
+  color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; }
+.pz-card__body{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.pz-card__name{ font-weight:800; font-size:1.05rem; }
+.pz-card__meta{ color:var(--muted); font-size:.85rem; }
+.pz-next{ margin-left:auto; text-align:right; font-size:.8rem; font-weight:700; color:var(--brand); }
+.pz-chips{ display:flex; gap:5px; flex-wrap:wrap; margin-top:3px; }
+.pz-chip{ background:var(--input-bg); border:1px solid var(--line); border-radius:999px;
+  padding:1px 9px; font-size:.75rem; color:var(--muted); }
+
+/* --- Cruscotto "Oggi" --- */
+.pz-today{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+.pz-today__box{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 16px; box-shadow:var(--shadow); }
+.pz-today__box h3{ font-size:.85rem; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--muted); margin-bottom:8px; }
+.pz-mini{ list-style:none; display:flex; flex-direction:column; gap:6px; }
+.pz-mini li{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.pz-link{ background:none; border:none; font:inherit; font-weight:700; color:var(--brand);
+  cursor:pointer; padding:0; text-align:left; }
+
+/* --- Timeline sessioni --- */
+.pz-timeline{ list-style:none; display:flex; flex-direction:column; }
+.pz-timeline li{ border-top:1px solid var(--line); }
+.pz-timeline li:first-child{ border-top:none; }
+.pz-timeline__b{ display:flex; gap:12px; width:100%; padding:11px 2px; align-items:baseline; }
+.pz-timeline__d{ flex:0 0 90px; font-weight:800; color:var(--ink); }
+.pz-timeline__t{ color:var(--ink); font-weight:400; }
+
+/* --- Coordinate della sessione --- */
+.pz-coords{ display:flex; flex-direction:column; gap:8px; }
+.pz-coord{ display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  background:var(--input-bg); border:1px solid var(--line); border-radius:12px; padding:9px 12px; }
+.pz-coord__l{ font-weight:700; flex:1 1 200px; }
+.pz-seg{ display:flex; gap:4px; }
+.pz-seg .ebtn.is-on{ background:var(--brand); color:#fff; border-color:var(--brand); }
+.pz-addrow{ display:flex; gap:8px; margin-top:10px; }
+.pz-addrow input{ flex:1; font:inherit; padding:10px 12px; border:1px solid var(--line);
+  border-radius:10px; background:var(--input-bg); color:var(--ink); }
+
+/* --- Checklist cattura automatica --- */
+.pz-check{ list-style:none; display:flex; flex-direction:column; gap:8px; }
+.pz-check li{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.pz-check label{ display:flex; align-items:center; gap:10px; cursor:pointer; flex:1 1 240px; }
+.pz-check input{ width:24px; height:24px; flex:0 0 24px; }
+
+/* --- Allegati --- */
+.pz-thumbs{ display:flex; gap:10px; flex-wrap:wrap; }
+.pz-thumbs figure{ position:relative; }
+.pz-thumbs img{ width:120px; height:120px; object-fit:cover; border-radius:12px; border:1px solid var(--line); }
+.pz-thumbs .ebtn{ position:absolute; top:4px; right:4px; }
+
+/* --- Agenda --- */
+.pz-appts{ list-style:none; display:flex; flex-direction:column; }
+.pz-appt{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:11px 2px;
+  border-top:1px solid var(--line); }
+.pz-appt:first-child{ border-top:none; }
+.pz-appt__h{ font-weight:800; flex:0 0 110px; }
+.pz-appt__n{ flex:1 1 160px; }
+.pz-appt__a{ display:flex; gap:5px; flex-wrap:wrap; }
+.pz-appt--disdetto, .pz-appt--assente{ opacity:.55; text-decoration:line-through; }
+.pz-tag{ font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.03em;
+  border-radius:999px; padding:2px 9px; background:var(--input-bg); border:1px solid var(--line); color:var(--muted); }
+.pz-tag--effettuato{ background:var(--brand); color:#fff; border-color:var(--brand); }
+.pz-tag--disdetto, .pz-tag--assente{ background:#c0392b; color:#fff; border-color:#c0392b; }
+.pz-tag--bozza{ background:#e6a700; color:#3a2a00; border-color:#e6a700; }
+
+.pz-ul{ padding-left:20px; display:flex; flex-direction:column; gap:6px; }
+
+/* --- Barra della sessione attiva --- */
+.pz-sessionbar{ position:fixed; left:50%; transform:translateX(-50%); bottom:14px; z-index:40;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center;
+  background:var(--card); border:1px solid var(--brand); border-radius:999px;
+  padding:9px 14px; box-shadow:0 6px 24px rgba(20,40,60,.22); max-width:calc(100vw - 24px); }
+.pz-sessionbar__dot{ width:10px; height:10px; border-radius:50%; background:#c0392b;
+  animation:pzpulse 1.6s infinite; }
+@keyframes pzpulse{ 0%,100%{ opacity:1 } 50%{ opacity:.25 } }
+.pz-sessionbar__t{ font-size:.9rem; }
+
+/* --- Stampa: solo il foglio generato --- */
+#pzPrint{ display:none; }
+@media print{
+  body.pz-printing > *{ display:none !important; }
+  body.pz-printing #pzPrint{ display:block; padding:0; color:#000; }
+  body.pz-printing #pzPrint h1{ font-size:20pt; margin-bottom:4pt; }
+  body.pz-printing #pzPrint h2{ font-size:13pt; margin:12pt 0 4pt; border-bottom:1px solid #999; }
+  body.pz-printing #pzPrint h3{ font-size:11pt; margin:8pt 0 2pt; }
+  body.pz-printing #pzPrint .pr-s{ page-break-inside:avoid; margin-bottom:8pt; }
+  body.pz-printing #pzPrint .pr-f{ margin-top:24pt; }
+}
+
+@media (max-width:600px){
+  .pz-bar__actions{ margin-left:0; width:100%; }
+  .pz-timeline__b{ flex-direction:column; gap:2px; }
+  .pz-timeline__d{ flex:none; }
+}

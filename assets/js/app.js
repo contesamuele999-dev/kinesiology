@@ -582,6 +582,7 @@
       const sec = t.dataset.sec;
       if (sec === "punti") location.hash = "";                     // Punti = default
       else if (sec === "costituzioni") location.hash = "#costituzioni";
+      else if (sec === "pazienti") location.hash = "#paz";
       else location.hash = "#coordinate";                          // Coordinate
     });
   }
@@ -650,6 +651,17 @@
   function route() { routeTo(); applyHighlight(false); }
   function routeTo() {
     const h = location.hash;
+    // Sezione Pazienti (dati cifrati in locale, vedi pazienti.js)
+    if (h.indexOf("#paz") === 0) {
+      firstMeridian = null; leavePunti(); leaveCost();
+      listView.hidden = true; coordView.hidden = true;
+      setActiveTab("pazienti");
+      searchWrap.hidden = true; backBtn.hidden = false;
+      if (window.Pazienti) window.Pazienti.show(h);
+      window.scrollTo(0, 0); updateStick();
+      return;
+    }
+    if (window.Pazienti) window.Pazienti.hide();
     // Default (nessun hash) o esplicito #punti => sezione Punti Indicatori
     if (h === "" || h === "#" || h === "#punti") { firstMeridian = null; leaveCost(); showPunti(); return; }
     // Sezione Costituzioni & Temperamenti
@@ -669,6 +681,10 @@
     firstMeridian = null; showList();  // "#coordinate" => home Coordinate
   }
   backBtn.addEventListener("click", () => {
+    if (location.hash.indexOf("#paz") === 0) {
+      if (window.Pazienti) window.Pazienti.back();
+      return;
+    }
     if (costView && !costView.hidden) {
       const v = window.Cost ? window.Cost.parse(location.hash) : { tipo: "home" };
       if (v.tipo === "teoria" && v.id) location.hash = "#cost/teoria";

@@ -22,12 +22,24 @@
 - [x] Barra di ricerca sempre visibile: fuori dagli elenchi evidenzia il testo
       (`mark.shl`) in qualunque sezione, con contatore risultati.
 
+- [x] **Pazienti, Sessioni e Agenda** (`#paz`) — specifica in `PROMPT_SESSIONI.md`.
+      Dati cifrati in locale: IndexedDB + WebCrypto (AES-GCM 256, PBKDF2-SHA256 600k),
+      passphrase, auto-lock 5 min, nessun server. Codice: `assets/js/store.js` (vault),
+      `assets/js/pazienti.js` (UI), `assets/css/pazienti.css`.
+      Include: anagrafica, sessioni con **cattura automatica** di ciò che si consulta
+      durante la seduta, timeline e confronto con la precedente, agenda con stati ed
+      export `.ics`, backup cifrato `.kin`, stampa scheda/riepilogo, export ed
+      eliminazione per singolo paziente. Test: `node tools/test_vault.js`.
+
 ## Da fare
 - [ ] Dettagli essenze (squilibri + affermazione) per gli altri 15 meridiani
       → in `tools/essenze_dettaglio.json`, dalle pagine-essenza del manuale Atteggiamenti.
 - [ ] Immagini Basket Weaver per le 7 coordinate mancanti (Maestro del Cuore, TR/Tiroide,
       TR/Surrenali, Vescica Biliare, Fegato, Polmone, Intestino Crasso) → serve il 2° volume.
 - [ ] (opzionale) Procedura di monitoraggio muscolare per coordinata (dal Monitoraggio, 1 pag./coord.).
+- [ ] Pazienti — fuori MVP, da fare solo se servono davvero: vista settimana a griglia
+      dell'agenda (ora è elenco per giorno), ricorrenze, notifiche locali, modelli di
+      sessione, registro prestazioni/CSV.
 
 ## Pipeline dati
 Tutti i contenuti stanno in tools/*.json (atteggiamenti, essenze_dettaglio, storia) + ESS in
