@@ -52,6 +52,50 @@
     if (window.PuntiMap && window.PuntiMap.retheme) window.PuntiMap.retheme();
   });
 
+  /* ---------- Indicatore "i dati vengono salvati" (header) ----------
+     L'area pazienti si sblocca con una passphrase: finché è bloccata
+     (o non esiste) nulla viene registrato. Senza un segnale fisso in
+     testata l'operatore se ne accorge solo quando riapre la scheda e
+     la trova vuota. */
+  const vaultBadge = el("vaultBadge");
+  const BADGE = {
+    off:    { t: "Dati non attivi", cls: "off",
+              d: "L'area pazienti non è ancora stata creata: nulla viene salvato. Tocca per crearla." },
+    locked: { t: "Bloccato", cls: "locked",
+              d: "Area pazienti bloccata: in questo momento non stai salvando nulla. Tocca per sbloccarla con la passphrase." },
+    on:     { t: "Salvataggio attivo", cls: "on",
+              d: "Area pazienti sbloccata: quello che registri viene salvato cifrato su questo dispositivo." }
+  };
+  function renderVaultBadge() {
+    const V = window.Vault;
+    if (!vaultBadge || !V) return;
+    V.isSetUp().then((setUp) => {
+      const k = !setUp ? "off" : (V.unlocked() ? "on" : "locked");
+      const b = BADGE[k];
+      const info = (window.Pazienti && window.Pazienti.statoSync) ? window.Pazienti.statoSync() : null;
+      /* Il sync si mostra solo da sbloccati: da bloccati non parte comunque. */
+      const conSync = k === "on" && info && info.url && info.accettato;
+      vaultBadge.hidden = false;
+      vaultBadge.dataset.state = b.cls;
+      vaultBadge.querySelector(".vbadge__t").textContent = b.t + (conSync ? " · sync" : "");
+      let d = b.d;
+      if (conSync) d += info.ultimo
+        ? " Ultima sincronizzazione: " + new Date(info.ultimo).toLocaleString("it-IT") + "."
+        : " Sync configurato, mai eseguito.";
+      vaultBadge.title = d;
+      vaultBadge.setAttribute("aria-label", "Area pazienti: " + b.t);
+    }).catch(() => {});
+  }
+  if (vaultBadge) {
+    vaultBadge.addEventListener("click", () => { location.hash = "#paz"; });
+    if (window.Vault) {
+      window.Vault.onLock(renderVaultBadge);
+      window.Vault.onUnlock(renderVaultBadge);
+    }
+  }
+  /* pazienti.js la richiama dopo un sync o un cambio di impostazioni. */
+  window.aggiornaBadgeDati = renderVaultBadge;
+
   /* ---------- Header sticky (scroll-margin sezioni) ---------- */
   const topbar = document.querySelector(".topbar");
   function updateStick(){
@@ -379,6 +423,73 @@
               ["Tabella di riferimento", "Tabella Acu Touch · anteriore (Yin)", "Tabella Acu Touch · posteriore (Yang)"]);
   }
 
+  /* ---------- Collegamenti fra sezioni (grafo in links.js) ----------
+     Il perno è il meridiano: da una coordinata si raggiungono la mappa 3D,
+     i punti d'allarme dell'organo, le costituzioni che lo coinvolgono e le
+     altre coordinate che condividono lo stesso meridiano. */
+  function uniqChips(list) {
+    const seen = {}, out = [];
+    (list || []).filter(Boolean).forEach((h) => {
+      const m = /href="([^"]+)"/.exec(h);
+      const k = m ? m[1] : h;
+      if (seen[k]) return;
+      seen[k] = 1; out.push(h);
+    });
+    return out;
+  }
+  function bothMer(fn, m1, m2) {
+    return uniqChips(fn(m1).concat(m2 && m2 !== m1 ? fn(m2) : []));
+  }
+  function coordLinkRows(c1, c2) {
+    const L = window.Links;
+    if (!L) return [];
+    const m1 = L.merOfCoord(c1), m2 = L.merOfCoord(c2);
+    const mappa = uniqChips([
+      m1 ? L.chipMer(m1, c1.meridiano) : "",
+      (m2 && m2 !== m1) ? L.chipMer(m2, c2.meridiano) : ""
+    ]);
+    return [
+      L.row("Sulla mappa 3D", mappa),
+      L.row("Punti d'allarme", bothMer(L.chipsPunti, m1, m2)),
+      L.row("Costituzioni", bothMer(L.chipsCost, m1, m2)),
+      L.row("Altre coordinate", uniqChips(
+        L.chipsCoord(m1, c1.id).concat(m2 && m2 !== m1 ? L.chipsCoord(m2, c1.id) : [])
+      )),
+      L.row("Prova al contrario", [L.chip({
+        kind: "coord", href: L.hrefCoord(c2.id, c1.id), colore: c2.colore,
+        label: "Muscolo " + c2.muscolo + ", posizione " + c1.meridiano,
+        sub: "inverte i due meridiani",
+        title: "Scambia i ruoli: " + c2.meridiano + " definisce il muscolo, " + c1.meridiano + " la posizione"
+      })])
+    ];
+  }
+  function linksSection(c1, c2) {
+    const L = window.Links;
+    if (!L) return PH;
+    return L.box("", coordLinkRows(c1, c2),
+      "Ogni voce apre la sezione dove quell'informazione è trattata per esteso.") || PH;
+  }
+  /* Striscia compatta sotto l'intestazione: le due voci più usate. */
+  function linksStrip(c1, c2) {
+    const L = window.Links;
+    if (!L) return "";
+    const m1 = L.merOfCoord(c1), m2 = L.merOfCoord(c2);
+    const chips = uniqChips([
+      m1 ? L.chipMer(m1, c1.meridiano) : "",
+      (m2 && m2 !== m1) ? L.chipMer(m2, c2.meridiano) : ""
+    ].concat(bothMer(L.chipsPunti, m1, m2)));
+    if (!chips.length) return "";
+    return '<div class="xlinks xlinks--strip">' + L.row("", chips) +
+      '<a class="xlinks__more" href="#sec-collegamenti">tutti i collegamenti ↓</a></div>';
+  }
+  /* Nome di meridiano cliccabile dentro un testo discorsivo. */
+  function merLink(nome) {
+    const L = window.Links;
+    const id = L ? L.merId(nome) : null;
+    if (!id) return esc(nome);
+    return '<a class="xref" href="' + esc(L.hrefMer(id)) + '">' + esc(nome) + "</a>";
+  }
+
   /* ---------- Vista coordinata (muscolo + posizione) ---------- */
   let pair = [null, null];   // [c1 = muscolo/1°, c2 = posizione/2°]
 
@@ -399,8 +510,8 @@
 
     // Meridiani coinvolti
     let merHtml = "";
-    if (has(c1.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano del muscolo (1°): ${esc(c1.meridiano)}</h4><p>${esc(c1.storiaMeridiano)}</p>`;
-    if (c2.id !== c1.id && has(c2.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano di riferimento (2° · posizione): ${esc(c2.meridiano)}</h4><p>${esc(c2.storiaMeridiano)}</p>`;
+    if (has(c1.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano del muscolo (1°): ${merLink(c1.meridiano)}</h4><p>${esc(c1.storiaMeridiano)}</p>`;
+    if (c2.id !== c1.id && has(c2.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano di riferimento (2° · posizione): ${merLink(c2.meridiano)}</h4><p>${esc(c2.storiaMeridiano)}</p>`;
     if (!merHtml) merHtml = PH;
 
     // Sezione posizione: numero + riferimento + emozioni/atteggiamenti
@@ -410,7 +521,7 @@
         `<div class="posbox">
            <span class="posbox__num">Pos. ${esc(posN)}</span>
            <div class="posbox__body">
-             <p class="posbox__ref">Meridiano di riferimento: <strong>${esc(refMer)}</strong></p>
+             <p class="posbox__ref">Meridiano di riferimento: <strong>${merLink(refMer)}</strong></p>
              <p class="posbox__hint">Definita dal 2° meridiano testato.</p>
            </div>
          </div>
@@ -446,7 +557,8 @@
       { id: "modi", label: "Modi digitali",
         html: modiBlock(MODI.digitali) + pointsBlock(c1.modi) +
               imgGrid([MODI.img.digitali], "Modi digitali", ["Tavola dei modi digitali"]) },
-      { id: "meridiani", label: "Meridiani coinvolti", html: merHtml }
+      { id: "meridiani", label: "Meridiani coinvolti", html: merHtml },
+      { id: "collegamenti", label: "Collegamenti", html: linksSection(c1, c2) }
     ];
   }
 
@@ -479,7 +591,8 @@
           <span class="coord__mus">Posizione ${esc(posN)}</span>
         </div>
       </div>
-      <button id="changeSecond" class="coord__change" type="button">↺ Cambia 2° meridiano (posizione)</button>`;
+      <button id="changeSecond" class="coord__change" type="button">↺ Cambia 2° meridiano (posizione)</button>
+      ${linksStrip(c1, c2)}`;
     el("changeSecond").addEventListener("click", () => { location.hash = "#/" + pair[0].id; });
   }
 
@@ -550,11 +663,43 @@
     Array.from(macronav.querySelectorAll(".macronav__tab"))
       .forEach((b) => b.classList.toggle("active", b.dataset.sec === sec));
   }
-  function showPunti() {
+  /* Indirizzi profondi dentro la mappa:
+       #punti/mer/<id>          scheda del meridiano
+       #punti/mer/<id>/<sigla>  singolo punto MTC (es. .../vescica/V62)
+       #punti/p/<id>            punto d'allarme
+     Servono perché le altre sezioni possano puntare qui. */
+  function parsePunti(h) {
+    let m = /^#punti\/mer\/([^/]+)(?:\/([^/]+))?/.exec(h || "");
+    if (m) return { t: "mer", id: decodeURIComponent(m[1]), sigla: m[2] ? decodeURIComponent(m[2]) : "" };
+    m = /^#punti\/p\/(.+)$/.exec(h || "");
+    if (m) return { t: "p", id: decodeURIComponent(m[1]) };
+    return null;
+  }
+  /* punti.js è l'ultimo script della pagina e la scena 3D si costruisce
+     al primo activate(): al primo giro PuntiMap può non esistere ancora. */
+  function applyPuntiTarget(target, tries) {
+    if (!target) return;
+    const P = window.PuntiMap;
+    if (!P || !P.selectPunto) {
+      if ((tries || 0) > 20) return;
+      setTimeout(() => applyPuntiTarget(target, (tries || 0) + 1), 30);
+      return;
+    }
+    try {
+      P.activate();
+      if (target.t === "p") { P.selectPunto(target.id); return; }
+      if (target.sigla && P.selectMerPointBySigla && P.selectMerPointBySigla(target.sigla)) return;
+      P.selectMeridiano(target.id);
+    } catch (e) { /* niente WebGL: la sezione resta consultabile dall'elenco */ }
+  }
+  function showPunti(hash) {
     setActiveTab("punti");
     listView.hidden = true; coordView.hidden = true; puntiView.hidden = false;
-    searchWrap.hidden = false; backBtn.hidden = true;
+    searchWrap.hidden = false;
+    const target = parsePunti(hash);
+    backBtn.hidden = !target;
     if (window.PuntiMap) window.PuntiMap.activate();
+    applyPuntiTarget(target);
     window.scrollTo(0, 0); updateStick();
   }
   function leavePunti() {
@@ -663,7 +808,7 @@
     }
     if (window.Pazienti) window.Pazienti.hide();
     // Default (nessun hash) o esplicito #punti => sezione Punti Indicatori
-    if (h === "" || h === "#" || h === "#punti") { firstMeridian = null; leaveCost(); showPunti(); return; }
+    if (h === "" || h === "#" || h.indexOf("#punti") === 0) { firstMeridian = null; leaveCost(); showPunti(h); return; }
     // Sezione Costituzioni & Temperamenti
     if (h === "#costituzioni" || h.indexOf("#cost/") === 0) { firstMeridian = null; showCost(h); return; }
     // Da qui in poi siamo nella sezione Coordinate
@@ -681,6 +826,12 @@
     firstMeridian = null; showList();  // "#coordinate" => home Coordinate
   }
   backBtn.addEventListener("click", () => {
+    /* Su un indirizzo profondo della mappa il "indietro" utile è quello del
+       browser: si torna alla coordinata (o alla costituzione) di partenza. */
+    if (parsePunti(location.hash)) {
+      if (history.length > 1) history.back(); else location.hash = "#punti";
+      return;
+    }
     if (location.hash.indexOf("#paz") === 0) {
       if (window.Pazienti) window.Pazienti.back();
       return;
@@ -731,6 +882,7 @@
     }
   })();
 
+  renderVaultBadge();
   route();
 })();
 

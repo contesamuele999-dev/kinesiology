@@ -21,6 +21,11 @@
       <button id="backBtn" class="backbtn" hidden aria-label="Indietro">‹ Indietro</button>
       <h1 class="topbar__title">Kinesiology</h1>
       <span class="topbar__sub">consultazione rapida</span>
+      <button id="vaultBadge" class="vbadge" type="button" hidden
+              aria-live="polite" title="Stato dell'area pazienti">
+        <span class="vbadge__dot" aria-hidden="true"></span>
+        <span class="vbadge__t">Area dati</span>
+      </button>
       <button id="themeBtn" class="themebtn" type="button" aria-label="Cambia tema">🌙</button>
     </div>
     <!-- ===== NAV MACROSEZIONI (sempre visibile) ===== -->
@@ -205,6 +210,8 @@
   <script src="assets/js/meridiani.js"></script>
   <script src="assets/js/tavole.js"></script>
   <script src="assets/js/costituzioni_data.js"></script>
+  <!-- links.js: il grafo dei collegamenti fra sezioni, usato da tutti i moduli sotto -->
+  <script src="assets/js/links.js"></script>
   <script src="assets/js/costituzioni.js"></script>
   <!-- store + pazienti prima di app.js: il router iniziale può già puntare a #paz -->
   <script src="assets/js/config.js"></script>

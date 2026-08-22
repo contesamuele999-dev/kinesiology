@@ -87,8 +87,23 @@
                  label: a.meridiano + " · " + a.muscolo + " — pos. " + (row ? row.posizione : "?") + " (" + b.meridiano + ")" };
       }
     }
-    if (h.indexOf("#cost") === 0) return { kind: "costituzioni", ref: h, label: "Costituzioni & Temperamenti" };
-    if (h === "" || h === "#" || h === "#punti") return { kind: "punti", ref: "#punti", label: "Punti indicatori" };
+    if (h.indexOf("#cost") === 0) {
+      var tc = (window.Cost && window.Cost.titolo) ? window.Cost.titolo(h) : "";
+      return { kind: "costituzioni", ref: h, label: "Costituzioni" + (tc ? " · " + tc : " & Temperamenti") };
+    }
+    var mm = /^#punti\/mer\/([^/]+)(?:\/([^/]+))?/.exec(h);
+    if (mm) {
+      var M = window.Links ? window.Links.mer(decodeURIComponent(mm[1])) : null;
+      return { kind: "punti", ref: h,
+               label: "Meridiano " + (M ? M.nome : mm[1]) + (mm[2] ? " · " + decodeURIComponent(mm[2]) : "") };
+    }
+    var mp = /^#punti\/p\/(.+)$/.exec(h);
+    if (mp) {
+      var pid = decodeURIComponent(mp[1]);
+      var PT = ((window.PUNTI_INDICATORI || {}).punti || []).find(function (x) { return x.id === pid; });
+      return { kind: "punti", ref: h, label: "Punto d'allarme · " + (PT ? PT.organo : pid) };
+    }
+    if (h === "" || h === "#" || h.indexOf("#punti") === 0) return { kind: "punti", ref: "#punti", label: "Punti indicatori" };
     if (h === "#coordinate") return null;
     return null;
   }
@@ -338,7 +353,8 @@
       '<section class="pz-box"><h3>Note permanenti</h3>' +
         AREE.map(function (a) {
           return '<label class="pz-f"><span>' + esc(a[1]) + "</span>" +
-            '<textarea data-p="' + a[0] + '" rows="2">' + esc(p[a[0]] || "") + "</textarea></label>";
+            '<textarea data-p="' + a[0] + '" rows="2">' + esc(p[a[0]] || "") + "</textarea></label>" +
+            (a[0] === "costituzione" ? costLinks(p.costituzione) : "");
         }).join("") +
       "</section>" +
 
@@ -368,6 +384,25 @@
       });
     });
   }
+  /* Dal testo libero "Costituzione & temperamento" alla scheda relativa:
+     si riconosce il nome scritto (TAI YANG, Shao Yin…); se non c'è nulla di
+     riconoscibile si offre il percorso guidato. */
+  function costLinks(txt) {
+    var L = window.Links, D = window.COSTITUZIONI;
+    if (!L || !D || !D.costituzioni) return "";
+    var t = String(txt || "").toLowerCase();
+    var chips = D.costituzioni.filter(function (c) {
+      return t.indexOf(c.nome.toLowerCase()) !== -1 || t.indexOf(c.id.replace("-", " ")) !== -1;
+    }).map(function (c) {
+      return L.chip({ kind: "cost", href: L.hrefCost(c.id), label: c.nome, sub: c.temperamento });
+    });
+    if (!chips.length) {
+      chips = [L.chip({ kind: "cost", href: "#cost/coppia", label: "Trova costituzione e temperamento",
+                        sub: "percorso guidato in 2 passi" })];
+    }
+    return L.box("", [L.row("", chips)]);
+  }
+
   function sessionRow(s) {
     var co = (s.coordinate || []).map(function (c) { return c.label; }).join(" · ");
     return '<li><button class="pz-link pz-timeline__b" data-act="apri-sessione" data-id="' + esc(s.id) + '">' +
@@ -379,14 +414,20 @@
   function ricorrenzeBox(ses) {
     var cnt = {};
     ses.forEach(function (s) {
-      (s.coordinate || []).forEach(function (c) { cnt[c.label] = (cnt[c.label] || 0) + 1; });
+      (s.coordinate || []).forEach(function (c) {
+        var e = cnt[c.label] || (cnt[c.label] = { n: 0, ref: "" });
+        e.n++; if (!e.ref && c.ref) e.ref = c.ref;
+      });
     });
     var rows = Object.keys(cnt).map(function (k) { return [k, cnt[k]]; })
-      .filter(function (r) { return r[1] > 1; })
-      .sort(function (a, b) { return b[1] - a[1]; }).slice(0, 8);
+      .filter(function (r) { return r[1].n > 1; })
+      .sort(function (a, b) { return b[1].n - a[1].n; }).slice(0, 8);
     if (!rows.length) return "";
     return '<section class="pz-box"><h3>Coordinate ricorrenti</h3><ul class="pz-mini">' +
-      rows.map(function (r) { return "<li>" + esc(r[0]) + ' <strong>×' + r[1] + "</strong></li>"; }).join("") +
+      rows.map(function (r) {
+        return "<li>" + refLink("coordinata", r[1].ref, r[0], "") +
+          ' <strong>×' + r[1].n + "</strong></li>";
+      }).join("") +
       "</ul></section>";
   }
 
@@ -482,9 +523,20 @@
     return '<label class="pz-f"><span>' + esc(label) + "</span>" +
       '<textarea data-s="' + f + '" rows="' + rows + '">' + esc(s[f] || "") + "</textarea></label>";
   }
+  /* Le voci registrate durante la seduta puntano a ciò che è stato aperto:
+     riaprirlo dalla scheda deve costare un tocco, non una ricerca. */
+  function refHref(kind, ref) {
+    if (!ref) return "";
+    return kind === "coordinata" ? "#/" + ref : ref;
+  }
+  function refLink(kind, ref, label, cls) {
+    var h = refHref(kind, ref);
+    if (!h) return '<span class="' + esc(cls || "") + '">' + esc(label) + "</span>";
+    return '<a class="' + esc(cls || "") + ' xref" href="' + esc(h) + '">' + esc(label) + "</a>";
+  }
   function coordRow(c, i) {
     var esiti = [["forte", "Forte"], ["debole", "Debole"], ["nt", "Non testato"]];
-    return '<div class="pz-coord"><span class="pz-coord__l">' + esc(c.label) + "</span>" +
+    return '<div class="pz-coord">' + refLink("coordinata", c.ref, c.label, "pz-coord__l") +
       '<span class="pz-seg">' + esiti.map(function (e) {
         return '<button class="ebtn ebtn--mini' + (c.esito === e[0] ? " is-on" : "") +
           '" data-act="esito" data-i="' + i + '" data-v="' + e[0] + '">' + e[1] + "</button>";
@@ -503,8 +555,12 @@
     return '<section class="pz-box"><h3>Consultato durante la seduta</h3>' +
       '<p class="pz-muted">Spunta ciò che hai davvero usato; il resto era solo consultazione.</p>' +
       '<ul class="pz-check">' + voci.map(function (v, i) {
+        /* Il collegamento sta FUORI dalla <label>: dentro, un clic sul link
+           spunterebbe anche la casella. */
+        var go = refHref(v.kind, v.ref);
         return '<li><label><input type="checkbox" data-act="voce" data-i="' + i + '"' + (v.usato ? " checked" : "") + " />" +
           "<span>" + esc(v.label) + ' <em class="pz-muted">' + Math.round((v.dwell || 0) / 1000) + "s</em></span></label>" +
+          (go ? ' <a class="xref pz-voce__go" href="' + esc(go) + '">riapri ›</a>' : "") +
           (v.kind === "coordinata" ? ' <button class="ebtn ebtn--mini" data-act="voce-coord" data-i="' + i + '">＋ tra le coordinate</button>' : "") +
           "</li>";
       }).join("") + "</ul></section>";
@@ -668,6 +724,7 @@
     });
     document.getElementById("pzAccetto").addEventListener("change", function () {
       lsSet(LS_LEGAL, this.checked ? JSON.stringify({ ver: LEGAL_VER, at: new Date().toISOString() }) : null);
+      badge();
     });
     document.getElementById("pzSyncAuto").addEventListener("change", function () {
       lsSet(LS_SYNC_AUTO, this.checked ? "1" : "0");
@@ -956,6 +1013,7 @@
     if (manuale) setSyncState("Sincronizzazione in corso…");
     return V.sync(url, syncInvito(), accettazione()).then(function (r) {
       lsSet(LS_SYNC_LAST, r.quando);
+      badge();
       return refresh().then(function () {
         if (st.route.name === "impostazioni") setSyncState("Fatto: " + r.inviati + " inviati, " + r.ricevuti + " ricevuti. " + syncStato());
         else render();
@@ -1090,7 +1148,14 @@
   var lm = Number(lsGet("kapp-lock-min"));
   if (lm) V.setLockMinutes(lm);
 
+  function badge() { if (window.aggiornaBadgeDati) window.aggiornaBadgeDati(); }
+
   window.Pazienti = {
+    /* Letta dal badge in testata (app.js): dice se e da quando i dati
+       viaggiano anche verso il server di sync. */
+    statoSync: function () {
+      return { url: syncUrl(), auto: syncAutoOn(), accettato: accettato(), ultimo: lsGet(LS_SYNC_LAST) };
+    },
     show: function (hash) {
       view.hidden = false;
       st.route = parse(hash);

@@ -37,7 +37,8 @@ termini.html             → termini d'uso + nomina a responsabile (modello)
 assets/css/style.css     → grafica
 assets/css/pazienti.css  → grafica area pazienti
 assets/js/data.js        → CONTENUTI (da compilare dai manuali)
-assets/js/app.js         → logica (elenco, ricerca, dettaglio)
+assets/js/app.js         → logica (elenco, ricerca, dettaglio, router)
+assets/js/links.js       → collegamenti fra sezioni (grafo con perno il meridiano)
 assets/js/store.js       → vault cifrato (IndexedDB + WebCrypto) e sync
 assets/js/pazienti.js    → pazienti, sessioni, agenda
 sync/                    → server di sync (Cloudflare Workers + D1) + istruzioni
@@ -52,8 +53,33 @@ node tools/test_vault.js        → cifratura del vault
 node tools/test_sync.js         → derivazione del token e regole di conflitto
 node tools/test_worker.js       → server di sync su SQLite (due dispositivi simulati)
 node tools/test_costituzioni.js → contenuti costituzioni
+node tools/test_links.js        → collegamenti fra sezioni (197 controlli)
 node tools/dev_sync_server.js   → server di sync in locale, per provare l'app
 ```
+
+## Collegamenti fra sezioni
+Coordinate, Punti d'Allarme e Costituzioni parlano tutte dello stesso oggetto — il
+**meridiano** — con nomi diversi ("Milza", "Milza (sx)", "M – P", "M4"). `assets/js/links.js`
+normalizza tutto su un unico id e da lì costruisce i collegamenti in ogni direzione, così
+ogni scheda mostra dove ritrovare le informazioni correlate. Indirizzi profondi disponibili:
+
+```
+#punti/mer/<id>          scheda di un meridiano sulla mappa 3D
+#punti/mer/<id>/<sigla>  singolo punto MTC (es. #punti/mer/vescica/V62)
+#punti/p/<id>            punto d'allarme (es. #punti/p/rene-dx)
+#/<coord>+<coord>        coordinata
+#cost/costituzione/<id>  costituzione
+```
+
+Aggiungendo un meridiano, una coordinata o un punto i collegamenti si aggiornano da soli:
+non c'è nessun elenco di link scritto a mano. `node tools/test_links.js` verifica che ogni
+entità risalga al proprio meridiano e che ogni indirizzo generato punti a qualcosa che esiste.
+
+## Indicatore in testata
+Il badge accanto al pulsante del tema dice se i dati vengono salvati: grigio = area pazienti
+non ancora creata, ambra = bloccata (nulla viene registrato), verde = sbloccata, con
+l'aggiunta di «· sync» quando la sincronizzazione è attiva e i termini sono stati accettati.
+Toccandolo si va all'area pazienti.
 
 ## Aggiornare i contenuti
 Apri `assets/js/data.js` con un editor di testo. Ogni coordinata ha una struttura fissa:

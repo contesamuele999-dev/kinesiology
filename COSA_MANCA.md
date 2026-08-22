@@ -36,6 +36,15 @@
       Test: `node tools/test_sync.js`, `node tools/test_worker.js`.
       Per aggiungere un dispositivo serve importare il backup (il salt viaggia lì).
 
+- [x] **Collegamenti fra le sezioni** (`assets/js/links.js`): un grafo con perno il meridiano
+      che unisce coordinate, punti d'allarme e costituzioni, normalizzando le denominazioni
+      diverse dei tre manuali ("Milza" / "Milza (sx)" / "M – P" / "M4"). Ogni scheda mostra
+      dove ritrovare le informazioni correlate e la mappa 3D ha indirizzi profondi
+      (`#punti/mer/<id>`, `#punti/mer/<id>/<sigla>`, `#punti/p/<id>`).
+      Test: `node tools/test_links.js` (197 controlli).
+- [x] **Indicatore «i dati vengono salvati»** in testata: tre stati (area non creata /
+      bloccata / sbloccata) più lo stato del sync, aggiornato da `Vault.onLock`/`onUnlock`.
+
 ## Da fare
 - [ ] Dettagli essenze (squilibri + affermazione) per gli altri 15 meridiani
       → in `tools/essenze_dettaglio.json`, dalle pagine-essenza del manuale Atteggiamenti.

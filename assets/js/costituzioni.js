@@ -77,6 +77,37 @@
   function link(hash, testo) {
     return '<a class="colink" href="' + esc(hash) + '">' + esc(testo) + " ›</a>";
   }
+  /* Collegamenti verso Punti Indicatori e Coordinate: il grafo sta in
+     links.js e conosce già le equivalenze ("M – P" = milza + polmone,
+     "M4" = MP4). Qui si incolla e basta. */
+  function xlinkCostituzione(c) {
+    var L = window.Links;
+    if (!L) return "";
+    var mers = L.merOfCost(c);
+    if (!mers.length) return "";
+    var chipsMer = mers.map(function (id) {
+      var m = L.mer(id);
+      return m ? L.chipMer(id, m.nome) : "";
+    });
+    var coordinate = [], punti = [], visti = {};
+    mers.forEach(function (id) {
+      L.chipsCoord(id).forEach(function (h) { if (!visti[h]) { visti[h] = 1; coordinate.push(h); } });
+      L.chipsPunti(id).forEach(function (h) { if (!visti[h]) { visti[h] = 1; punti.push(h); } });
+    });
+    var pt = L.siglaPunto(c.puntoTest && c.puntoTest.sigla);
+    var chipTest = pt ? [L.chip({
+      kind: "mer", href: L.hrefMer(pt.merId, pt.sigla),
+      colore: (L.mer(pt.merId) || {}).colore,
+      label: c.puntoTest.sigla, sub: "sulla mappa 3D",
+      title: "Inquadra il punto di test " + c.puntoTest.sigla + " sulla mappa 3D"
+    })] : [];
+    return L.box("", [
+      L.row("Meridiani (" + c.meridiani + ")", chipsMer),
+      L.row("Punto di test", chipTest),
+      L.row("Coordinate di questi meridiani", coordinate),
+      L.row("Punti d'allarme", punti)
+    ]);
+  }
 
   /* --------------------------------------------------------- home */
   function cardHtml(hash, titolo, sotto, immagine, badge) {
@@ -247,7 +278,7 @@
         '<p class="comotto">« ' + esc(c.difesa.motto) + " »</p>" + paragrafi(c.difesa.testo), "c-difesa") +
       sezione("Come si testa",
         "<p>Mentre la persona tocca con una mano il punto <strong>VC8 (Ombelico)</strong>, " +
-        "testare il punto <strong>" + esc(c.puntoTest.sigla) + "</strong>.</p>" +
+        "testare il punto <strong>" + puntoLink(c.puntoTest.sigla) + "</strong>.</p>" +
         figura(c.puntoTest.immagine, c.puntoTest.sigla + " — " + c.nome) +
         '<p class="cohint">' + link("#cost/test/costituzioni", "Vedi tutti e 6 i punti chiave") + "</p>", "c-test") +
       sezione("Collegamenti",
@@ -256,7 +287,7 @@
                  "Il somatotipo di questa costituzione",
                  (byId(D.biotipi, c.biotipo) || {}).immagine, "") +
         cardHtml("#cost/confronto", "Confronto fra i biotipi", "Tabella comparativa", "", "") +
-        "</div>", "c-link") +
+        "</div>" + xlinkCostituzione(c), "c-link") +
       "</div>";
   }
 
@@ -528,6 +559,14 @@
       "<div><h2>" + esc(titolo) + "</h2>" +
       (sotto ? "<p>" + esc(sotto) + "</p>" : "") + "</div></div>";
   }
+  /* "VC8", "M4"… dentro un testo diventano un salto alla mappa 3D. */
+  function puntoLink(sigla) {
+    var L = window.Links;
+    var pt = L ? L.siglaPunto(sigla) : null;
+    if (!pt) return esc(sigla);
+    return '<a class="xref" href="' + esc(L.hrefMer(pt.merId, pt.sigla)) + '">' + esc(sigla) + "</a>";
+  }
+
   function ancore(list) {
     return '<nav class="anchors coanchors" aria-label="Vai alla sezione">' +
       list.map(function (a) {

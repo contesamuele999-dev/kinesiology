@@ -168,3 +168,9 @@ body.dark .pz-warn{ background:#3a2f0a; border-color:#7a6413; color:#f4dd94; }
   .pz-timeline__b{ flex-direction:column; gap:2px; }
   .pz-timeline__d{ flex:none; }
 }
+
+/* Collegamenti dentro l'area pazienti (chip e riferimenti da links.js) */
+a.pz-coord__l{ text-decoration:none; }
+.pz-voce__go{ font-size:.78rem; font-weight:700; white-space:nowrap; }
+.pz-box .xlinks{ margin-top:8px; }
+.pz-box .xlinks__row{ margin-bottom:0; }

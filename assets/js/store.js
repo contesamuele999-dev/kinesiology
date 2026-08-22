@@ -19,7 +19,7 @@
   var syncSecret = null; // token di sync: byte diversi da quelli della chiave dati
   var cfg = null;        // { salt, iter, check } — in chiaro, non è un segreto
   var dbp = null;
-  var lockTimer = null, lockMs = 5 * 60 * 1000, lockCbs = [];
+  var lockTimer = null, lockMs = 5 * 60 * 1000, lockCbs = [], unlockCbs = [];
 
   /* ---------- IndexedDB ---------- */
   function openDB() {
@@ -103,6 +103,11 @@
     clearTimeout(lockTimer);
     lockCbs.forEach(function (f) { try { f(); } catch (e) {} });
   }
+  /* Chiamata da setup/unlock/changePass: chi mostra lo stato in interfaccia
+     non deve interrogare unlocked() a intervalli. */
+  function fireUnlock() {
+    unlockCbs.forEach(function (f) { try { f(); } catch (e) {} });
+  }
   if (typeof document !== "undefined") {
     ["pointerdown", "keydown", "touchstart"].forEach(function (ev) {
       document.addEventListener(ev, touch, { passive: true });
@@ -125,7 +130,7 @@
       return seal(k, CHECK).then(function (chk) {
         var rec = { id: "crypto", salt: salt, iter: ITER, checkIv: chk.iv, checkCt: chk.ct };
         return idb("meta", "readwrite", function (s) { return s.put(rec); }).then(function () {
-          cfg = rec; key = k; syncSecret = d.secret; touch();
+          cfg = rec; key = k; syncSecret = d.secret; touch(); fireUnlock();
           if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
           return true;
         });
@@ -140,7 +145,7 @@
         return unseal(d.key, { iv: c.checkIv, ct: c.checkCt })
           .then(function (v) {
             if (v !== CHECK) throw new Error("passphrase-errata");
-            key = d.key; syncSecret = d.secret; touch();
+            key = d.key; syncSecret = d.secret; touch(); fireUnlock();
             return true;
           })
           .catch(function () { throw new Error("passphrase-errata"); });
@@ -163,7 +168,7 @@
           var nk = d.key;
           return seal(nk, CHECK).then(function (chk) {
             var rec = { id: "crypto", salt: salt, iter: ITER, checkIv: chk.iv, checkCt: chk.ct };
-            key = nk; syncSecret = d.secret; cfg = rec;
+            key = nk; syncSecret = d.secret; cfg = rec; fireUnlock();
             var writes = [idb("meta", "readwrite", function (s) { return s.put(rec); })];
             groups.forEach(function (g) {
               g.forEach(function (item) { writes.push(put(item.store, item.obj)); });
@@ -387,6 +392,7 @@
     isSetUp: isSetUp, setup: setup, unlock: unlock, lock: lock, changePass: changePass,
     unlocked: function () { return !!key; },
     onLock: function (f) { lockCbs.push(f); },
+    onUnlock: function (f) { unlockCbs.push(f); },
     setLockMinutes: function (m) { lockMs = m * 60 * 1000; touch(); },
     put: put, get: get, all: all, del: del,
     exportBackup: exportBackup, importBackup: importBackup, wipe: wipe,

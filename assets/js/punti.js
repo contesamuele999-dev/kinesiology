@@ -572,7 +572,7 @@
       (p.note ? '<p class="pinfo__note">' + esc(p.note) + '</p>' : '') +
       '<dl class="pinfo__dl">' +
       rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join("") +
-      '</dl>' + mpBlockFor(p) + merBlockFor(p) + editHtml;
+      '</dl>' + mpBlockFor(p) + merBlockFor(p) + puntoXLinks(p) + editHtml;
     infoEl.hidden = false;
     wireMerActions();
     wireMpActions(p);
@@ -855,16 +855,6 @@
     return (c < 10 ? Math.round(c * 10) / 10 : Math.round(c)) + " cm";
   }
   function merLabel(m) { return m.nome + " (" + m.sigla + ")"; }
-  function coordLabel(cid) {
-    try {
-      if (typeof COORDINATE !== "undefined" && COORDINATE && COORDINATE.length) {
-        const c = COORDINATE.find((x) => x.id === cid);
-        if (c) return c.muscolo;
-      }
-    } catch (e) {}
-    return cid;
-  }
-
   /* ---------- editor: trascinamento di un punto del meridiano ---------- */
   function moveMerPointTo(marker, cx, cy) {
     const mm = MM(); if (!mm || !bodyGroup) return;
@@ -900,6 +890,21 @@
     syncChips();
     renderMerPointInfo(m, ref);
     tavMark({ kind: "mer", merId: ref.merId, idx: ref.idx, ramo: ref.ramo });
+  }
+
+  /* "M4" del manuale Costituzioni e "MP4" dei dati sono lo stesso punto:
+     links.js normalizza la sigla, qui si cerca e si inquadra. */
+  function selectMerPointBySigla(sigla) {
+    const mm = MM(); if (!mm || !sigla) return false;
+    const L = window.Links;
+    const norm = (L && L.siglaPunto(sigla)) ? L.siglaPunto(sigla).sigla : sigla;
+    const f = mm.findPunto(norm) || mm.findPunto(sigla);
+    if (!f) return false;
+    mm.setVisible(f.mer.id, true);
+    selectMerPoint({ merId: f.mer.id, idx: f.idx, side: 1, ramo: f.ramo });
+    const n = f.nodo;
+    if (n && n.x != null) focusOn({ x: n.x, y: n.y, z: n.z }, 1.3);
+    return true;
   }
 
   function selectMeridiano(id) {
@@ -952,10 +957,31 @@
     let h = '<div class="meractions">';
     h += '<button type="button" class="ebtn ebtn--mini" data-mact="iso" data-mid="' + esc(m.id) + '">Mostra solo questo</button>';
     h += '<button type="button" class="ebtn ebtn--mini" data-mact="all">Mostra tutti</button>';
-    (m.coordinate || []).forEach((cid) => {
-      h += '<a class="ebtn ebtn--mini ebtn--link" href="#/' + encodeURIComponent(cid) + '">Coordinata: ' + esc(coordLabel(cid)) + '</a>';
-    });
-    return h + '</div>';
+    return h + '</div>' + merXLinks(m.id);
+  }
+  /* Collegamenti verso le altre sezioni: il grafo sta in links.js, qui si
+     incolla soltanto. Sono <a> veri, quindi funziona anche "apri in nuova scheda". */
+  function merXLinks(id) {
+    const L = window.Links;
+    if (!L || !id) return "";
+    return L.box("Collegamenti", [
+      L.row("Coordinate", L.chipsCoord(id)),
+      L.row("Punti d'allarme", L.chipsPunti(id)),
+      L.row("Costituzioni", L.chipsCost(id))
+    ]);
+  }
+  function puntoXLinks(p) {
+    const L = window.Links;
+    if (!L || !p || p.kind === "landmark") return "";
+    const id = L.merOfPunto(p);
+    if (!id) return "";
+    const m = L.mer(id);
+    return L.box("Collegamenti", [
+      L.row("Meridiano", [m ? L.chipMer(id, m.nome) : ""]),
+      L.row("Coordinate", L.chipsCoord(id)),
+      L.row("Costituzioni", L.chipsCost(id)),
+      L.row("Altri punti dello stesso meridiano", L.chipsPunti(id, p.id))
+    ]);
   }
 
   function renderMerPointInfo(m, ref) {
@@ -1376,6 +1402,7 @@
     // meridiani
     selectMeridiano: selectMeridiano,
     selectMerPoint: selectMerPoint,
+    selectMerPointBySigla: selectMerPointBySigla,
     probeAt: probeAt,
     setView: setView,
     setZona: setZona,

@@ -736,3 +736,69 @@ body.editing .punti__canvas{ cursor:crosshair; outline:2px solid color-mix(in sr
 .mpfig{ margin:8px 0 0; }
 .mpfig img{ width:100%; border-radius:10px; background:#fff; border:1px solid var(--line); cursor:zoom-in; }
 .mpfig figcaption{ color:var(--muted); font-size:.78rem; margin-top:4px; }
+
+/* ================== INDICATORE AREA DATI (testata) ==================
+   Tre stati: area non creata (grigio), bloccata (ambra), sbloccata
+   (verde, pulsante). Serve a sapere a colpo d'occhio se quello che si
+   scrive viene davvero registrato. */
+.vbadge{ margin-left:auto; align-self:center; display:inline-flex; align-items:center; gap:7px;
+  font:inherit; font-size:.78rem; font-weight:700; line-height:1; cursor:pointer;
+  padding:7px 12px; border-radius:999px; border:1px solid var(--line);
+  background:var(--input-bg); color:var(--ink); white-space:nowrap; }
+.vbadge:hover{ border-color:var(--brand); }
+.vbadge + .themebtn{ margin-left:8px; }
+.vbadge__dot{ width:9px; height:9px; border-radius:50%; flex:0 0 auto; background:var(--muted); }
+.vbadge[data-state="off"]{ color:var(--muted); }
+.vbadge[data-state="locked"]{ border-color:#d99b2a; color:#a8721a; }
+.vbadge[data-state="locked"] .vbadge__dot{ background:#d99b2a; }
+body.dark .vbadge[data-state="locked"]{ color:#f0be6b; }
+.vbadge[data-state="on"]{ border-color:color-mix(in srgb, var(--brand) 55%, var(--line)); color:var(--brand); }
+.vbadge[data-state="on"] .vbadge__dot{ background:var(--brand); animation:vpulse 2.4s ease-in-out infinite; }
+@keyframes vpulse{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb, var(--brand) 55%, transparent); }
+                   50%{ box-shadow:0 0 0 5px color-mix(in srgb, var(--brand) 0%, transparent); } }
+@media (prefers-reduced-motion: reduce){ .vbadge[data-state="on"] .vbadge__dot{ animation:none; } }
+@media (max-width:560px){ .vbadge__t{ display:none; } .vbadge{ padding:9px; } }
+
+/* ================== COLLEGAMENTI FRA SEZIONI ==================
+   Chip generati da links.js: <a> veri, quindi apribili in nuova scheda
+   e raggiungibili da tastiera. --xc è il colore del meridiano. */
+.xlinks{ margin:14px 0 4px; }
+.xlinks__h{ font-size:.78rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:8px; }
+.xlinks__row{ display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 10px; margin-bottom:9px; }
+.xlinks__lb{ flex:0 0 auto; min-width:9.5rem; font-size:.78rem; font-weight:700; color:var(--muted); }
+.xlinks__set{ display:flex; flex-wrap:wrap; gap:6px; flex:1 1 14rem; }
+.xlinks__hint{ margin-top:4px; font-size:.78rem; color:var(--muted); }
+.xlinks--strip{ margin:10px 0 0; padding-top:10px; border-top:1px dashed var(--line); }
+.xlinks--strip .xlinks__row{ margin-bottom:0; }
+.xlinks__more{ display:inline-block; margin-top:8px; font-size:.78rem; font-weight:700;
+  color:var(--brand); text-decoration:none; }
+.xlinks__more:hover{ text-decoration:underline; }
+
+.xlink{ display:inline-flex; align-items:center; gap:6px; max-width:100%; min-width:0;
+  font-size:.8rem; font-weight:700; line-height:1.2; text-decoration:none;
+  padding:6px 11px 6px 8px; border-radius:999px;
+  border:1px solid var(--line); background:var(--card); color:var(--ink); }
+.xlink:hover{ border-color:var(--brand); background:color-mix(in srgb, var(--brand) 7%, var(--card)); }
+.xlink:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; }
+.xlink__ic{ font-size:.72rem; line-height:1; color:var(--xc, var(--muted)); flex:0 0 auto; }
+.xlink__t{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:22ch; }
+.xlink__s{ font-weight:600; font-size:.72rem; color:var(--muted); white-space:nowrap;
+  min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.xlink--mer .xlink__ic{ font-size:.85rem; }
+.xlink--punto .xlink__ic{ color:#c0392b; }
+.xlink--cost .xlink__ic{ color:#7a5cc4; }
+
+/* Riferimento in linea dentro un testo discorsivo */
+.xref{ color:var(--brand); text-decoration:none; border-bottom:1px dotted currentColor; }
+.xref:hover{ border-bottom-style:solid; }
+
+/* Su schermo stretto l'etichetta della riga va sopra i chip, non a fianco:
+   con 9.5rem di etichetta restano ~200px per un chip e le voci lunghe
+   ("Muscolo Psoas, posizione Milza") sfondavano la pagina. */
+@media (max-width:640px){
+  .xlinks__row{ flex-direction:column; align-items:stretch; gap:5px; }
+  .xlinks__lb{ min-width:0; }
+  .xlink__t{ max-width:17ch; }
+  .xlink__s{ max-width:13ch; }
+}
