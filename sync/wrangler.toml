@@ -6,4 +6,7 @@ compatibility_date = "2025-01-01"
 binding = "DB"
 database_name = "kin-sync"
 # Sostituisci con l'id stampato da: wrangler d1 create kin-sync
-database_id = "59d6837c-51b3-417f-a9a5-82bfe5bb8bf4"
+# Vuoto di proposito: il database dell'autore è stato cancellato il 22/08/2026
+# e non esiste più alcun server condiviso. Chi installa questo Worker crea il
+# proprio database e incolla qui il suo id.
+database_id = ""

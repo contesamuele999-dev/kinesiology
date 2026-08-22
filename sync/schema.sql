@@ -2,7 +2,9 @@
 CREATE TABLE IF NOT EXISTS spaces (
   space        TEXT PRIMARY KEY,
   seq          INTEGER NOT NULL DEFAULT 0,
-  -- Prova dell'accettazione dei termini (nomina a responsabile, art. 28 GDPR).
+  -- Data e versione dei termini accettati dall'operatore. NON è una nomina a
+  -- responsabile: chi installa questo Worker lo gestisce per sé, e il rapporto
+  -- ex art. 28 GDPR è fra lui e il proprio hosting (vedi README, «Ruoli»).
   accepted_ver TEXT,
   accepted_at  TEXT
 );

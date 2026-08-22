@@ -78,8 +78,8 @@ async function sync(env, space, body, invite) {
     await env.DB.prepare("INSERT INTO spaces(space, seq) VALUES(?, 0) ON CONFLICT(space) DO NOTHING")
       .bind(space).run();
 
-    /* Prova dell'accettazione dei termini: si scrive la prima e non si tocca più,
-       così resta la data reale della nomina anche se il client la rimanda. */
+    /* Presa d'atto dei termini: si scrive la prima volta e non si tocca più,
+       così resta la data reale anche se il client la rimanda. */
     const acc = body && body.accetto;
     if (acc && acc.ver && acc.at)
       await env.DB.prepare(

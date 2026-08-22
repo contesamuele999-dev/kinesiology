@@ -125,6 +125,24 @@ allegati conta grosso modo qualche decina di operatori, poi si passa al piano a
 - Dati sanitari su un server terzo: sono cifrati end-to-end, ma il rapporto con
   Cloudflare resta un trattamento (GDPR art. 28). Accetta il DPA dal pannello
   Cloudflare e, se vuoi tenere tutto in UE, attiva la *EU data boundary*.
+
+## Ruoli: chi installa questo Worker se ne assume la responsabilità
+
+Questo componente **non è un servizio erogato dall'autore dell'app**, che non
+gestisce alcun server e non tratta alcun dato (vedi `termini.html`, sezione 6).
+È codice che metti in funzione tu.
+
+Nel momento in cui lo installi e ci fai sincronizzare dei dati sanitari:
+
+- se lo usi **solo per i tuoi pazienti**, resti tu titolare del trattamento e
+  Cloudflare è il tuo responsabile: ti serve il DPA di Cloudflare, nient'altro;
+- se lo apri **ad altri operatori**, diventi tu il loro responsabile del
+  trattamento ex art. 28 GDPR, con tutto quello che comporta — accordo scritto
+  con ciascuno, registro dei trattamenti (art. 30 §2, senza esenzioni PMI
+  quando ci sono dati dell'art. 9), notifica delle violazioni, diritto di
+  ispezione. La cifratura end-to-end riduce molto il rischio, non la qualifica.
+
+La seconda strada è una scelta seria: valutala prima, non dopo.
 - «Cancella tutto» nell'app svuota il dispositivo. Per svuotare anche il
   server usa **prima** il pulsante «Cancella anche sul server»: dopo il wipe
   locale il token non è più derivabile.
