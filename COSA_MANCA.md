@@ -30,6 +30,11 @@
       durante la seduta, timeline e confronto con la precedente, agenda con stati ed
       export `.ics`, backup cifrato `.kin`, stampa scheda/riepilogo, export ed
       eliminazione per singolo paziente. Test: `node tools/test_vault.js`.
+- [x] **Nessun server fornito** (scelta legale, non tecnica): `config.js` ha `syncUrl` vuoto e
+      `syncAuto: false`. Chi non gestisce un server non è responsabile del trattamento ex
+      art. 28 GDPR; privacy e termini sono stati riscritti di conseguenza (`LEGAL_VER: "2"`,
+      così gli operatori riaccettano la versione nuova). Il codice del Worker resta in `sync/`
+      per chi vuole ospitarselo: in quel caso il ruolo di responsabile è suo.
 - [x] **Sync fra dispositivi**, end-to-end cifrato: Cloudflare Workers + D1 (piano gratuito).
       Il server vede solo ciphertext; token = seconda metà della derivazione PBKDF2.
       Conflitti last-write-wins, cancellazioni con lapidi. Codice e istruzioni in `sync/`.
@@ -42,6 +47,10 @@
       dove ritrovare le informazioni correlate e la mappa 3D ha indirizzi profondi
       (`#punti/mer/<id>`, `#punti/mer/<id>/<sigla>`, `#punti/p/<id>`).
       Test: `node tools/test_links.js` (197 controlli).
+- [x] **Anteprima delle sedute** nella timeline del paziente: coordinate testate con esito
+      (pallino verde/rosso/grigio) oppure, se non ne sono state aggiunte a mano, ciò che l'app
+      ha registrato da sola durante la seduta, più una riga di indicatori (durata, scala
+      pre→post, correzioni, essenze, compiti, foto, note). Prima mostrava data e trattino.
 - [x] **Indicatore «i dati vengono salvati»** in testata: tre stati (area non creata /
       bloccata / sbloccata) più lo stato del sync, aggiornato da `Vault.onLock`/`onUnlock`.
 

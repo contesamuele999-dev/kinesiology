@@ -16,24 +16,32 @@ I dati restano **sul dispositivo**, cifrati (AES-GCM 256, chiave da passphrase c
 600k) e protetti da passphrase con blocco automatico. **Non esiste alcun recupero della
 passphrase**: annotala e usa i backup (Impostazioni → Esporta backup).
 
-Per usare l'app su più dispositivi c'è un **sync end-to-end** opzionale: il server riceve
-solo ciphertext e non può leggere nulla. Installazione e limiti in [`sync/README.md`](sync/README.md).
-Per aggiungere un dispositivo si importa il backup `.kin` e poi si sincronizza: ricreare
-l'area con la stessa passphrase **non** basta (ogni area ha un salt casuale).
+Per usare l'app su più dispositivi il modo previsto è il **backup cifrato** `.kin`: si esporta
+da un dispositivo e si importa nell'altro. Ricreare l'area con la stessa passphrase **non**
+basta (ogni area ha un salt casuale).
+
+Esiste anche un **sync end-to-end** opzionale, ma **non è preconfigurato**: `assets/js/config.js`
+ha `syncUrl` vuoto e nessun server viene fornito. Chi lo vuole se lo installa
+([`sync/README.md`](sync/README.md)) e ne incolla l'indirizzo nelle impostazioni. È una scelta
+deliberata: chi non gestisce alcun server non è responsabile del trattamento ex art. 28 GDPR.
+Se attivi un server tuo, quel ruolo lo assumi tu (o il tuo hosting) e i testi legali vanno
+riscritti di conseguenza.
 
 ## Testi legali
 `privacy.html` e `termini.html` sono **modelli da far rivedere a un legale**: compila i campi
 tra parentesi quadre (nome, P.IVA, indirizzo, email, foro, date) prima di pubblicare.
-La sezione 6 dei Termini è la nomina a responsabile ex art. 28 GDPR: vale come contratto solo
-se l'operatore l'accetta, e l'app registra l'accettazione (versione + data) sul dispositivo e
-sul server di sync. Se cambi i testi in modo sostanziale, alza `LEGAL_VER` in
-`assets/js/pazienti.js` per richiedere una nuova accettazione.
+La sezione 6 dei Termini **non è più una nomina a responsabile**: dichiara che il Fornitore
+non tratta alcun dato, coerentemente con l'assenza di un server. Se un giorno riattivi un
+server tuo, quella nomina va ripristinata, altrimenti il testo non corrisponde ai fatti.
+L'app registra l'accettazione (versione + data) sul dispositivo. Se cambi i testi in modo
+sostanziale, alza `LEGAL_VER` in `assets/js/pazienti.js` per richiedere una nuova accettazione
+(attualmente `"2"`).
 
 ## Struttura
 ```
 index.html               → pagina unica
 privacy.html             → informativa privacy (modello)
-termini.html             → termini d'uso + nomina a responsabile (modello)
+termini.html             → termini d'uso (modello; il Fornitore non tratta dati)
 assets/css/style.css     → grafica
 assets/css/pazienti.css  → grafica area pazienti
 assets/js/data.js        → CONTENUTI (da compilare dai manuali)

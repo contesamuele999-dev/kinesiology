@@ -174,3 +174,23 @@ a.pz-coord__l{ text-decoration:none; }
 .pz-voce__go{ font-size:.78rem; font-weight:700; white-space:nowrap; }
 .pz-box .xlinks{ margin-top:8px; }
 .pz-box .xlinks__row{ margin-bottom:0; }
+
+/* --- Anteprima della seduta nella timeline del paziente ---
+   Due righe: cosa è stato testato o consultato, e sotto gli indicatori
+   di cosa è stato fatto. Sostituisce la vecchia riga "data + trattino". */
+.pz-timeline__b{ align-items:flex-start; text-align:left; }
+.pz-timeline__d{ display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
+.pz-tl__body{ display:flex; flex-direction:column; gap:5px; min-width:0; flex:1 1 auto; }
+.pz-timeline__t{ display:flex; flex-wrap:wrap; align-items:center; gap:3px 12px; line-height:1.35; }
+.pz-tl__co{ display:inline-flex; align-items:center; gap:6px; font-weight:600; }
+.pz-tl__dot{ width:8px; height:8px; border-radius:50%; flex:0 0 auto; background:var(--muted); }
+.pz-tl__dot--ok{ background:#2e9e6b; }
+.pz-tl__dot--ko{ background:#c0392b; }
+.pz-tl__dot--nt{ background:var(--muted); opacity:.45; }
+.pz-tl__cons{ font-size:.72rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--muted); border:1px solid var(--line); border-radius:6px; padding:1px 6px; margin-right:2px; }
+.pz-tl__piu{ font-size:.76rem; font-weight:700; color:var(--muted); }
+.pz-tl__meta{ display:flex; flex-wrap:wrap; gap:4px 6px; }
+.pz-tl__b{ font-size:.73rem; font-weight:600; color:var(--muted); line-height:1.5;
+  background:var(--input-bg); border:1px solid var(--line); border-radius:999px; padding:1px 9px;
+  max-width:26ch; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }

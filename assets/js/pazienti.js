@@ -38,7 +38,7 @@
   function syncInvito() { return lsGet(LS_SYNC_INVITE) || CFG.syncInvito || ""; }
   /* Versione dei testi legali: cambiala quando modifichi privacy/termini in
      modo sostanziale, così l'accettazione viene richiesta di nuovo. */
-  var LEGAL_VER = "1";
+  var LEGAL_VER = "2";
   function accettazione() {
     try { return JSON.parse(lsGet(LS_LEGAL) || "null"); } catch (e) { return null; }
   }
@@ -403,13 +403,58 @@
     return L.box("", [L.row("", chips)]);
   }
 
+  /* ---------- Anteprima di una seduta nella timeline del paziente ----------
+     Mostrava solo le coordinate aggiunte a mano, che quasi nessuno compila:
+     il risultato era una riga con la data e un trattino. Qui si ripiega su
+     ciò che l'app ha registrato da sola (le voci consultate) e si aggiunge
+     una riga di indicatori, così la timeline dice davvero com'è andata. */
+  function taglia(t, n) {
+    t = String(t == null ? "" : t).replace(/\s+/g, " ").trim();
+    return t.length > n ? t.slice(0, n - 1).replace(/\s+$/, "") + "…" : t;
+  }
+  var ESITO = { forte: ["ok", "forte"], debole: ["ko", "debole"], nt: ["nt", "non testato"] };
+  function sessionPreview(s) {
+    var co = s.coordinate || [], voci = s.voci || [];
+    var titolo;
+    if (co.length) {
+      titolo = co.slice(0, 3).map(function (c) {
+        var e = ESITO[c.esito] || ESITO.nt;
+        return '<span class="pz-tl__co"><i class="pz-tl__dot pz-tl__dot--' + e[0] +
+          '" title="' + e[1] + '"></i>' + esc(taglia(c.label, 46)) + "</span>";
+      }).join("") + (co.length > 3 ? '<span class="pz-tl__piu">+' + (co.length - 3) + "</span>" : "");
+    } else if (voci.length) {
+      /* Se ha spuntato qualcosa contano solo quelle: il resto era sfogliare. */
+      var usate = voci.filter(function (v) { return v.usato; });
+      var lista = usate.length ? usate : voci;
+      titolo = '<span class="pz-tl__cons">Consultato</span>' +
+        lista.slice(0, 3).map(function (v) { return esc(taglia(v.label, 40)); }).join(" · ") +
+        (lista.length > 3 ? '<span class="pz-tl__piu">+' + (lista.length - 3) + "</span>" : "");
+    } else {
+      titolo = '<span class="pz-muted">Nessuna coordinata registrata</span>';
+    }
+    var meta = [];
+    if (co.length && voci.length) meta.push(voci.length + (voci.length === 1 ? " sezione" : " sezioni") + " consultate");
+    if (s.durataMin) meta.push(s.durataMin + " min");
+    if (s.pre != null && s.post != null) meta.push("scala " + s.pre + " → " + s.post);
+    if (s.correzioni) meta.push("correzioni: " + taglia(s.correzioni, 32));
+    if (s.essenze) meta.push("essenze: " + taglia(s.essenze, 32));
+    if (s.compitiCasa) meta.push("compiti a casa");
+    if (s.prossimoPasso) meta.push("prossimo passo");
+    if ((s.allegati || []).length) meta.push(s.allegati.length + (s.allegati.length === 1 ? " foto" : " foto"));
+    if (s.note) meta.push("note");
+    return { titolo: titolo, meta: meta };
+  }
   function sessionRow(s) {
-    var co = (s.coordinate || []).map(function (c) { return c.label; }).join(" · ");
+    var a = sessionPreview(s);
     return '<li><button class="pz-link pz-timeline__b" data-act="apri-sessione" data-id="' + esc(s.id) + '">' +
-      '<span class="pz-timeline__d">' + fmtShort(s.date) + "</span>" +
-      '<span class="pz-timeline__t">' + esc(co || "—") +
-      (s.essenze ? ' <span class="pz-muted">· ' + esc(s.essenze) + "</span>" : "") +
-      (s.stato === "bozza" ? ' <span class="pz-tag pz-tag--bozza">bozza</span>' : "") + "</span></button></li>";
+      '<span class="pz-timeline__d">' + fmtShort(s.date) +
+        (s.stato === "bozza" ? '<span class="pz-tag pz-tag--bozza">bozza</span>' : "") + "</span>" +
+      '<span class="pz-tl__body">' +
+        '<span class="pz-timeline__t">' + a.titolo + "</span>" +
+        (a.meta.length ? '<span class="pz-tl__meta">' + a.meta.map(function (m) {
+          return '<span class="pz-tl__b">' + esc(m) + "</span>";
+        }).join("") + "</span>" : "") +
+      "</span></button></li>";
   }
   function ricorrenzeBox(ses) {
     var cnt = {};
@@ -659,8 +704,10 @@
       "</section>" +
 
       '<section class="pz-box"><h3>Sync fra dispositivi</h3>' +
-        '<p class="pz-muted">Facoltativo. I dati viaggiano <strong>già cifrati</strong>: il server non può leggerli. ' +
-        'Istruzioni per attivarlo: cartella <code>sync/</code>.</p>' +
+        '<p class="pz-muted">Facoltativo e <strong>non preconfigurato</strong>: ' +
+        "l'app non è collegata ad alcun " +
+        'server. Se ne vuoi uno devi installartelo (istruzioni nella cartella <code>sync/</code>) e incollarne ' +
+        "qui l'indirizzo. I dati viaggiano <strong>già cifrati</strong>: il server non può leggerli.</p>" +
         '<p class="pz-warn">Per aggiungere un dispositivo: <strong>esporta il backup da qui e importalo là</strong> ' +
         "(schermata iniziale dell'area pazienti), poi incolla lo stesso indirizzo. " +
         "Ricreare l'area con la stessa passphrase <strong>non basta</strong>: sarebbe uno spazio separato e vuoto.</p>" +
@@ -670,7 +717,8 @@
           '<input type="text" id="pzSyncInvite" value="' + esc(syncInvito()) + '" /></label>' +
         '<label class="pz-f pz-f--check"><input type="checkbox" id="pzAccetto"' + (accettato() ? " checked" : "") + " />" +
           '<span>Ho letto <a href="privacy.html">privacy</a> e <a href="termini.html">termini</a> ' +
-          "e accetto la nomina del fornitore a responsabile del trattamento (art. 28 GDPR).</span></label>" +
+          "e prendo atto che, attivando un server mio, resto <strong>unico titolare</strong> " +
+          "e che l'accordo ex art. 28 GDPR va stipulato con chi ospita quel server.</span></label>" +
         '<p class="pz-muted" id="pzSyncState">' + esc(syncStato()) + "</p>" +
         '<button class="ebtn ebtn--primary" data-act="sync-now">⇅ Sincronizza adesso</button> ' +
         '<label class="pz-f pz-f--check"><input type="checkbox" id="pzSyncAuto"' + (syncAutoOn() ? " checked" : "") + " />" +

@@ -1,19 +1,19 @@
 /* config.js — configurazione della copia pubblicata dell'app.
-   Modifica questo file UNA VOLTA, prima di pubblicare: tutti gli utenti che
-   installano l'app trovano il sync già impostato e non devono incollare niente.
-   Le impostazioni dell'app restano modificabili dal singolo operatore e, se
-   le cambia, vincono sulle scelte fatte qui. */
-window.KIN_CONFIG = {
-  /* Indirizzo del Worker di sync. Vuoto = nessun sync preconfigurato:
-     l'app funziona solo in locale finché l'operatore non ne inserisce uno.
-     Esempio: "https://kin-sync.tuonome.workers.dev" */
-  syncUrl: "https://kin-sync.kinesiology.workers.dev/",
 
-  /* Codice di invito, se il Worker ne richiede uno (variabile INVITE_CODES).
-     Serve solo alla prima attivazione di ogni nuovo operatore. */
+   Il Fornitore NON eroga alcun server: l'app funziona interamente sul
+   dispositivo e nessun dato esce di lì. Chi vuole sincronizzare fra più
+   dispositivi installa un proprio Worker (istruzioni in sync/README.md) e
+   ne incolla l'indirizzo nelle impostazioni: da quel momento il
+   responsabile del trattamento è chi gestisce quel server, non l'autore
+   dell'app. Lasciare syncUrl vuoto è quindi una scelta, non una svista. */
+window.KIN_CONFIG = {
+  /* Indirizzo di un Worker di sync. Vuoto = nessun server preconfigurato. */
+  syncUrl: "",
+
+  /* Codice di invito, se il Worker ne richiede uno (variabile INVITE_CODES). */
   syncInvito: "",
 
-  /* Con un syncUrl impostato, il sync automatico parte da solo.
-     Metti false se preferisci che ogni operatore lo accenda a mano. */
-  syncAuto: true
+  /* Il sync automatico non parte mai da solo: lo accende l'operatore
+     dopo aver configurato un server proprio. */
+  syncAuto: false
 };

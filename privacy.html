@@ -23,8 +23,8 @@
   <main class="legal">
     <p class="legal__lead">Questa app registra dati sanitari. Qui c'è scritto dove finiscono,
       chi può leggerli e cosa puoi pretendere. In breve: <strong>i dati restano sul tuo
-      dispositivo, cifrati</strong>, e chi gestisce il server di sincronizzazione
-      <strong>non è in grado di leggerli</strong>.</p>
+      dispositivo, cifrati</strong>, e <strong>non esiste alcun server</strong> a cui vengano
+      inviati. Chi ha scritto l'app non li riceve e non è in condizione di riceverli.</p>
 
     <h2>1. Chi tratta quali dati</h2>
     <p>Vanno distinti due piani, perché i ruoli sono diversi.</p>
@@ -33,10 +33,13 @@
       professionista) che usa l'app. È lui a decidere quali dati raccogliere, a raccogliere il
       consenso dei pazienti e a rispondere verso di loro.</p>
     <p>Il fornitore dell'app, <strong>[TUO NOME O RAGIONE SOCIALE], [INDIRIZZO], P.IVA/C.F.
-      [P.IVA]</strong>, agisce come <strong>responsabile del trattamento</strong> (art. 28 GDPR)
-      limitatamente al servizio di sincronizzazione, e solo su dati cifrati che non è in grado
-      di decifrare. I termini della nomina sono nella
-      <a href="termini.html">pagina Termini</a>, sezione «Nomina a responsabile».</p>
+      [P.IVA]</strong>, <strong>non è responsabile del trattamento</strong> ai sensi dell'art. 28
+      GDPR e non tratta alcun dato: fornisce un programma che gira sul tuo dispositivo, non
+      gestisce server e non riceve nulla. La ripartizione dei ruoli è nella
+      <a href="termini.html">pagina Termini</a>, sezione 6.</p>
+    <p>Se scegli di attivare la sincronizzazione verso un <strong>server tuo</strong> (vedi
+      punto 5), il responsabile del trattamento è chi gestisce quel server — tipicamente il tuo
+      fornitore di hosting — e l'accordo previsto dall'art. 28 lo stipuli tu con lui.</p>
     <h3>b) Dati dell'operatore che usa l'app</h3>
     <p>L'app <strong>non ha account, non chiede email, non chiede registrazione</strong>.
       Non raccogliamo il tuo nome né i tuoi dati di contatto per farla funzionare.</p>
@@ -47,9 +50,10 @@
         Ogni record è cifrato con AES-GCM a 256 bit; la chiave deriva dalla tua passphrase
         con PBKDF2-SHA256 a 600.000 iterazioni e resta solo in memoria, mai su disco,
         mai in rete.</li>
-      <li><strong>Sul server di sincronizzazione</strong>, solo se attivi la funzione.
-        Il server riceve identificativo, data di modifica e <em>testo cifrato</em>:
-        non ha la chiave e non può ricostruire nome, note o diagnosi.</li>
+      <li><strong>Su un server</strong>, soltanto se sei tu ad averne configurato uno tuo:
+        l'app non ne ha nessuno preimpostato. Anche in quel caso il server riceve
+        identificativo, data di modifica e <em>testo cifrato</em>: non ha la chiave e non può
+        ricostruire nome, note o diagnosi.</li>
       <li><strong>Nei backup</strong> che esporti tu (file <code>.kin</code>): anch'essi cifrati,
         e da quel momento sotto la tua responsabilità (dove li salvi, chi li può prendere).</li>
     </ul>
@@ -65,40 +69,45 @@
     <h2>4. Cookie, tracciamento, statistiche</h2>
     <p><strong>Nessun cookie di profilazione, nessun tracciamento, nessuna statistica d'uso,
       nessun servizio di terze parti caricato dalle pagine.</strong> L'app usa solo lo spazio
-      tecnico del browser (localStorage) per ricordare tema, preferenze e l'indirizzo del
-      server di sync: sono dati tecnici che restano sul dispositivo e non identificano nessuno.</p>
+      tecnico del browser (localStorage) per ricordare tema, preferenze ed eventualmente
+      l'indirizzo di un server che hai configurato tu: sono dati tecnici che restano sul
+      dispositivo e non identificano nessuno.</p>
 
-    <h2>5. Cosa registra il server di sincronizzazione</h2>
-    <p>Se attivi il sync, il servizio è ospitato su <strong>Cloudflare Workers e D1</strong>
-      (Cloudflare, Inc.). Vengono trattati:</p>
+    <h2>5. Se configuri un server tuo</h2>
+    <p>L'app <strong>non è collegata ad alcun server</strong>. Nella cartella <code>sync/</code>
+      c'è il codice per installarne uno per conto proprio: è una scelta tua, e se la fai le
+      conseguenze ricadono su di te, non su chi ha scritto l'app.</p>
+    <p>In quel caso il server riceve:</p>
     <ul class="pz-ul">
       <li>il testo cifrato dei tuoi record, con identificativo e data di modifica;</li>
       <li>un identificativo dello spazio, ottenuto come impronta (SHA-256) del token: non
         contiene la passphrase e non permette di risalire a te;</li>
-      <li>dati tecnici di connessione gestiti da Cloudflare (indirizzo IP, data e ora della
-        richiesta), per sicurezza e prevenzione degli abusi.</li>
+      <li>i dati tecnici di connessione che registra l'hosting scelto (indirizzo IP, data e
+        ora della richiesta).</li>
     </ul>
-    <p>Cloudflare può trattare dati anche fuori dall'Unione Europea, sulla base delle clausole
-      contrattuali standard. Se il fornitore ha attivato l'opzione <em>EU data boundary</em>,
-      il trattamento resta nell'area UE.</p>
+    <p>Prima di attivarlo verifica dove si trovano fisicamente i dati: se l'hosting li tratta
+      fuori dall'Unione Europea servono garanzie adeguate (di norma le clausole contrattuali
+      standard). Con dati sanitari è una verifica che conviene fare, non un dettaglio.</p>
 
     <h2>6. Per quanto tempo</h2>
     <p>I dati restano finché li tieni tu: non c'è cancellazione automatica. Puoi eliminare un
-      singolo paziente, svuotare il dispositivo («Cancella tutto») e svuotare lo spazio sul
-      server («Cancella anche sul server»). La cancellazione sul server è definitiva e immediata.</p>
+      singolo paziente e svuotare il dispositivo («Cancella tutto»). Se hai configurato un
+      server tuo, l'app offre anche «Cancella anche sul server»: la cancellazione è definitiva
+      e immediata.</p>
 
     <h2>7. Diritti dei pazienti</h2>
     <p>I pazienti possono chiedere accesso, rettifica, cancellazione, limitazione e portabilità
       dei propri dati. Le richieste vanno rivolte <strong>all'operatore</strong>, che è il
       titolare. L'app lo aiuta: da ogni scheda paziente si può <strong>esportare</strong> tutto
       in formato leggibile (JSON) ed <strong>eliminare</strong> l'intero fascicolo.</p>
-    <p>Il fornitore del server non può dare seguito direttamente a queste richieste, perché non
-      è in grado di identificare né leggere i dati di un singolo paziente.</p>
+    <p>Il fornitore dell'app non può dare seguito a queste richieste in alcun modo: non ha
+      accesso ai dati, che stanno soltanto sul tuo dispositivo.</p>
 
     <h2>8. Sicurezza, e i suoi limiti</h2>
     <p>Misure adottate: cifratura AES-GCM 256 a riposo, derivazione della chiave con PBKDF2
       600.000 iterazioni, chiave non estraibile e mai trasmessa, blocco automatico dopo
-      inattività, trasporto in TLS, isolamento per spazio sul server.</p>
+      inattività e blocco automatico dopo inattività. Se hai configurato un server tuo, il
+      trasporto avviene in TLS e ogni spazio è isolato dagli altri.</p>
     <p>Detto onestamente, cosa <strong>non</strong> copre:</p>
     <ul class="pz-ul">
       <li>non protegge da un dispositivo già compromesso (keylogger, estensioni malevole,
@@ -110,19 +119,22 @@
     </ul>
 
     <h2>9. Violazioni dei dati</h2>
-    <p>Se il fornitore rileva una violazione che riguarda lo spazio di sincronizzazione,
-      lo comunica agli operatori interessati <strong>senza ingiustificato ritardo</strong>,
-      con le informazioni utili alla valutazione. La notifica al Garante entro 72 ore, quando
-      dovuta, spetta all'operatore in quanto titolare.</p>
+    <p>Poiché i dati non transitano da alcun sistema del fornitore dell'app, una violazione può
+      avvenire solo sul tuo dispositivo, nei tuoi backup o su un server che hai configurato tu.
+      Rilevarla, valutarla e — quando dovuta — notificarla al Garante entro 72 ore spetta a te
+      in quanto titolare.</p>
+    <p>Se il fornitore dell'app viene a conoscenza di una vulnerabilità del programma, la
+      segnala agli operatori <strong>senza ingiustificato ritardo</strong> insieme alla
+      correzione.</p>
 
     <h2>10. Contatti</h2>
     <p>[TUO NOME O RAGIONE SOCIALE] — [EMAIL DI CONTATTO] — [PEC, se presente].<br />
       Reclami: Garante per la protezione dei dati personali, <a href="https://www.gpdp.it"
       rel="noopener">www.gpdp.it</a>.</p>
 
-    <p class="legal__ver">Versione 1 — [DATA]. Le modifiche sostanziali vengono segnalate
+    <p class="legal__ver">Versione 2 — [DATA]. Le modifiche sostanziali vengono segnalate
       nell'app alla prima apertura utile.</p>
-    <p class="legal__nav"><a href="termini.html">Termini d'uso e nomina a responsabile</a> ·
+    <p class="legal__nav"><a href="termini.html">Termini d'uso</a> ·
       <a href="index.html">Torna all'app</a></p>
   </main>
 </body>
