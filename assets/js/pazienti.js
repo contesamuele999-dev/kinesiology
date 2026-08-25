@@ -9,6 +9,10 @@
   if (!view || !V) return;
 
   var DATA = window.COORDINATE || [];
+  /* Testo libero dell'operatore reso cliccabile: se nelle note scrive
+     "Milza" o "VC8", quella parola porta alla scheda. Il grafo sta in
+     links.js. */
+  var AL = function (t, o) { return window.Links ? window.Links.autolink(t, o) : esc(t); };
   var esc = function (s) {
     return String(s == null ? "" : s)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -354,7 +358,7 @@
         AREE.map(function (a) {
           return '<label class="pz-f"><span>' + esc(a[1]) + "</span>" +
             '<textarea data-p="' + a[0] + '" rows="2">' + esc(p[a[0]] || "") + "</textarea></label>" +
-            (a[0] === "costituzione" ? costLinks(p.costituzione) : "");
+            (a[0] === "costituzione" ? costLinks(p.costituzione) : noteLinks(p[a[0]]));
         }).join("") +
       "</section>" +
 
@@ -387,6 +391,15 @@
   /* Dal testo libero "Costituzione & temperamento" alla scheda relativa:
      si riconosce il nome scritto (TAI YANG, Shao Yin…); se non c'è nulla di
      riconoscibile si offre il percorso guidato. */
+  /* Le note permanenti restano in una textarea, quindi il testo non si
+     può linkare dentro: i riferimenti riconosciuti (meridiani, muscoli,
+     punti, costituzioni) compaiono come chip sotto al campo. */
+  function noteLinks(txt) {
+    var L = window.Links;
+    if (!L || !L.chipsCitate) return "";
+    var chips = L.chipsCitate(txt, 6);
+    return chips.length ? L.box("", [L.row("Citati qui", chips)]) : "";
+  }
   function costLinks(txt) {
     var L = window.Links, D = window.COSTITUZIONI;
     if (!L || !D || !D.costituzioni) return "";
@@ -495,9 +508,11 @@
         "</div></div>" +
 
       (prev ? '<section class="pz-box pz-prev"><h3>Seduta precedente · ' + fmtShort(prev.date) + "</h3>" +
-        '<p><strong>Fatto:</strong> ' + esc((prev.coordinate || []).map(function (c) { return c.label; }).join(" · ") || "—") + "</p>" +
-        (prev.compitiCasa ? "<p><strong>Compiti assegnati:</strong> " + esc(prev.compitiCasa) + "</p>" : "") +
-        (prev.prossimoPasso ? '<p class="pz-hl"><strong>Da provare oggi:</strong> ' + esc(prev.prossimoPasso) + "</p>" : "") +
+        '<p><strong>Fatto:</strong> ' + ((prev.coordinate || []).length
+          ? (prev.coordinate || []).map(function (c) { return refLink("coordinata", c.ref, c.label, ""); }).join(" · ")
+          : "—") + "</p>" +
+        (prev.compitiCasa ? "<p><strong>Compiti assegnati:</strong> " + AL(prev.compitiCasa, { max: 4 }) + "</p>" : "") +
+        (prev.prossimoPasso ? '<p class="pz-hl"><strong>Da provare oggi:</strong> ' + AL(prev.prossimoPasso, { max: 4 }) + "</p>" : "") +
         "</section>" : "") +
 
       '<section class="pz-box"><h3>Quando</h3><div class="pz-grid">' +

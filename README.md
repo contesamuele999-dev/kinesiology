@@ -61,15 +61,36 @@ node tools/test_vault.js        → cifratura del vault
 node tools/test_sync.js         → derivazione del token e regole di conflitto
 node tools/test_worker.js       → server di sync su SQLite (due dispositivi simulati)
 node tools/test_costituzioni.js → contenuti costituzioni
-node tools/test_links.js        → collegamenti fra sezioni (197 controlli)
+node tools/test_links.js        → collegamenti fra sezioni (1559 controlli)
 node tools/dev_sync_server.js   → server di sync in locale, per provare l'app
 ```
 
 ## Collegamenti fra sezioni
 Coordinate, Punti d'Allarme e Costituzioni parlano tutte dello stesso oggetto — il
 **meridiano** — con nomi diversi ("Milza", "Milza (sx)", "M – P", "M4"). `assets/js/links.js`
-normalizza tutto su un unico id e da lì costruisce i collegamenti in ogni direzione, così
-ogni scheda mostra dove ritrovare le informazioni correlate. Indirizzi profondi disponibili:
+normalizza tutto su un unico id e da lì costruisce i collegamenti in ogni direzione. Oltre al
+meridiano il grafo conosce altre quattro dimensioni, tutte ricavate dai dati:
+
+- **elemento** — i 5 movimenti: da un meridiano si raggiungono gli altri dello stesso elemento;
+- **coppia yin/yang** — il meridiano accoppiato ("Accoppiato con" è un link, non più testo);
+- **orologio cinese** — precedente, successivo e opposto nel giro delle 24 ore;
+- **le 14 posizioni** di un muscolo — da una coordinata si salta a qualunque altra posizione
+  dello stesso muscolo senza tornare all'elenco;
+- **i fiori** — le due posizioni speculari coperte dallo stesso fiore e gli altri muscoli su
+  cui quel fiore torna.
+
+In più il testo discorsivo dei manuali è **cliccabile**: `Links.autolink()` riconosce nomi di
+meridiano e alias, muscoli, costituzioni, biotipi e sigle di punti MTC ("VC8", "M4", "P1") e li
+trasforma in `<a>`. Lavora sul testo grezzo e ricompone l'output escapando i pezzi in chiaro,
+quindi non può iniettare markup né annidare un link dentro un altro; salta la pagina su cui si
+è già, linka una sola volta per destinazione e mai una parola dentro un'altra parola. Le sezioni
+possono aggiungere un vocabolario locale (`opzioni.extra`): così i capitoli di teoria delle
+Costituzioni si citano a vicenda, con i termini ricavati dai loro stessi titoli.
+
+Dove il testo resta modificabile — le note del paziente sono in una `textarea` — i riferimenti
+riconosciuti compaiono come chip sotto al campo (`Links.chipsCitate`).
+
+Indirizzi profondi disponibili:
 
 ```
 #punti/mer/<id>          scheda di un meridiano sulla mappa 3D
@@ -77,11 +98,16 @@ ogni scheda mostra dove ritrovare le informazioni correlate. Indirizzi profondi 
 #punti/p/<id>            punto d'allarme (es. #punti/p/rene-dx)
 #/<coord>+<coord>        coordinata
 #cost/costituzione/<id>  costituzione
+#cost/biotipo/<id>       biotipo
+#cost/teoria/<id>        capitolo di teoria
+#cost/test/<id>          procedura di test
+#cost/coppia/<c>/<t>     coppia costituzione + temperamento
 ```
 
-Aggiungendo un meridiano, una coordinata o un punto i collegamenti si aggiornano da soli:
-non c'è nessun elenco di link scritto a mano. `node tools/test_links.js` verifica che ogni
-entità risalga al proprio meridiano e che ogni indirizzo generato punti a qualcosa che esiste.
+Aggiungendo un meridiano, una coordinata, un punto o un capitolo i collegamenti si aggiornano
+da soli: non c'è nessun elenco di link scritto a mano. `node tools/test_links.js` verifica che
+ogni entità risalga al proprio meridiano, che le nuove relazioni siano coerenti e reciproche e
+che l'autolink sia sicuro (niente markup iniettato, niente link annidati).
 
 ## Indicatore in testata
 Il badge accanto al pulsante del tema dice se i dati vengono salvati: grigio = area pazienti

@@ -788,10 +788,25 @@ body.dark .vbadge[data-state="locked"]{ color:#f0be6b; }
 .xlink--mer .xlink__ic{ font-size:.85rem; }
 .xlink--punto .xlink__ic{ color:#c0392b; }
 .xlink--cost .xlink__ic{ color:#7a5cc4; }
+.xlink--elem .xlink__ic{ color:#0d8a6a; }
+.xlink--ora .xlink__ic{ color:#b8860b; }
+.xlink--fiore .xlink__ic{ color:#c2568f; }
+.xlink--pos .xlink__ic{ color:var(--muted); }
+/* La posizione già aperta resta nell'elenco ma si distingue: serve a
+   capire dove si è fra le 14, non a essere ricliccata. */
+.xlink--pos.is-on{ border-color:var(--brand); background:color-mix(in srgb, var(--brand) 12%, var(--card)); }
+.xlink--pos.is-on .xlink__ic{ color:var(--brand); }
 
 /* Riferimento in linea dentro un testo discorsivo */
 .xref{ color:var(--brand); text-decoration:none; border-bottom:1px dotted currentColor; }
 .xref:hover{ border-bottom-style:solid; }
+/* Un <a> dentro una cella di tabella o una definizione eredita il peso
+   del testo: senza questo i link nelle kv/dl sparivano fra i grassetti. */
+.kv a.xref, .cotab a.xref, .pinfo__dl a.xref{ font-weight:inherit; }
+
+/* Riga di metadati del meridiano sotto la sua storia (elemento, natura, orario) */
+.mermeta{ margin:6px 0 0; font-size:.82rem; color:var(--muted); }
+.mermeta__k{ font-weight:700; text-transform:uppercase; letter-spacing:.03em; font-size:.72rem; }
 
 /* Su schermo stretto l'etichetta della riga va sopra i chip, non a fianco:
    con 9.5rem di etichetta restano ~200px per un chip e le voci lunghe

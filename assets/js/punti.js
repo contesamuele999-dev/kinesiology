@@ -14,6 +14,9 @@
   const esc = (s) => String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const cssEsc = (s) => String(s == null ? "" : s).replace(/["\\\]]/g, "\\$&");
+  /* Testo dei manuali reso cliccabile (nomi di meridiano, muscoli, sigle
+     dei punti): il grafo sta in links.js, qui si chiama e basta. */
+  const AL = (t, o) => (window.Links ? window.Links.autolink(t, o) : esc(t));
 
   let inited = false, THREE, renderer, scene, camera, raycaster, pointer;
   let bodyGroup, pointsGroup, markerMeshes = [], picked = null, hovered = null;
@@ -542,7 +545,15 @@
     if (p.regione) rows.push(["Regione", p.regione]);
     rows.push(["Vista", p.vista === "retro" ? "Posteriore (retro)" : "Anteriore (fronte)"]);
     if (p.lato) rows.push(["Lato", p.lato]);
-    if (p.meridiano) rows.push(["Meridiano", p.meridiano]);
+    if (p.meridiano) {
+      const L = window.Links;
+      const mid = L ? L.merOfPunto(p) : null;
+      rows.push(["Meridiano", mid ? { h: xrefMer(mid, p.meridiano) } : p.meridiano]);
+      const el = mid ? L.elementoOf(mid) : null;
+      const M = mid ? L.mer(mid) : null;
+      if (el) rows.push(["Elemento", el]);
+      if (M && M.orario && M.orario !== "—") rows.push(["Massima energia", M.orario]);
+    }
     const isLm = p.kind === "landmark";
     const idx = DATA.indexOf(p);
     const dotTxt = isLm ? "◇" : (idx + 1);
@@ -569,9 +580,9 @@
     }
     infoEl.innerHTML =
       '<div class="pinfo__head"><span class="pinfo__dot' + (isLm ? ' pinfo__dot--lm' : '') + '">' + dotTxt + '</span><h3>' + esc(p.organo) + '</h3></div>' +
-      (p.note ? '<p class="pinfo__note">' + esc(p.note) + '</p>' : '') +
+      (p.note ? '<p class="pinfo__note">' + AL(p.note, { max: 3 }) + '</p>' : '') +
       '<dl class="pinfo__dl">' +
-      rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join("") +
+      rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + val(v) + '</dd>').join("") +
       '</dl>' + mpBlockFor(p) + merBlockFor(p) + puntoXLinks(p) + editHtml;
     infoEl.hidden = false;
     wireMerActions();
@@ -941,17 +952,39 @@
   function merDot(m, txt) {
     return '<span class="pinfo__dot pinfo__dot--mer" style="background:' + esc(m.colore) + '">' + esc(txt || m.sigla) + '</span>';
   }
+  /* Un valore della scheda può essere testo (escapato) oppure un
+     frammento già pronto: `{ h: "<a …>" }`. Serve per rendere cliccabili
+     le voci che puntano a un'altra scheda — "Accoppiato con", il
+     meridiano di un punto d'allarme, il punto MTC più vicino. */
+  function val(v) { return (v && typeof v === "object" && v.h != null) ? v.h : esc(v); }
+  function xrefMer(id, testo) {
+    const L = window.Links;
+    if (!L || !id) return esc(testo);
+    const m = L.mer(id);
+    return '<a class="xref" href="' + esc(L.hrefMer(id)) + '" title="' + esc("Apri " + (m ? m.nome : testo) + " sulla mappa 3D") +
+      '">' + esc(testo) + '</a>';
+  }
+  function xrefPuntoMTC(merIdent, sigla, testo) {
+    const L = window.Links;
+    if (!L || !merIdent || !sigla) return esc(testo);
+    return '<a class="xref" href="' + esc(L.hrefMer(merIdent, sigla)) + '" title="' + esc("Inquadra " + sigla + " sulla mappa 3D") +
+      '">' + esc(testo) + '</a>';
+  }
   function merMetaRows(m) {
+    const L = window.Links;
     const rows = [];
     if (m.elemento && m.elemento !== "—") rows.push(["Elemento", m.elemento]);
     if (m.natura) rows.push(["Natura", m.natura]);
     if (m.orario && m.orario !== "—") rows.push(["Massima energia", m.orario]);
-    if (m.coppia) rows.push(["Accoppiato con", m.coppia]);
+    if (m.coppia) {
+      const cid = L ? L.coppiaOf(m.id) : null;
+      rows.push(["Accoppiato con", cid ? { h: xrefMer(cid, m.coppia) } : m.coppia]);
+    }
     return rows;
   }
   function dlOf(rows) {
     if (!rows.length) return "";
-    return '<dl class="pinfo__dl">' + rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>').join("") + '</dl>';
+    return '<dl class="pinfo__dl">' + rows.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + val(v) + '</dd>').join("") + '</dl>';
   }
   function merActions(m) {
     let h = '<div class="meractions">';
@@ -964,10 +997,14 @@
   function merXLinks(id) {
     const L = window.Links;
     if (!L || !id) return "";
+    const el = L.elementoOf(id);
     return L.box("Collegamenti", [
       L.row("Coordinate", L.chipsCoord(id)),
       L.row("Punti d'allarme", L.chipsPunti(id)),
-      L.row("Costituzioni", L.chipsCost(id))
+      L.row("Costituzioni", L.chipsCost(id)),
+      L.row(el ? "Stesso elemento (" + el + ")" : "Stesso elemento", L.chipsElemento(id)),
+      L.row("Accoppiato con", [L.chipCoppia(id)]),
+      L.row("Orologio cinese", L.chipsOrologio(id))
     ]);
   }
   function puntoXLinks(p) {
@@ -976,11 +1013,15 @@
     const id = L.merOfPunto(p);
     if (!id) return "";
     const m = L.mer(id);
+    const el = L.elementoOf(id);
     return L.box("Collegamenti", [
       L.row("Meridiano", [m ? L.chipMer(id, m.nome) : ""]),
       L.row("Coordinate", L.chipsCoord(id)),
       L.row("Costituzioni", L.chipsCost(id)),
-      L.row("Altri punti dello stesso meridiano", L.chipsPunti(id, p.id))
+      L.row("Altri punti dello stesso meridiano", L.chipsPunti(id, p.id)),
+      L.row(el ? "Stesso elemento (" + el + ")" : "Stesso elemento", L.chipsElemento(id)),
+      L.row("Accoppiato con", [L.chipCoppia(id)]),
+      L.row("Orologio cinese", L.chipsOrologio(id))
     ]);
   }
 
@@ -989,7 +1030,7 @@
     const mm = MM();
     const arr = mm.nodiDi(m.id, ref.ramo) || [];
     const n = arr[ref.idx] || {};
-    const rows = [["Meridiano", m.nome + " (" + m.sigla + " / " + m.siglaInt + ")"]];
+    const rows = [["Meridiano", { h: xrefMer(m.id, m.nome + " (" + m.sigla + " / " + m.siglaInt + ")") }]];
     if (n.nome) rows.push(["Nome cinese", n.nome]);
     if (n.ruolo) rows.push(["Ruolo", n.ruolo]);
     if (ref.ramo) rows.push(["Ramo", m.id === "vescica" ? "linea esterna del dorso (3 cun)" : "ramo secondario"]);
@@ -1004,7 +1045,7 @@
     }
     infoEl.innerHTML =
       '<div class="pinfo__head">' + merDot(m, n.sigla) + '<h3>' + esc((n.sigla || "") + (n.nome ? " · " + n.nome : "")) + '</h3></div>' +
-      (n.note ? '<p class="pinfo__note">' + esc(n.note) + '</p>' : '') +
+      (n.note ? '<p class="pinfo__note">' + AL(n.note, { max: 3 }) + '</p>' : '') +
       dlOf(rows) +
       '<div class="meractions"><button type="button" class="ebtn ebtn--mini" data-mzoom="' +
         esc(String(n.x)) + ',' + esc(String(n.y)) + ',' + esc(String(n.z)) + ',' + (ref.side || 1) +
@@ -1027,7 +1068,9 @@
       '" data-mid="' + esc(m.id) + '">' + (tutti ? 'Mostra solo i principali' : 'Mostra tutti i ' + tot.length + ' punti') + '</button>';
     infoEl.innerHTML =
       '<div class="pinfo__head">' + merDot(m) + '<h3>' + esc(m.nome) + '</h3></div>' +
-      (m.descrizione ? '<p class="pinfo__note">' + esc(m.descrizione) + '</p>' : '') +
+      /* La descrizione del tracciato cita i punti uno per uno ("P1
+         Zhongfu", "P2"...): l'autolink li rende inquadrabili al tocco. */
+      (m.descrizione ? '<p class="pinfo__note">' + AL(m.descrizione, { max: 12, salta: (window.Links ? window.Links.hrefMer(m.id) : '') }) + '</p>' : '') +
       dlOf(merMetaRows(m).concat([
         ["Punti", String(tot.length) + (m.bilaterale ? " per lato" : "") + " · " + chiave.length + " principali"]
       ])) +
@@ -1055,7 +1098,10 @@
       ["Distanza dal tracciato", cmOf(near.dist)]
     ];
     if (near.mer.bilaterale && near.latoNome) rows.push(["Lato", near.latoNome]);
-    if (near.punto) rows.push(["Punto MTC più vicino", near.punto.sigla + " · " + (near.punto.nome || "") + " (" + cmOf(near.puntoDist) + ")"]);
+    if (near.punto) rows.push(["Punto MTC più vicino", { h:
+      xrefPuntoMTC(near.mer.id, near.punto.sigla,
+                   near.punto.sigla + " · " + (near.punto.nome || "")) +
+      esc(" (" + cmOf(near.puntoDist) + ")") }]);
     merMetaRows(near.mer).forEach((r) => rows.push(r));
     infoEl.innerHTML =
       '<div class="pinfo__head"><span class="pinfo__dot pinfo__dot--probe">◎</span><h3>Punto sul corpo</h3></div>' +
@@ -1151,7 +1197,7 @@
     return '<div class="mpres">' +
       '<div class="mpres__head"><span class="mpres__tag">' + esc(cfg.organo) + '</span>' +
       '<span class="mpres__sub">indicato dal ' + esc(cfg.muscolo) + '</span></div>' +
-      (c.storiaMeridiano ? '<p class="mphint">' + esc(c.storiaMeridiano) + '</p>' : '') +
+      (c.storiaMeridiano ? '<p class="mphint">' + AL(c.storiaMeridiano, { max: 4 }) + '</p>' : '') +
 
       '<h5 class="mpsub">Punti neuro-linfatici (NL)</h5>' + mpZone(c.neuroLinfatici) +
       mpFig(c.schedaNL, "NL · " + cfg.organo + " (ant. &amp; post.)") +

@@ -21,6 +21,10 @@
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   const has = (s) => s && String(s).trim().length > 0;
+  /* Testo discorsivo reso cliccabile: i nomi di meridiano, i muscoli, le
+     costituzioni e le sigle dei punti diventano <a>. Se links.js non c'è
+     (o non ha ancora i dati) si ripiega sull'escape normale. */
+  const AL = (t, o) => (window.Links ? window.Links.autolink(t, o) : esc(t));
   const PH = '<p><span class="placeholder">Da compilare dai manuali.</span></p>';
   const PH_IMG = '<p><span class="placeholder">Nessuna immagine disponibile.</span></p>';
   const find = (id) => data.find((x) => x.id === id);
@@ -269,10 +273,12 @@
 
   /* ---------- Blocchi di rendering ---------- */
   function muscleBlock(c) {
+    /* Il nome del muscolo NON si autolinka: si è già sulla sua scheda. */
+    const qui = window.Links ? window.Links.hrefCoord(c.id) : "";   // la sua stessa scheda
     const parts = [`<p class="mus-name">${esc(c.muscolo)}</p>`];
-    parts.push(has(c.movimento) ? `<p>${esc(c.movimento)}</p>`
+    parts.push(has(c.movimento) ? `<p>${AL(c.movimento, { salta: qui })}</p>`
       : '<p><span class="placeholder">Movimento da definire.</span></p>');
-    if (has(c.movimentoNote)) parts.push(`<p class="movnote">${esc(c.movimentoNote)}</p>`);
+    if (has(c.movimentoNote)) parts.push(`<p class="movnote">${AL(c.movimentoNote, { salta: qui })}</p>`);
     return parts.join("");
   }
 
@@ -282,7 +288,7 @@
     return '<ul class="points">' + items.map((x) => {
       const title = esc(x.zona || x.nome || "");
       const lato = has(x.lato) ? ` <span class="pt-lato">(${esc(x.lato)})</span>` : "";
-      const note = has(x.note) ? `<div class="pt-note">${esc(x.note)}</div>` : "";
+      const note = has(x.note) ? `<div class="pt-note">${AL(x.note, { max: 3 })}</div>` : "";
       return `<li><span class="pt-title">${title}</span>${lato}${note}</li>`;
     }).join("") + "</ul>";
   }
@@ -307,16 +313,25 @@
     const head = posN != null
       ? `<p class="ess__head-sec">Fiori per la <strong>posizione ${esc(posN)}</strong></p>`
       : "";
+    const L = window.Links;
     return head + '<div class="ess__list">' + rows.map((x) => {
       const sq = (x.squilibri || []).map((s) => `<li><span class="ess__box">\u2610</span> ${esc(s)}</li>`).join("");
       const ref = Array.isArray(x.posizioni) && x.posizioni.length
         ? `<span class="ess__ref">Pos. ${x.posizioni.join(", ")}</span>` : "";
+      /* Lo stesso fiore vale su due posizioni speculari (k e 15-k) e a
+         volte torna su un altro muscolo: da qui ci si arriva in un tocco
+         invece di ricostruire la coordinata a mano. */
+      const xl = L ? L.box("", [
+        L.row("Stesso fiore, altra posizione", L.chipsPosFiore(c, x.posizioni)),
+        L.row("Stesso fiore, altro muscolo", L.chipsFiore(x.nome, c.id))
+      ]) : "";
       return `
       <div class="ess">
         <div class="ess__head"><span class="ess__name">${esc(x.nome || "—")}</span><span class="ess__type">${esc(x.tipo || "")}</span>${ref}</div>
         ${essScelgoBlock()}
         ${sq ? `<p class="ess__label">Il mio / La mia\u2026</p><ul class="ess__sq">${sq}</ul><p class="ess__label">\u2026 in amore senza limiti.</p>` : ""}
         ${has(x.frasi) ? `<div class="ess__imp">${esc(x.frasi)}</div>` : ""}
+        ${xl}
       </div>`;
     }).join("") + "</div>";
   }
@@ -448,6 +463,9 @@
       m1 ? L.chipMer(m1, c1.meridiano) : "",
       (m2 && m2 !== m1) ? L.chipMer(m2, c2.meridiano) : ""
     ]);
+    const el1 = L.elementoOf(m1), el2 = L.elementoOf(m2);
+    const etichEl = el1 && el2 && el2 !== el1 ? "Stesso elemento (" + el1 + " / " + el2 + ")"
+                  : "Stesso elemento" + (el1 ? " (" + el1 + ")" : "");
     return [
       L.row("Sulla mappa 3D", mappa),
       L.row("Punti d'allarme", bothMer(L.chipsPunti, m1, m2)),
@@ -455,6 +473,12 @@
       L.row("Altre coordinate", uniqChips(
         L.chipsCoord(m1, c1.id).concat(m2 && m2 !== m1 ? L.chipsCoord(m2, c1.id) : [])
       )),
+      L.row(etichEl, bothMer(L.chipsElemento, m1, m2)),
+      L.row("Meridiano accoppiato", uniqChips([
+        L.chipCoppia(m1), (m2 && m2 !== m1) ? L.chipCoppia(m2) : ""
+      ])),
+      L.row("Orologio cinese", uniqChips(L.chipsOrologio(m1))),
+      L.row("Altre posizioni del muscolo", L.chipsPosizioni(c1, m2)),
       L.row("Prova al contrario", [L.chip({
         kind: "coord", href: L.hrefCoord(c2.id, c1.id), colore: c2.colore,
         label: "Muscolo " + c2.muscolo + ", posizione " + c1.meridiano,
@@ -481,6 +505,37 @@
     if (!chips.length) return "";
     return '<div class="xlinks xlinks--strip">' + L.row("", chips) +
       '<a class="xlinks__more" href="#sec-collegamenti">tutti i collegamenti ↓</a></div>';
+  }
+  /* Le 14 posizioni dello stesso muscolo, una per meridiano di
+     riferimento: cambiare posizione era l'operazione più frequente e
+     costava tornare all'elenco e riscegliere il 2° meridiano. */
+  function altrePosizioni(c1, c2) {
+    const L = window.Links;
+    if (!L) return "";
+    const chips = L.chipsPosizioni(c1, L.merOfCoord(c2));
+    if (!chips.length) return "";
+    return L.box("", [L.row("", chips)],
+      "Tutte le posizioni in cui si può testare " + c1.muscolo + ": tocca per aprire quella coordinata.");
+  }
+  /* Sotto la storia di un meridiano: elemento, natura, coppia e orologio.
+     Sono i dati che stanno in meridiani_data.js e che finora la scheda
+     della coordinata non mostrava affatto. */
+  function merMetaLinks(c) {
+    const L = window.Links;
+    if (!L) return "";
+    const id = L.merOfCoord(c), m = id ? L.mer(id) : null;
+    if (!m) return "";
+    const el = L.elementoOf(id);
+    const meta = [
+      el ? `<span class="mermeta__k">Elemento</span> ${esc(el)}` : "",
+      m.natura ? `<span class="mermeta__k">Natura</span> ${esc(m.natura)}` : "",
+      m.orario && m.orario !== "—" ? `<span class="mermeta__k">Massima energia</span> ${esc(m.orario)}` : ""
+    ].filter(Boolean).join(" · ");
+    return (meta ? `<p class="mermeta">${meta}</p>` : "") + L.box("", [
+      L.row(el ? "Stesso elemento (" + el + ")" : "Stesso elemento", L.chipsElemento(id)),
+      L.row("Accoppiato con", [L.chipCoppia(id)]),
+      L.row("Orologio cinese", L.chipsOrologio(id))
+    ]);
   }
   /* Nome di meridiano cliccabile dentro un testo discorsivo. */
   function merLink(nome) {
@@ -509,9 +564,15 @@
     const reflexHtml = reflexBlock(c1, row, cap);
 
     // Meridiani coinvolti
+    /* La storia del meridiano cita organi, elementi e altri meridiani:
+       autolink, tranne il meridiano di cui si sta parlando (si è già lì). */
+    const L0 = window.Links;
+    const qui = [c1, c2].map(function (x) { return L0 ? L0.hrefCoord(x.id) : ""; });
+    const hrefM1 = L0 && L0.merOfCoord(c1) ? L0.hrefMer(L0.merOfCoord(c1)) : "";
+    const hrefM2 = L0 && L0.merOfCoord(c2) ? L0.hrefMer(L0.merOfCoord(c2)) : "";
     let merHtml = "";
-    if (has(c1.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano del muscolo (1°): ${merLink(c1.meridiano)}</h4><p>${esc(c1.storiaMeridiano)}</p>`;
-    if (c2.id !== c1.id && has(c2.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano di riferimento (2° · posizione): ${merLink(c2.meridiano)}</h4><p>${esc(c2.storiaMeridiano)}</p>`;
+    if (has(c1.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano del muscolo (1°): ${merLink(c1.meridiano)}</h4><p>${AL(c1.storiaMeridiano, { salta: qui.concat(hrefM1) })}</p>` + merMetaLinks(c1);
+    if (c2.id !== c1.id && has(c2.storiaMeridiano)) merHtml += `<h4 class="subh">Meridiano di riferimento (2° · posizione): ${merLink(c2.meridiano)}</h4><p>${AL(c2.storiaMeridiano, { salta: qui.concat(hrefM2) })}</p>` + merMetaLinks(c2);
     if (!merHtml) merHtml = PH;
 
     // Sezione posizione: numero + riferimento + emozioni/atteggiamenti
@@ -530,6 +591,7 @@
     } else {
       posHtml = `<p><span class="placeholder">Nessuna posizione trovata per «${esc(refMer)}» sul muscolo ${esc(c1.muscolo)}.</span></p>`;
     }
+    posHtml += altrePosizioni(c1, c2);
 
     // Ampiezza: ritaglio della singola posizione (come NL/NV); fallback pagine intere
     const ampHtml = row && has(row.amp)

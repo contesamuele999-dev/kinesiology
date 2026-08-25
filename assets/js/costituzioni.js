@@ -57,16 +57,53 @@
     return '<section class="section"' + (id ? ' id="' + esc(id) + '"' : "") +
            "><h3>" + esc(titolo) + "</h3>" + corpo + "</section>";
   }
-  function paragrafi(list) {
-    if (!list || !list.length) return "";
-    return list.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
+  /* ---- vocabolario locale: i capitoli di teoria ----
+     I capitoli si citano a vicenda di continuo ("come in Ippocrate",
+     "i tre foglietti embriologici"). I termini non sono scritti a mano:
+     si ricavano dal titolo del capitolo — il nome proprio dopo "modello
+     di", e ciò che segue i due punti — così aggiungendo un capitolo i
+     rimandi compaiono da soli. */
+  var TEORIA_TERMINI = null;
+  function teoriaTermini() {
+    if (TEORIA_TERMINI) return TEORIA_TERMINI;
+    var out = [];
+    (D.teoria || []).forEach(function (t) {
+      var href = "#cost/teoria/" + t.id, titolo = "Capitolo: " + t.titolo;
+      var m = /modello di ([^:]+)/i.exec(t.titolo);
+      if (m) out.push({ testo: m[1].trim(), href: href, title: titolo });
+      var d = /:\s*(?:i |le |gli |l')?(.+)$/i.exec(t.titolo);
+      if (d) out.push({ testo: d[1].trim(), href: href, title: titolo });
+      var f = /^I tre (.+)$/i.exec(t.titolo);
+      if (f) out.push({ testo: f[1].trim(), href: href, title: titolo });
+    });
+    TEORIA_TERMINI = out.filter(function (x) { return x.testo.length >= 4; });
+    return TEORIA_TERMINI;
   }
+  /* Testo dei manuali reso cliccabile: meridiani, muscoli, costituzioni e
+     sigle dei punti (links.js) più i rimandi fra capitoli di teoria. */
+  function AL(t, o) {
+    var L = window.Links;
+    if (!L) return esc(t);
+    var opz = {};
+    Object.keys(o || {}).forEach(function (k) { opz[k] = o[k]; });
+    opz.extra = (opz.extra || []).concat(teoriaTermini());
+    return L.autolink(t, opz);
+  }
+  function paragrafi(list, opz) {
+    if (!list || !list.length) return "";
+    return list.map(function (p) { return "<p>" + AL(p, opz) + "</p>"; }).join("");
+  }
+  /* Una riga può portare un valore testuale (`v`, escapato) oppure un
+     frammento già pronto (`h`), che è come si rendono cliccabili le voci
+     che puntano a un'altra scheda: somatotipo, meridiani, punto di test. */
   function kvTabella(rows) {
     if (!rows || !rows.length) return "";
     return '<dl class="kv">' + rows.map(function (r) {
-      var k = r.k != null ? r.k : r[0], v = r.v != null ? r.v : r[1];
+      var k = r.k != null ? r.k : r[0];
+      var v = r.v != null ? r.v : r[1];
+      var h = r.h != null ? r.h : null;
       return '<div class="kv__row"><dt>' + esc(k) + "</dt><dd>" +
-             (v ? esc(v) : '<span class="kv__vuoto">—</span>') + "</dd></div>";
+             (h ? h : (v ? esc(v) : '<span class="kv__vuoto">—</span>')) + "</dd></div>";
     }).join("") + "</dl>";
   }
   function elenco(items, cls) {
@@ -74,8 +111,36 @@
     return '<ul class="colist ' + (cls || "") + '">' +
       items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
   }
+  /* I sei polsi della procedura: ognuno è il nome di un temperamento e
+     porta alla costituzione di cui è nativo. */
+  function elencoPolsi(items) {
+    if (!items || !items.length) return "";
+    return '<ul class="colist colist--forte">' +
+      items.map(function (x) { return "<li>" + tempLink(x) + "</li>"; }).join("") + "</ul>";
+  }
   function link(hash, testo) {
     return '<a class="colink" href="' + esc(hash) + '">' + esc(testo) + " ›</a>";
+  }
+  /* links.js con un fallback inerte: se non è caricato le schede restano
+     leggibili, solo senza collegamenti. */
+  var LNULL = { hrefCoppia: function () { return "#cost/coppia"; },
+                linkSigleMer: function (s) { return esc(s); } };
+  function L() { return window.Links || LNULL; }
+  function hLink(hash, testo, titolo) {
+    if (!testo) return '<span class="kv__vuoto">—</span>';
+    return '<a class="xref" href="' + esc(hash) + '"' +
+      (titolo ? ' title="' + esc(titolo) + '"' : "") + ">" + esc(testo) + "</a>";
+  }
+  /* "Ecto-Meso", "Endo": ogni metà rimanda al capitolo sui tre foglietti
+     e al biotipo corrispondente. */
+  var FOGL = { ecto: "ecto", meso: "meso", endo: "endo" };
+  function foglLink(testo) {
+    var s = String(testo || "");
+    if (!s) return '<span class="kv__vuoto">—</span>';
+    return s.replace(/[A-Za-zÀ-ÿ]+/g, function (tok) {
+      var id = FOGL[tok.toLowerCase()];
+      return id ? hLink("#cost/biotipo/" + id, tok, "Biotipo " + BIO[id]) : esc(tok);
+    });
   }
   /* Collegamenti verso Punti Indicatori e Coordinate: il grafo sta in
      links.js e conosce già le equivalenze ("M – P" = milza + polmone,
@@ -176,9 +241,9 @@
 
   function sinotticaHtml(conTitolo) {
     var righe = D.sinottica.map(function (r) {
-      return "<tr><td>" + esc(r.foglietto) + '</td><td><a href="#cost/costituzione/' + esc(r.id) +
-        '"><strong>' + esc(r.livello) + "</strong></a></td><td>" + esc(r.biotipo) +
-        "</td><td>" + esc(r.neurotipo) + "</td><td>" + esc(r.meridiani) +
+      return "<tr><td>" + foglLink(r.foglietto) + '</td><td><a href="#cost/costituzione/' + esc(r.id) +
+        '"><strong>' + esc(r.livello) + "</strong></a></td><td>" + tempLink(r.biotipo) +
+        "</td><td>" + esc(r.neurotipo) + "</td><td>" + L().linkSigleMer(r.meridiani) +
         '</td><td><a href="#cost/biotipo/' + esc(r.bio) + '">' + esc(BIO[r.bio]) + "</a></td></tr>";
     }).join("");
     var tabella = '<div class="cotab-wrap"><table class="cotab"><thead><tr>' +
@@ -193,9 +258,33 @@
   /* ------------------------------------------------------- biotipo */
   var SINT_ORD = ["LIVELLI DI MTC", "TEMPERAMENTO", "MERIDIANI", "DIATESI", "TENDENZA", "ANIMALE"];
 
+  /* "Nervoso / Melanconico" → ogni temperamento apre la costituzione di
+     cui è nativo. L'elenco TEMPERAMENTI è già qui sopra: nessuna tabella
+     di link da mantenere. */
+  function tempLink(testo) {
+    return String(testo || "").replace(/[A-Za-zÀ-ÿ]+/g, function (tok) {
+      var t = null;
+      for (var i = 0; i < TEMPERAMENTI.length; i++) {
+        if (norm(TEMPERAMENTI[i].nome) === norm(tok)) { t = TEMPERAMENTI[i]; break; }
+      }
+      if (!t) return esc(tok);
+      var c = byId(D.costituzioni, t.cost);
+      return hLink("#cost/costituzione/" + t.cost, tok,
+                   "Temperamento nativo di " + (c ? c.nome : t.cost));
+    });
+  }
   function biotipoHtml(b) {
+    /* Le voci della sintesi non sono testo morto: livelli MTC,
+       temperamenti e meridiani puntano tutti a una scheda. */
+    var SINT_H = {
+      "LIVELLI DI MTC": function (v) { return AL(v, { max: 4 }); },
+      "TEMPERAMENTO": tempLink,
+      "MERIDIANI": function (v) { return L().linkSigleMer(v); }
+    };
     var breve = SINT_ORD.filter(function (k) { return b.sintesi[k]; })
-      .map(function (k) { return { k: k, v: b.sintesi[k] }; });
+      .map(function (k) {
+        return SINT_H[k] ? { k: k, h: SINT_H[k](b.sintesi[k]) } : { k: k, v: b.sintesi[k] };
+      });
 
     var cost = D.costituzioni.filter(function (c) { return c.biotipo === b.id; });
 
@@ -217,8 +306,8 @@
               ["b-terreno", "Terreno"], ["b-appr", "Apprendimento"], ["b-sint", "Sintomi"],
               ["b-pers", "Personalità"], ["b-ergo", "Ergopsichica"]]) +
       '<div class="sections">' +
-      sezione("In breve", kvTabella(breve) + paragrafi(b.descrizione.slice(0, 1)), "b-breve") +
-      sezione("Descrizione", paragrafi(b.descrizione.slice(1)), "b-desc") +
+      sezione("In breve", kvTabella(breve) + paragrafi(b.descrizione.slice(0, 1), { salta: "#cost/biotipo/" + b.id }), "b-breve") +
+      sezione("Descrizione", paragrafi(b.descrizione.slice(1), { salta: "#cost/biotipo/" + b.id }), "b-desc") +
       sezione("Caratteristiche", car, "b-car") +
       sezione("Scheda fisica e sintomi", kvTabella(b.scheda), "b-scheda") +
       sezione("Terreno, reazioni e corrispondenze",
@@ -254,14 +343,16 @@
   function costituzioneHtml(c) {
     var breve = [
       { k: "CODICE DI RIFERIMENTO", v: c.codice },
-      { k: "TEMPERAMENTO", v: c.temperamento },
+      { k: "TEMPERAMENTO", h: hLink(L().hrefCoppia(c.id), c.temperamento,
+          "Componi il profilo: " + c.nome + " + un temperamento") },
       { k: "ANIMALE", v: c.animale },
       { k: "POPOLAZIONE", v: c.popolazione },
-      { k: "SOMATOTIPO", v: BIO[c.biotipo] },
-      { k: "FOGLIETTO EMBRIOLOGICO", v: c.foglietto },
+      { k: "SOMATOTIPO", h: hLink("#cost/biotipo/" + c.biotipo, BIO[c.biotipo],
+          "Scheda del biotipo " + BIO[c.biotipo]) },
+      { k: "FOGLIETTO EMBRIOLOGICO", h: foglLink(c.foglietto) },
       { k: "NEUROTIPO", v: c.neurotipo },
-      { k: "MERIDIANI", v: c.meridiani },
-      { k: "PUNTO DI TEST", v: c.puntoTest.sigla }
+      { k: "MERIDIANI", h: L().linkSigleMer(c.meridiani) },
+      { k: "PUNTO DI TEST", h: puntoLink(c.puntoTest.sigla) }
     ];
     var fig = '<div class="cofigs">' +
       figura(c.immagini.trigramma, "Codice " + c.codice) +
@@ -273,11 +364,11 @@
               ["c-difesa", "Difesa emotiva"], ["c-test", "Come si testa"]]) +
       '<div class="sections">' +
       sezione("In breve", kvTabella(breve) + fig, "c-breve") +
-      sezione("Descrizione", paragrafi(c.descrizione), "c-desc") +
+      sezione("Descrizione", paragrafi(c.descrizione, { salta: "#cost/costituzione/" + c.id }), "c-desc") +
       sezione("Personalità come difesa emotiva",
         '<p class="comotto">« ' + esc(c.difesa.motto) + " »</p>" + paragrafi(c.difesa.testo), "c-difesa") +
       sezione("Come si testa",
-        "<p>Mentre la persona tocca con una mano il punto <strong>VC8 (Ombelico)</strong>, " +
+        "<p>Mentre la persona tocca con una mano il punto <strong>" + puntoLink("VC8") + " (Ombelico)</strong>, " +
         "testare il punto <strong>" + puntoLink(c.puntoTest.sigla) + "</strong>.</p>" +
         figura(c.puntoTest.immagine, c.puntoTest.sigla + " — " + c.nome) +
         '<p class="cohint">' + link("#cost/test/costituzioni", "Vedi tutti e 6 i punti chiave") + "</p>", "c-test") +
@@ -293,8 +384,10 @@
 
   /* ------------------------------------------------------ procedure */
   function proceduraHtml(p) {
+    /* I passi nominano VC8 e i sei punti chiave: tutti inquadrabili
+       sulla mappa 3D senza uscire dalla procedura. */
     var passi = '<ol class="copassi">' + p.passi.map(function (x) {
-      return "<li>" + esc(x) + "</li>";
+      return "<li>" + AL(x) + "</li>";
     }).join("") + "</ol>";
 
     var corpo;
@@ -307,9 +400,9 @@
       }).join("") + "</div>";
     } else {
       corpo = '<div class="copolsi"><div class="copolsi__col"><h4>Mano destra</h4>' +
-        elenco(p.polsi.destra, "colist--forte") + "</div>" +
+        elencoPolsi(p.polsi.destra) + "</div>" +
         '<div class="copolsi__col"><h4>Mano sinistra</h4>' +
-        elenco(p.polsi.sinistra, "colist--forte") + "</div></div>" +
+        elencoPolsi(p.polsi.sinistra) + "</div></div>" +
         (p.immagini || []).map(function (i) { return figura(i, "I 6 polsi"); }).join("");
     }
     return head(p.titolo, "Procedura di test", "") +
@@ -333,7 +426,7 @@
     var prec = D.teoria[i - 1], succ = D.teoria[i + 1];
     return head(t.titolo, "Teoria · capitolo " + (i + 1) + " di " + D.teoria.length, "") +
       '<div class="sections">' +
-      sezione(t.titolo, paragrafi(t.paragrafi) +
+      sezione(t.titolo, paragrafi(t.paragrafi, { salta: "#cost/teoria/" + t.id }) +
         (t.immagini || []).map(function (im) { return figura(im, ""); }).join(""), "t-corpo") +
       '<div class="conav">' +
       (prec ? link("#cost/teoria/" + prec.id, "‹ " + prec.titolo) : "<span></span>") +
@@ -371,7 +464,7 @@
     }).join("") + "</tr>";
     var righe = CONFRONTO.map(function (r) {
       return "<tr><th scope=\"row\">" + esc(r[0]) + "</th>" +
-        D.biotipi.map(function (b) { return "<td>" + esc(r[1](b) || "—") + "</td>"; }).join("") + "</tr>";
+        D.biotipi.map(function (b) { return "<td>" + AL(r[1](b) || "—", { max: 3 }) + "</td>"; }).join("") + "</tr>";
     }).join("");
     var sintomi = "<tr><th scope=\"row\">Sintomatologia</th>" + D.biotipi.map(function (b) {
       return "<td>" + elenco(b.sintomi, "colist--fitta") + "</td>";
@@ -425,7 +518,7 @@
     }).join("");
     return '<div class="cohome"><div class="cohero"><h2>Costituzione + Temperamento</h2>' +
       "<p>Due test, un solo profilo. Comincia dalla costituzione: mentre la persona tocca " +
-      "<strong>VC8 (Ombelico)</strong>, testa i 6 punti chiave e scegli qui quello che ha risposto.</p></div>" +
+      "<strong>" + puntoLink("VC8") + " (Ombelico)</strong>, testa i 6 punti chiave e scegli qui quello che ha risposto.</p></div>" +
       passi(1) +
       '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">1</span>Scegli la costituzione</h3>' +
       '<p class="coblock__d">Il livello energetico MTC emerso dal test dei 6 punti chiave.</p>' +
@@ -448,7 +541,7 @@
     return '<div class="cohome"><div class="cohero"><h2>' + esc(c.nome) +
       " + quale temperamento?</h2>" +
       "<p>Costituzione scelta: <strong>" + esc(c.nome) + "</strong> (codice " + esc(c.codice) +
-      "). Ora, sempre con una mano su <strong>VC8</strong>, testa i 6 polsi e scegli il temperamento che ha risposto.</p></div>" +
+      "). Ora, sempre con una mano su <strong>" + puntoLink("VC8") + "</strong>, testa i 6 polsi e scegli il temperamento che ha risposto.</p></div>" +
       passi(2) +
       '<p class="cohint">' + link("#cost/coppia", "‹ Cambia costituzione") + "</p>" +
       '<section class="coblock"><h3 class="coblock__h"><span class="coblock__n">2</span>Scegli il temperamento</h3>' +
@@ -457,30 +550,38 @@
       '<p class="cohint">' + link("#cost/test/temperamenti", "Rivedi la procedura completa") + "</p></div>";
   }
 
-  /* righe della sintesi: [etichetta, valore per una costituzione] */
+  /* righe della sintesi: [etichetta, valore, (facoltativo) come renderlo
+     cliccabile]. Il terzo elemento riceve il valore e la costituzione da
+     cui viene, così ogni cella del confronto porta alla sua scheda. */
   var COPPIA_ROWS = [
-    ["Livello MTC",          function (c) { return c.nome; }],
+    ["Livello MTC",          function (c) { return c.nome; },
+                             function (v, c) { return hLink("#cost/costituzione/" + c.id, v, "Scheda di " + v); }],
     ["Codice di riferimento",function (c) { return c.codice; }],
-    ["Temperamento nativo",  function (c) { return c.temperamento; }],
-    ["Somatotipo",           function (c) { return BIO[c.biotipo]; }],
-    ["Foglietto embriologico", function (c) { return c.foglietto; }],
+    ["Temperamento nativo",  function (c) { return c.temperamento; }, function (v) { return tempLink(v); }],
+    ["Somatotipo",           function (c) { return BIO[c.biotipo]; },
+                             function (v, c) { return hLink("#cost/biotipo/" + c.biotipo, v, "Scheda del biotipo " + v); }],
+    ["Foglietto embriologico", function (c) { return c.foglietto; }, function (v) { return foglLink(v); }],
     ["Neurotipo",            function (c) { return c.neurotipo; }],
-    ["Meridiani",            function (c) { return c.meridiani; }],
+    ["Meridiani",            function (c) { return c.meridiani; }, function (v) { return L().linkSigleMer(v); }],
     ["Animale",              function (c) { return c.animale; }],
     ["Popolazione",          function (c) { return c.popolazione; }],
-    ["Punto di test",        function (c) { return c.puntoTest.sigla; }]
+    ["Punto di test",        function (c) { return c.puntoTest.sigla; }, function (v) { return puntoLink(v); }]
   ];
 
   function coppiaHtml(c, t) {
     var orig = byId(D.costituzioni, t.cost);          // costituzione "proprietaria" del temperamento
     var puro = orig && orig.id === c.id;              // costituzione e temperamento coincidono
 
+    var cella = function (r, valore, cost) {
+      if (!valore) return "—";
+      return r[2] ? r[2](valore, cost) : esc(valore);
+    };
     var righe = COPPIA_ROWS.map(function (r) {
       var a = r[1](c) || "", b = orig ? (r[1](orig) || "") : "";
       var uguali = norm(a) === norm(b) && a !== "";
       return '<tr class="' + (uguali ? "is-same" : "is-diff") + '">' +
-        '<th scope="row">' + esc(r[0]) + "</th><td>" + esc(a || "—") + "</td>" +
-        (puro ? "" : "<td>" + esc(b || "—") + "</td>") + "</tr>";
+        '<th scope="row">' + esc(r[0]) + "</th><td>" + cella(r, a, c) + "</td>" +
+        (puro ? "" : "<td>" + cella(r, b, orig) + "</td>") + "</tr>";
     }).join("");
 
     var capi = '<tr><th></th><th>Costituzione<br><span class="cocap">' + esc(c.nome) + "</span></th>" +
@@ -507,12 +608,12 @@
 
     var rilevata = '<div class="cocols">' +
       '<div class="cocol"><h4>Costituzione — punto chiave</h4>' +
-      "<p>Con una mano su <strong>VC8 (Ombelico)</strong>, ha risposto <strong>" +
-      esc(c.puntoTest.sigla) + "</strong>.</p>" +
+      "<p>Con una mano su <strong>" + puntoLink("VC8") + " (Ombelico)</strong>, ha risposto <strong>" +
+      puntoLink(c.puntoTest.sigla) + "</strong>.</p>" +
       figura(c.puntoTest.immagine, c.puntoTest.sigla + " — " + c.nome) + "</div>" +
       '<div class="cocol"><h4>Temperamento — polso</h4>' +
-      "<p>Sempre con una mano su <strong>VC8</strong>, ha risposto il polso <strong>" +
-      esc(t.nome) + "</strong>, <strong>mano " + esc(t.mano) + "</strong>.</p></div></div>";
+      "<p>Sempre con una mano su <strong>" + puntoLink("VC8") + "</strong>, ha risposto il polso <strong>" +
+      tempLink(t.nome) + "</strong>, <strong>mano " + esc(t.mano) + "</strong>.</p></div></div>";
 
     var motti = '<div class="cocols">' +
       '<div class="cocol"><h4>Dalla costituzione · ' + esc(c.nome) + "</h4>" +

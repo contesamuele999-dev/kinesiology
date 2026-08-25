@@ -54,6 +54,18 @@
 - [x] **Indicatore «i dati vengono salvati»** in testata: tre stati (area non creata /
       bloccata / sbloccata) più lo stato del sync, aggiornato da `Vault.onLock`/`onUnlock`.
 
+- [x] **Più collegamenti interni ovunque**: il grafo di `links.js` guadagna quattro
+      dimensioni oltre al meridiano — elemento (5 movimenti), coppia yin/yang, orologio cinese
+      (prima / dopo / opposto) e le 14 posizioni di un muscolo — più l'indice dei fiori. Il testo
+      discorsivo dei manuali diventa cliccabile (`Links.autolink`): nomi di meridiano e alias,
+      muscoli, costituzioni, biotipi e sigle di punti MTC ("VC8", "M4", "P1" → mappa 3D). Le
+      voci dei metadati non sono più testo morto ("Accoppiato con", "Somatotipo", "Foglietto",
+      "Meridiani", "Punto di test", i sei polsi). I capitoli di teoria delle Costituzioni si
+      citano a vicenda con termini ricavati dai loro titoli. Nelle note del paziente, che
+      restano modificabili, i riferimenti riconosciuti compaiono come chip sotto al campo.
+      Test: `node tools/test_links.js` (1559 controlli, compresa la sicurezza dell'autolink:
+      niente markup iniettato, niente link annidati, mai una parola dentro un'altra).
+
 ## Da fare
 - [ ] Dettagli essenze (squilibri + affermazione) per gli altri 15 meridiani
       → in `tools/essenze_dettaglio.json`, dalle pagine-essenza del manuale Atteggiamenti.
