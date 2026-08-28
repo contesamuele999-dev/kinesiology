@@ -69,8 +69,14 @@
 ## Da fare
 - [ ] Dettagli essenze (squilibri + affermazione) per gli altri 15 meridiani
       → in `tools/essenze_dettaglio.json`, dalle pagine-essenza del manuale Atteggiamenti.
-- [ ] Immagini Basket Weaver per le 7 coordinate mancanti (Maestro del Cuore, TR/Tiroide,
-      TR/Surrenali, Vescica Biliare, Fegato, Polmone, Intestino Crasso) → serve il 2° volume.
+- [ ] Immagini Basket Weaver **per posizione** (corpo, mani, piedi, ruota) per le 7 coordinate
+      mancanti (Maestro del Cuore, TR/Tiroide, TR/Surrenali, Vescica Biliare, Fegato, Polmone,
+      Intestino Crasso) → serve il 2° volume del manuale.
+      La *riflessologia* di queste 7, però, non manca più: dal PDF «Basket Weaver» (non dal
+      manuale) sono state estratte le due tabelle unificate — `assets/modi/riflessologia_mano.jpg`
+      e `riflessologia_piede.jpg` — che coprono tutti e 16 i meridiani e ora compaiono in fondo
+      alla sezione Reflessologia di ogni coordinata, con la sigla da cercare sulla mappa
+      (oggetto sul lato dominante, riferimento sull'altro).
 - [ ] (opzionale) Procedura di monitoraggio muscolare per coordinata (dal Monitoraggio, 1 pag./coord.).
 - [ ] Pazienti — fuori MVP, da fare solo se servono davvero: vista settimana a griglia
       dell'agenda (ora è elenco per giorno), ricorrenze, notifiche locali, modelli di

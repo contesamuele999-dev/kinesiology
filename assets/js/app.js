@@ -352,8 +352,41 @@
     ).join("") + "</div>";
   }
 
+  /* Sigla del meridiano come è stampata sulle tabelle Applied Physiology.
+     Due non coincidono con quelle dei dati: MP -> "M/P", GI -> "IC". */
+  const REFLEX_SIGLA = { "milza": "M/P", "intestino-crasso": "IC" };
+  function reflexSigla(c) {
+    const L = window.Links;
+    const id = c && L && L.merOfCoord ? L.merOfCoord(c) : null;
+    if (!id) return "";
+    if (REFLEX_SIGLA[id]) return REFLEX_SIGLA[id];
+    const m = L.mer(id);
+    return m && m.sigla ? m.sigla : "";
+  }
+
+  /* Le due tabelle di riflessologia del PDF «Basket Weaver»: una mappa unica
+     per la mano e una per il piede, con tutti e 16 i meridiani. Valgono anche
+     dove il manuale non ha i ritagli per posizione. */
+  function reflexTabelle(c1, c2) {
+    const imgs = reflexRow([
+      { src: MODI.img.reflexMano, cap: "Tabella di riflessologia · mano sinistra e destra" },
+      { src: MODI.img.reflexPiede, cap: "Tabella di riflessologia · piede destro e sinistro" }
+    ]);
+    if (!imgs) return "";
+    /* Il modo chiede la zona del meridiano oggetto sulla mano/piede
+       dominante e quella del meridiano di riferimento sull'altra: qui le
+       due sigle da cercare sulla mappa, già pronte. */
+    const so = reflexSigla(c1), sr = reflexSigla(c2);
+    let hint = "";
+    if (so && sr && so !== sr)
+      hint = `<p class="hint">Sulla mano o sul piede <strong>dominante</strong> stimola la zona <strong>${esc(so)}</strong> (meridiano oggetto), sull'altro lato la zona <strong>${esc(sr)}</strong> (meridiano di riferimento).</p>`;
+    else if (so)
+      hint = `<p class="hint">Oggetto e riferimento sono lo stesso meridiano: cerca la zona <strong>${esc(so)}</strong> su entrambi i lati.</p>`;
+    return '<h4 class="subh">Tabelle di riflessologia · tutti i meridiani</h4>' + hint + imgs;
+  }
+
   /* Sezione Reflessologia (Basket Weaver): corpo + mani dx/sx + piedi dx/sx + ruota */
-  function reflexBlock(c1, row, cap) {
+  function reflexBlock(c1, c2, row, cap) {
     const parts = [];
     if (row && has(row.reflex))
       parts.push('<h4 class="subh">Corpo · ' + esc(cap) + '</h4>' + posImg(row.reflex, "Corpo · " + cap));
@@ -369,8 +402,12 @@
     if (piedi) parts.push('<h4 class="subh">Piedi · ' + esc(cap) + '</h4>' + piedi);
     if (has(c1.ruota))
       parts.push('<h4 class="subh">Ruota energetica</h4>' + posImg(c1.ruota, "Ruota energetica — " + c1.muscolo));
-    if (!parts.length)
+    const tabelle = reflexTabelle(c1, c2);
+    if (!parts.length && !tabelle)
       return '<p><span class="placeholder">Reflessologia non disponibile per questo muscolo nel manuale Basket Weaver.</span></p>';
+    if (!parts.length)
+      parts.push('<p><span class="placeholder">Il manuale Basket Weaver copre 9 coordinate su 16: per questo muscolo non ci sono i ritagli per posizione. Le tabelle qui sotto valgono per tutti i meridiani.</span></p>');
+    if (tabelle) parts.push(tabelle);
     return parts.join("");
   }
 
@@ -561,7 +598,7 @@
     const nlImg = row && has(row.nl) ? posImg(row.nl, "Dettaglio NL · " + cap) : "";
     const nvList = pointsBlock(c1.neurovascolari);
     const nvImg = row && has(row.nv) ? posImg(row.nv, "Dettaglio NV · " + cap) : "";
-    const reflexHtml = reflexBlock(c1, row, cap);
+    const reflexHtml = reflexBlock(c1, c2, row, cap);
 
     // Meridiani coinvolti
     /* La storia del meridiano cita organi, elementi e altri meridiani:

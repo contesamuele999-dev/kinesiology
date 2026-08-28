@@ -1,6 +1,6 @@
 /* sw.js — service worker per PWA offline (app shell + dati).
    Bump CACHE ad ogni release per invalidare la cache. */
-const CACHE = "fisiologia-v38";
+const CACHE = "fisiologia-v39";
 const ASSETS = [
   "./",
   "./index.html",
@@ -30,6 +30,8 @@ const ASSETS = [
   "./assets/icon-192.png",
   "./assets/icon-512.png",
   "./assets/apple-touch-icon.png",
+  "./assets/modi/riflessologia_mano.jpg",
+  "./assets/modi/riflessologia_piede.jpg",
   "./assets/modi/tabella_riferimento.png",
   "./assets/modi/acutouch_anteriore.png",
   "./assets/modi/acutouch_posteriore.png",

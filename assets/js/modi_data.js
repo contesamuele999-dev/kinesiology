@@ -94,6 +94,10 @@ window.MODI = {
   },
 
   img: {
+    /* Le due tabelle di riflessologia (PDF «Basket Weaver», non il manuale):
+       una mappa unica per mano e una per piede, con tutti e 16 i meridiani. */
+    reflexMano: "assets/modi/riflessologia_mano.jpg",
+    reflexPiede: "assets/modi/riflessologia_piede.jpg",
     tabella: "assets/modi/tabella_riferimento.png",
     acuAnt: "assets/modi/acutouch_anteriore.png",
     acuPost: "assets/modi/acutouch_posteriore.png",
