@@ -272,9 +272,9 @@
       if (!q) return;
       if (q.kind === "ind") {
         var p = (window.PUNTI_INDICATORI.punti || []).filter(function (x) { return x.id === q.id; })[0];
-        if (p && window.PuntiMap && window.PuntiMap.selectPunto) window.PuntiMap.selectPunto(p.id);
+        if (p && window.PuntiMap && window.PuntiMap.selectPunto) window.PuntiMap.selectPunto(p.id, true);
       } else if (window.PuntiMap && window.PuntiMap.selectMerPoint) {
-        window.PuntiMap.selectMerPoint({ merId: q.mer, idx: q.idx, side: q.side, ramo: q.ramo });
+        window.PuntiMap.selectMerPoint({ merId: q.mer, idx: q.idx, side: q.side, ramo: q.ramo }, true);
       }
     });
   }

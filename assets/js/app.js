@@ -387,11 +387,20 @@
     if (!has(label)) return "";
     return `<button class="regbtn" type="button" data-reg="${esc(label)}" title="Registra nella seduta">＋</button>`;
   }
+  /* Prefisso di ciò che si registra: dice DOVE si era. Nella sezione Punti le
+     etichette si descrivono già da sole ("Punto d'allarme · Fegato"), quindi
+     lì non serve. */
   function ctxLabel() {
     const [c1, c2] = pair;
-    if (!c1 || !c2 || coordView.hidden) return "";
-    const row = posFor(c1, c2);
-    return c1.meridiano + " · " + c1.muscolo + " — pos. " + (row ? row.posizione : "?") + " (" + c2.meridiano + ")";
+    if (c1 && c2 && !coordView.hidden) {
+      const row = posFor(c1, c2);
+      return c1.meridiano + " · " + c1.muscolo + " — pos. " + (row ? row.posizione : "?") + " (" + c2.meridiano + ")";
+    }
+    if (costView && !costView.hidden) {
+      const t = (window.Cost && window.Cost.titolo) ? window.Cost.titolo(location.hash) : "";
+      return "Costituzioni" + (t ? " · " + t : "");
+    }
+    return "";
   }
   document.addEventListener("click", (e) => {
     const b = e.target.closest ? e.target.closest("[data-reg]") : null;
@@ -408,6 +417,9 @@
     const on = !!(window.Pazienti && window.Pazienti.attiva && window.Pazienti.attiva());
     document.body.classList.toggle("has-sessione", on);
   }
+  /* Un solo bottone per tutta l'app: chi disegna una scheda emette il markup
+     e il gestore qui sopra fa il resto. */
+  window.Reg = regBtn;
 
   /* Sezione Fiori: mostra SOLO i fiori relativi alla posizione corrente.
      posN = numero della posizione (row.posizione). Ogni fiore ha x.posizioni = [k, 15-k]. */
@@ -552,7 +564,7 @@
     const parts = stressPair(stress);
     if (parts.length < 2) return `<p class="stress-line">${esc(stress)}</p>`;
     return '<div class="stress">' + parts.map((p) =>
-      `<div class="stress__item"><span class="stress__lab">${esc(p.lab)}</span><span class="stress__sep">–</span><span class="stress__val">${esc(p.val)}</span></div>`
+      `<div class="stress__item"><span class="stress__lab">${esc(p.lab)}</span><span class="stress__sep">–</span><span class="stress__val">${esc(p.val)}</span>${regBtn(p.lab + " " + p.val)}</div>`
     ).join("") + "</div>";
   }
 
@@ -568,7 +580,7 @@
       const img = src
         ? `<img class="pageimg modi__img" src="${esc(src)}" loading="lazy" alt="Modo ${esc(m.nome)}" />` : "";
       return `<li>${img}<div class="modi__body"><span class="modi__name">${esc(m.nome)}${has(m.tocco) ? ":" : ""}</span>` +
-             `<span class="modi__touch">${esc(m.tocco)}</span></div></li>`;
+             `<span class="modi__touch">${esc(m.tocco)}</span>${regBtn("Modo " + m.nome)}</div></li>`;
     }).join("") + "</ul></div>";
   }
   /* Frase da compilare: il vuoto si riempie con una delle 2 voci IrF / IoF. */
@@ -830,7 +842,7 @@
     const row = posFor(c1, c2);
     sections.innerHTML = sectionsFor(c1, c2, row).map((s) =>
       `<section class="section" id="sec-${s.id}">
-         <h3>${s.label}</h3>${s.html}</section>`).join("");
+         <h3>${s.label}${regBtn(s.label)}</h3>${s.html}</section>`).join("");
     fraseInit(sections);
     regToggle();
     updateStick();

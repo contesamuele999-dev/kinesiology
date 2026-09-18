@@ -66,11 +66,15 @@
       Test: `node tools/test_links.js` (1559 controlli, compresa la sicurezza dell'autolink:
       niente markup iniettato, niente link annidati, mai una parola dentro un'altra).
 
-- [x] **Seduta: registrare quello che si tocca, con riscontro** — ogni punto della mappa 3D,
-      ogni immagine e ogni voce NL/NV delle schede ha il suo «＋» (visibile solo a seduta
-      aperta) e conferma a schermo cosa è finito nella seduta; la barra della seduta conta le
-      voci e mostra l'ultima. Coordinate testate: si sceglie la **coordinata intera** (1° e 2°
-      meridiano) e l'esito è separato per **destra e sinistra**.
+- [x] **Seduta: registrare quello che si tocca, con riscontro** — il «＋» (visibile solo a
+      seduta aperta) sta su **tutte le schede**: intestazione di ogni sezione della coordinata,
+      modi, voci IrF/IoF, immagini, elenchi NL/NV, elenco dei Punti d'Allarme e sezioni delle
+      Costituzioni. Un tocco su un punto della mappa 3D, su un punto di meridiano o sulle
+      Tavole 2D registra da sé. Ogni registrazione conferma a schermo cosa è finito nella
+      seduta; la barra conta le voci e mostra l'ultima. Coordinate testate: si sceglie la
+      **coordinata intera** (1° e 2° meridiano) e l'esito è separato per **destra e sinistra**.
+- [x] **Riepilogo della seduta** con le frasi scelte, oltre a essenze e compiti, da stampare,
+      copiare o mandare al paziente su WhatsApp o per email.
 - [x] **Frase da comporre e consegnare** (Fiori/Atteggiamenti e Forme Pensiero & Sensazioni):
       si scelgono verbo (tramutare / trasformare / trascendere / dissolvere), «mi impegno»
       oppure «accetto» e la voce ottenuta dal test; la frase si compone sotto, sul colore del

@@ -55,7 +55,7 @@
   function sezione(titolo, corpo, id) {
     if (!corpo) return "";
     return '<section class="section"' + (id ? ' id="' + esc(id) + '"' : "") +
-           "><h3>" + esc(titolo) + "</h3>" + corpo + "</section>";
+           "><h3>" + esc(titolo) + (window.Reg ? window.Reg(titolo) : "") + "</h3>" + corpo + "</section>";
   }
   /* ---- vocabolario locale: i capitoli di teoria ----
      I capitoli si citano a vicenda di continuo ("come in Ippocrate",

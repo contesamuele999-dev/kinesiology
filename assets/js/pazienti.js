@@ -600,6 +600,9 @@
 
       '<div class="pz-bar__actions pz-end">' +
         '<button class="ebtn" data-act="riepilogo" data-id="' + esc(s.id) + '">📄 Riepilogo per il paziente</button>' +
+        '<button class="ebtn" data-act="riep-copia" data-id="' + esc(s.id) + '">⧉ Copia</button>' +
+        '<button class="ebtn" data-act="riep-wa" data-id="' + esc(s.id) + '">WhatsApp</button>' +
+        '<button class="ebtn" data-act="riep-mail" data-id="' + esc(s.id) + '">Email</button>' +
       "</div></div>";
 
     view.querySelectorAll("[data-s]").forEach(function (inp) {
@@ -1003,6 +1006,21 @@
         save("sessions", s, true).then(function () { renderSession(s.id); });
         break;
       case "riepilogo": riepilogoPaziente(id); break;
+      /* Si apre WhatsApp o il client di posta col testo già scritto: a premere
+         «invia», e a scegliere il destinatario, è l'operatore. */
+      case "riep-copia": {
+        var tc = riepilogoTesto(id);
+        if (navigator.clipboard) navigator.clipboard.writeText(tc).then(function () { toast("Riepilogo copiato."); },
+                                                                       function () { toast("Copia non riuscita.", true); });
+        break;
+      }
+      case "riep-wa":
+        window.open("https://wa.me/?text=" + encodeURIComponent(riepilogoTesto(id)), "_blank", "noopener");
+        break;
+      case "riep-mail":
+        location.href = "mailto:?subject=" + encodeURIComponent("Riepilogo della seduta") +
+                        "&body=" + encodeURIComponent(riepilogoTesto(id));
+        break;
 
       case "nuovo-appuntamento": st.agendaFor = id; location.hash = "#paz/agenda"; break;
       case "crea-appuntamento": creaAppuntamento(); break;
@@ -1332,12 +1350,34 @@
       }).join("");
     apriStampa(html);
   }
+  /* Le frasi scelte durante la seduta: sono la parte che il paziente si
+     porta a casa e ripete, quindi nel riepilogo vengono prima di tutto. */
+  function frasiDi(s) {
+    return (s.voci || []).filter(function (v) { return v.kind === "frase" && v.usato; })
+      .map(function (v) { return v.label; });
+  }
   function riepilogoPaziente(id) {
     var s = session(id), p = patient(s.patientId);
+    var fr = frasiDi(s);
     apriStampa("<h1>Riepilogo della seduta</h1><p>" + esc(p.displayName) + " · " + fmtShort(s.date) + "</p>" +
+      (fr.length ? "<h2>Le tue frasi</h2><ul>" + fr.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + "</ul>" : "") +
       (s.essenze ? "<h2>Essenze</h2><p>" + esc(s.essenze) + "</p>" : "") +
       (s.compitiCasa ? "<h2>Da fare a casa</h2><p>" + esc(s.compitiCasa) + "</p>" : "") +
       "<p class='pr-f'>Prossimo controllo: ____________</p>");
+  }
+  /* Stesso riepilogo in testo semplice: è quello che si incolla in WhatsApp o
+     in una email. Niente dati clinici che il paziente non debba leggere:
+     frasi, essenze e compiti, gli stessi del foglio stampato. */
+  function riepilogoTesto(id) {
+    var s = session(id), p = patient(s.patientId);
+    var fr = frasiDi(s), out = [];
+    out.push("Riepilogo della seduta — " + (p ? p.displayName : "") + " · " + fmtShort(s.date));
+    if (fr.length) out.push("", "LE TUE FRASI", fr.map(function (f) { return "• " + f; }).join("\n"));
+    if (s.essenze) out.push("", "ESSENZE", s.essenze);
+    if (s.compitiCasa) out.push("", "DA FARE A CASA", s.compitiCasa);
+    if (!fr.length && !s.essenze && !s.compitiCasa)
+      out.push("", "(Nessuna frase, essenza o compito registrato in questa seduta.)");
+    return out.join("\n");
   }
   /* Stampa nativa: nessuna libreria PDF, il browser fa già «Salva come PDF». */
   function apriStampa(html) {

@@ -468,7 +468,7 @@
     const tubes = merVisibleTubes();
     if (tubes.length) {
       const h3 = raycaster.intersectObjects(tubes, false)[0];
-      if (h3) { selectMeridiano(h3.object.userData.meridiano); return; }
+      if (h3) { selectMeridiano(h3.object.userData.meridiano, true); return; }
     }
     // 4) punto qualsiasi del corpo -> meridiano più vicino
     if (bodyGroup) {
@@ -666,11 +666,16 @@
     let del = "";
     if (editing && p.kind !== "landmark" && p._added)
       del = '<span class="punti__li-del" data-del="' + esc(p.id) + '" title="Elimina">🗑</span>';
+    const reg = (p.kind === "landmark" || !window.Reg) ? ""
+      : window.Reg("Punto d'allarme · " + (p.organo || p.id));
     li.innerHTML = dot +
       '<span class="punti__li-name">' + esc(p.organo) + '</span>' +
-      '<span class="punti__li-tag">' + (p.vista === "retro" ? "retro" : "fronte") + '</span>' + del;
+      '<span class="punti__li-tag">' + (p.vista === "retro" ? "retro" : "fronte") + '</span>' + reg + del;
     li.addEventListener("click", (e) => {
       if (e.target && e.target.dataset && e.target.dataset.del) { removePoint(e.target.dataset.del); return; }
+      /* Il "+" ha il suo gestore (app.js): qui non deve anche selezionare,
+         altrimenti la voce finirebbe nella seduta due volte. */
+      if (e.target && e.target.closest && e.target.closest("[data-reg]")) return;
       selectPoint(p, true);
     });
     return li;
@@ -945,8 +950,14 @@
     mm.highlight(m.id);
     syncChips();
     renderMerPointInfo(m, ref);
-    if (daUtente) segnaInSeduta("punti", "#punti/mer/" + encodeURIComponent(m.id) + "/" + encodeURIComponent(ref.sigla || ""),
-                  "Meridiano " + (m.nome || m.id) + (ref.sigla ? " · " + ref.sigla : ""));
+    if (daUtente) {
+      /* Le tavole 2D passano solo l'indice: la sigla si ricava dai nodi, così
+         la voce registrata dice quale punto è, non solo quale meridiano. */
+      const nodi = mm.nodiDi(m.id, ref.ramo) || [];
+      const sg = ref.sigla || (nodi[ref.idx] && nodi[ref.idx].sigla) || "";
+      segnaInSeduta("punti", "#punti/mer/" + encodeURIComponent(m.id) + (sg ? "/" + encodeURIComponent(sg) : ""),
+                    "Meridiano " + (m.nome || m.id) + (sg ? " · " + sg : ""));
+    }
     tavMark({ kind: "mer", merId: ref.merId, idx: ref.idx, ramo: ref.ramo });
   }
 
@@ -965,7 +976,7 @@
     return true;
   }
 
-  function selectMeridiano(id) {
+  function selectMeridiano(id, daUtente) {
     const mm = MM(); if (!mm) return;
     const m = mm.get(id); if (!m) return;
     merSel = { merId: id, idx: -1, side: 1 };
@@ -973,6 +984,8 @@
     mm.highlight(id);
     syncChips();
     renderMerInfo(m);
+    if (daUtente) segnaInSeduta("punti", "#punti/mer/" + encodeURIComponent(m.id),
+                                "Meridiano " + (m.nome || m.id));
   }
 
   /* ---------- probe: click su un punto qualsiasi del corpo ---------- */
@@ -1506,8 +1519,8 @@
     puntiVisible: puntiVisible,
     setStage: setStage,
     stage: () => stage,
-    selectPunto: (id) => { const p = DATA.find((x) => x.id === id) || LANDMARKS.find((x) => x.id === id);
-                           if (p) selectPoint(p); return !!p; },
+    selectPunto: (id, daUtente) => { const p = DATA.find((x) => x.id === id) || LANDMARKS.find((x) => x.id === id);
+                           if (p) selectPoint(p, daUtente); return !!p; },
     meridianoDi: (pos) => (window.MeridianiMap ? window.MeridianiMap.nearest(pos) : null)
   };
 
