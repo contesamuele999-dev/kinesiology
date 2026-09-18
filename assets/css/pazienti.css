@@ -28,6 +28,15 @@ body.dark .pz-warn{ background:#3a2f0a; border-color:#7a6413; color:#f4dd94; }
 .pz-sep{ border:none; border-top:1px solid var(--line); margin:20px 0 16px; }
 .pz-lock .ebtn{ display:inline-block; margin-top:8px; }
 
+/* «Ho perso la passphrase»: chiuso di default, non è una strada da imboccare
+   per sbaglio. */
+.pz-lost{ margin-top:20px; border-top:1px solid var(--line); padding-top:14px; text-align:left; }
+.pz-lost summary{ cursor:pointer; font-weight:700; color:var(--muted); font-size:.92rem; }
+.pz-lost summary:hover{ color:var(--brand); }
+.pz-lost p{ margin:10px 0; font-size:.9rem; line-height:1.5; }
+.pz-lost code{ font-size:.85em; padding:1px 5px; border-radius:5px;
+  background:color-mix(in srgb, var(--brand) 12%, var(--card)); }
+
 /* --- Riquadri --- */
 .pz-box{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
   padding:18px 18px; box-shadow:var(--shadow); }

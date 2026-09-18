@@ -179,7 +179,25 @@
       '<form><input type="password" id="pzPass" autocomplete="current-password" placeholder="Passphrase" />' +
       giornoCheck() +
       '<button class="ebtn ebtn--primary" type="submit">Sblocca</button></form>' +
-      '<p class="pz-err" id="pzErr" hidden></p></div>';
+      '<p class="pz-err" id="pzErr" hidden></p>' +
+      persaHtml() + "</div>";
+  }
+  /* Passphrase persa: non c'e' recupero — e' la cifratura che funziona come
+     deve. L'unica strada e' ripartire, e va detto per intero prima di farlo,
+     perche' quello che si cancella sono cartelle cliniche. */
+  function persaHtml() {
+    return '<details class="pz-lost"><summary>Ho perso la passphrase</summary>' +
+      "<p>Non esiste alcun recupero: senza la passphrase i dati cifrati su questo dispositivo " +
+      "restano illeggibili <strong>per chiunque</strong>, te compreso. Nessun server può " +
+      "reimpostarla, perché nessun server ha mai visto la chiave.</p>" +
+      "<p>Se hai un <strong>backup <code>.kin</code></strong> di un altro dispositivo e ne " +
+      "ricordi <em>quella</em> passphrase, puoi ripartire da lì: cancella prima l'area qui " +
+      "sotto, poi importa il backup nella schermata di creazione che compare.</p>" +
+      '<p class="pz-warn"><strong>Altrimenti l\'unica strada è ricreare l\'area da zero.</strong> ' +
+      "Tutte le sedute, i pazienti e gli appuntamenti registrati su questo dispositivo vengono " +
+      "cancellati e non tornano più.</p>" +
+      '<button class="ebtn ebtn--danger" data-act="ricrea">Cancella l\'area e ricreala con una nuova passphrase</button>' +
+      "</details>";
   }
   function setupHtml() {
     return '<div class="pz-lock"><h2>Crea l\'area pazienti</h2>' +
@@ -1032,6 +1050,20 @@
         b.disabled = true; b.textContent = "Attendi…";
         V.changePass(o, n).then(function () { b.disabled = false; b.textContent = "Cambia"; alert("Passphrase cambiata. I vecchi backup restano legati alla vecchia passphrase."); })
           .catch(function (err) { b.disabled = false; b.textContent = "Cambia"; showErr(err.message === "passphrase-errata" ? "Passphrase attuale errata." : err.message); });
+        break;
+      }
+      /* Sulla schermata di blocco: l'operatore non puo' sbloccare, quindi non
+         puo' nemmeno esportare. Si chiede di scrivere la parola per intero:
+         due «ok» di fila si premono senza leggerli. */
+      case "ricrea": {
+        var conf = prompt("Questo cancella TUTTI i pazienti e le sedute di questo dispositivo, " +
+          "senza possibilità di recupero.\n\nPer confermare scrivi: CANCELLA");
+        if (!conf || conf.trim().toUpperCase() !== "CANCELLA") return;
+        V.wipe().then(function () {
+          st.patients = []; st.sessions = []; st.appts = []; st.activeId = null; st.loaded = false;
+          lsSet(LS_ACTIVE, null); lsSet(LS_SYNC_LAST, null); lsSet(LS_GIORNO, null);
+          sessionBar(); badge(); render();
+        });
         break;
       }
       case "wipe":

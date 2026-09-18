@@ -14,7 +14,9 @@ l'app segna da sola cosa hai aperto e a fine seduta te lo propone come checklist
 
 I dati restano **sul dispositivo**, cifrati (AES-GCM 256, chiave da passphrase con PBKDF2
 600k) e protetti da passphrase con blocco automatico. **Non esiste alcun recupero della
-passphrase**: annotala e usa i backup (Impostazioni → Esporta backup).
+passphrase**: annotala e usa i backup (Impostazioni → Esporta backup). Se la perdi davvero,
+la schermata di blocco ha «Ho perso la passphrase»: cancella l'area e la ricrea con una
+passphrase nuova (chiede di scrivere `CANCELLA`). Serve a ripartire, non a recuperare.
 
 Chi lavora tutto il giorno sullo stesso tablet può spuntare **«chiedi la passphrase una volta
 al giorno»**: la chiave (non estraibile) resta in IndexedDB fino a mezzanotte, così la seduta

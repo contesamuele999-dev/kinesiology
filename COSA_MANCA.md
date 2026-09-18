@@ -78,6 +78,10 @@
 - [x] **Sblocco giornaliero**: la passphrase si digita una volta al giorno (chiave non
       estraibile in IndexedDB fino a mezzanotte). Prima l'auto-lock a 5 minuti scattava a metà
       seduta e faceva sparire la barra di registrazione.
+- [x] **Passphrase persa**: dalla schermata di blocco, «Ho perso la passphrase» spiega che non
+      c'è recupero e permette di cancellare l'area e ricrearla con una passphrase nuova
+      (conferma scrivendo `CANCELLA`). Da lì si può anche importare un backup `.kin` di un
+      altro dispositivo, se se ne ricorda *quella* passphrase.
 
 ## Da fare
 - [ ] Squilibri mancanti per 3 pagine-essenza: Devil's Claw (Vaso Concezione, pos. 4/11) e
