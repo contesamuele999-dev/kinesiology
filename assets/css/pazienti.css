@@ -194,3 +194,30 @@ a.pz-coord__l{ text-decoration:none; }
 .pz-tl__b{ font-size:.73rem; font-weight:600; color:var(--muted); line-height:1.5;
   background:var(--input-bg); border:1px solid var(--line); border-radius:999px; padding:1px 9px;
   max-width:26ch; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* --- Sblocco giornaliero --- */
+.pz-day{ display:flex; align-items:flex-start; gap:10px; margin:12px 0; text-align:left; }
+.pz-day input{ width:22px; height:22px; flex:0 0 22px; margin-top:2px; }
+.pz-day span{ font-size:.92rem; }
+.pz-day em{ display:block; font-style:normal; color:var(--muted); font-size:.82rem; margin-top:2px; }
+
+/* --- Riscontro di ciò che viene registrato --- */
+.pz-toast{ position:fixed; left:50%; bottom:104px; transform:translate(-50%,10px); z-index:60;
+  max-width:min(92vw,520px); padding:11px 16px; border-radius:12px; font-weight:700; font-size:.9rem;
+  background:var(--brand); color:#fff; box-shadow:0 8px 28px rgba(20,40,60,.3);
+  opacity:0; pointer-events:none; transition:opacity .18s, transform .18s; }
+.pz-toast[data-on="1"]{ opacity:1; transform:translate(-50%,0); }
+.pz-toast[data-warn="1"]{ background:#c0392b; }
+.pz-sessionbar__n{ display:block; font-style:normal; font-size:.76rem; color:var(--muted); font-weight:700; }
+
+/* --- Coordinate testate: destra e sinistra separate --- */
+.pz-coord{ display:block; }
+.pz-coord__h{ display:flex; align-items:center; gap:10px; }
+.pz-coord__h .pz-coord__l{ flex:1 1 auto; }
+.pz-coord__lati{ display:flex; flex-wrap:wrap; gap:8px 24px; margin-top:10px; }
+.pz-lato{ display:flex; align-items:center; gap:8px; }
+.pz-lato__lb{ font-size:.78rem; font-weight:800; color:var(--muted); min-width:56px; }
+.pz-addcoord{ display:grid; gap:10px; margin-top:12px; align-items:end;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+.pz-addcoord .pz-f{ margin-top:0; }
+.pz-addcoord .ebtn{ align-self:end; justify-self:start; }

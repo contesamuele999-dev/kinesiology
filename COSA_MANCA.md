@@ -66,9 +66,25 @@
       Test: `node tools/test_links.js` (1559 controlli, compresa la sicurezza dell'autolink:
       niente markup iniettato, niente link annidati, mai una parola dentro un'altra).
 
+- [x] **Seduta: registrare quello che si tocca, con riscontro** — ogni punto della mappa 3D,
+      ogni immagine e ogni voce NL/NV delle schede ha il suo «＋» (visibile solo a seduta
+      aperta) e conferma a schermo cosa è finito nella seduta; la barra della seduta conta le
+      voci e mostra l'ultima. Coordinate testate: si sceglie la **coordinata intera** (1° e 2°
+      meridiano) e l'esito è separato per **destra e sinistra**.
+- [x] **Frase da comporre e consegnare** (Fiori/Atteggiamenti e Forme Pensiero & Sensazioni):
+      si scelgono verbo (tramutare / trasformare / trascendere / dissolvere), «mi impegno»
+      oppure «accetto» e la voce ottenuta dal test; la frase si compone sotto, sul colore del
+      meridiano, e si copia, si manda su WhatsApp o per email, o si registra nella seduta.
+- [x] **Sblocco giornaliero**: la passphrase si digita una volta al giorno (chiave non
+      estraibile in IndexedDB fino a mezzanotte). Prima l'auto-lock a 5 minuti scattava a metà
+      seduta e faceva sparire la barra di registrazione.
+
 ## Da fare
-- [ ] Dettagli essenze (squilibri + affermazione) per gli altri 15 meridiani
-      → in `tools/essenze_dettaglio.json`, dalle pagine-essenza del manuale Atteggiamenti.
+- [ ] Squilibri mancanti per 3 pagine-essenza: Devil's Claw (Vaso Concezione, pos. 4/11) e
+      Star of Bethlehem (Milza e Milza/Pancreas, pos. 3/12). Le affermazioni ci sono tutte
+      (112 su 112), mancano solo gli elenchi di squilibri di queste tre.
+- [ ] Sezione a sé per **Emozioni / Forme Pensiero / Atteggiamento**, con i suoi modi e senza
+      passare dalle coordinate (richiesta del 18/09/2026).
 - [ ] Immagini Basket Weaver **per posizione** (corpo, mani, piedi, ruota) per le 7 coordinate
       mancanti (Maestro del Cuore, TR/Tiroide, TR/Surrenali, Vescica Biliare, Fegato, Polmone,
       Intestino Crasso) → serve il 2° volume del manuale.

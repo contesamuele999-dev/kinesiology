@@ -12,3 +12,6 @@ desktop.ini
 *.log
 *.tmp
 node_modules/
+
+# Config locale dell'editor
+.claude/

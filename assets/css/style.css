@@ -817,3 +817,32 @@ body.dark .vbadge[data-state="locked"]{ color:#f0be6b; }
   .xlink__t{ max-width:17ch; }
   .xlink__s{ max-width:13ch; }
 }
+
+/* --- Frase da comporre e consegnare al paziente ---
+   --c è il colore del meridiano: tinge il fondo della frase così si
+   riconosce a colpo d'occhio di quale meridiano si sta parlando. */
+.frasebox{ margin:12px 0; padding:12px 14px; border-radius:12px;
+  border:1px solid var(--line); border-left:6px solid var(--c,var(--brand));
+  background:color-mix(in srgb, var(--c,var(--brand)) 10%, var(--card)); }
+.frasebox__h{ margin:0 0 8px; font-weight:800; font-size:.9rem; color:var(--muted); }
+.frasebox__opts{ display:flex; flex-direction:column; gap:8px; }
+.fopt{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.fopt__lb{ font-size:.78rem; font-weight:800; color:var(--muted); min-width:120px; }
+.fchip{ display:inline-flex; cursor:pointer; }
+.fchip input{ position:absolute; opacity:0; width:0; height:0; }
+.fchip span{ display:inline-block; padding:7px 12px; border-radius:999px;
+  border:1px solid var(--line); background:var(--card); font-size:.86rem; font-weight:700; }
+.fchip input:checked + span{ background:var(--c,var(--brand)); color:#fff; border-color:var(--c,var(--brand)); }
+.fchip input:focus-visible + span{ outline:2px solid var(--brand); outline-offset:2px; }
+.frasebox__out{ margin:12px 0 0; padding:12px 14px; border-radius:10px;
+  background:color-mix(in srgb, var(--c,var(--brand)) 22%, var(--card));
+  font-size:1.02rem; line-height:1.5; font-weight:600; }
+.frasebox__act{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.frasebox--manca .frasebox__out{ outline:2px solid #c0392b; outline-offset:2px; }
+
+/* --- «＋»: registra nella seduta. Compare solo a seduta aperta. --- */
+.regbtn{ display:none; margin-left:6px; vertical-align:middle; font:inherit; font-weight:800;
+  line-height:1; padding:3px 8px; border-radius:999px; cursor:pointer;
+  border:1px solid var(--brand); background:var(--card); color:var(--brand); }
+.regbtn:hover{ background:var(--brand); color:#fff; }
+body.has-sessione .regbtn{ display:inline-block; }

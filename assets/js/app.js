@@ -289,15 +289,124 @@
       const title = esc(x.zona || x.nome || "");
       const lato = has(x.lato) ? ` <span class="pt-lato">(${esc(x.lato)})</span>` : "";
       const note = has(x.note) ? `<div class="pt-note">${AL(x.note, { max: 3 })}</div>` : "";
-      return `<li><span class="pt-title">${title}</span>${lato}${note}</li>`;
+      return `<li><span class="pt-title">${title}</span>${lato}${regBtn(x.zona || x.nome || "")}${note}</li>`;
     }).join("") + "</ul>";
   }
 
-  /* Checkbox fissi "scelgo di ..." (uguali per tutti i fiori nel manuale) */
-  function essScelgoBlock() {
-    const opzioni = ["tramutare", "trasformare", "trascendere", "dissolvere"];
-    return `<p class="ess__intro">Mi prendo la responsabilit\u00e0 dei miei atteggiamenti ed ora con gentilezza, cortesia, amore e dandomi sostegno scelgo di \u2026</p>` +
-      '<ul class="ess__scelgo">' + opzioni.map((o) => `<li><span class="ess__box">\u2610</span> ${esc(o)}</li>`).join("") + "</ul>";
+  /* ---------- Frase da comporre e consegnare al paziente ----------
+     Il manuale lascia dei vuoti da riempire a voce: il verbo (tramutare /
+     trasformare / trascendere / dissolvere), «mi impegno» oppure «accetto»,
+     e la voce risultata dal test. Qui si scelgono con un tocco, la frase si
+     compone sotto e si manda al paziente com'è. */
+  const VERBI = ["tramutare", "trasformare", "trascendere", "dissolvere"];
+  let fraseSeq = 0;
+  function radioRow(name, lab, valori, sel) {
+    if (!valori.length) return "";
+    return `<div class="fopt"><span class="fopt__lb">${esc(lab)}</span>` +
+      valori.map((v, i) => {
+        const val = typeof v === "string" ? v : v.val;
+        const txt = typeof v === "string" ? v : (v.lab ? v.lab + " — " + v.val : v.val);
+        const on = (sel == null ? i === 0 : sel === i);
+        return `<label class="fchip"><input type="radio" name="${esc(name)}" value="${esc(val)}"` +
+               `${on ? " checked" : ""} /><span>${esc(txt)}</span></label>`;
+      }).join("") + "</div>";
+  }
+  /* tpl usa i segnaposto {imp} {verbo} {voce}; quello che non è ancora stato
+     scelto resta «…», così si vede subito cosa manca. */
+  function fraseBox(o) {
+    const id = "fr" + (++fraseSeq);
+    const rows =
+      (o.imp === false ? "" : radioRow(id + "-imp", "Frase", ["Mi impegno", "Accetto"])) +
+      (o.verbi === false ? "" : radioRow(id + "-verbo", "Scelgo di", VERBI, -1)) +
+      radioRow(id + "-voce", o.vociLabel || "Voce ottenuta", o.voci || [], -1);
+    const act = '<div class="frasebox__act">' +
+      '<button class="ebtn ebtn--mini" type="button" data-f="copia">⧉ Copia</button>' +
+      '<button class="ebtn ebtn--mini" type="button" data-f="wa">WhatsApp</button>' +
+      '<button class="ebtn ebtn--mini" type="button" data-f="mail">Email</button>' +
+      '<button class="ebtn ebtn--mini ebtn--primary" type="button" data-f="reg">＋ Registra nella seduta</button>' +
+      "</div>";
+    return `<div class="frasebox" data-tpl="${esc(o.tpl)}" style="--c:${esc(o.colore || "")}">` +
+      (o.titolo ? `<p class="frasebox__h">${esc(o.titolo)}</p>` : "") +
+      `<div class="frasebox__opts">${rows}</div>` +
+      '<p class="frasebox__out" data-out></p>' + act + "</div>";
+  }
+  function fraseTesto(box) {
+    let t = box.dataset.tpl || "";
+    ["imp", "verbo", "voce"].forEach((k) => {
+      const r = box.querySelector('input[name$="-' + k + '"]:checked');
+      t = t.split("{" + k + "}").join(r ? r.value : "…");
+    });
+    return t.replace(/\s+/g, " ").trim();
+  }
+  function fraseSync(box) {
+    const out = box.querySelector("[data-out]");
+    if (out) out.textContent = fraseTesto(box);
+  }
+  document.addEventListener("change", (e) => {
+    const box = e.target.closest ? e.target.closest(".frasebox") : null;
+    if (box) fraseSync(box);
+  });
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest(".frasebox [data-f]") : null;
+    if (!b) return;
+    const box = b.closest(".frasebox"), txt = fraseTesto(box);
+    const P = window.Pazienti;
+    /* Una frase con ancora dei «…» dentro non si manda al paziente e non si
+       registra: manca un pezzo del test. */
+    if (txt.indexOf("…") !== -1 && b.dataset.f !== "copia") {
+      if (P && P.avvisa) P.avvisa("Frase incompleta: scegli prima le parti mancanti (…).", true);
+      box.classList.add("frasebox--manca");
+      setTimeout(() => box.classList.remove("frasebox--manca"), 1200);
+      return;
+    }
+    if (b.dataset.f === "copia") {
+      const old = b.textContent;
+      const done = () => { b.textContent = "✓ Copiata"; setTimeout(() => { b.textContent = old; }, 1500); };
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(done, () => {});
+      else done();
+    } else if (b.dataset.f === "wa") {
+      /* Si apre WhatsApp col testo già scritto: a premere «invia» è l'operatore. */
+      window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank", "noopener");
+    } else if (b.dataset.f === "mail") {
+      location.href = "mailto:?subject=" + encodeURIComponent("La tua frase") + "&body=" + encodeURIComponent(txt);
+    } else if (b.dataset.f === "reg") {
+      if (P && P.registra) P.registra({ kind: "frase", ref: location.hash, label: txt });
+    }
+  });
+  /* Le frasi appena inserite nel DOM partono già compilate. */
+  function fraseInit(root) {
+    (root || document).querySelectorAll(".frasebox").forEach(fraseSync);
+  }
+
+  /* ---------- Registrare un singolo punto dalle schede ----------
+     La mappa 3D registra il punto toccato; nelle schede i punti stanno
+     dentro le immagini dei manuali e negli elenchi NL/NV. Qui ogni voce e
+     ogni immagine hanno il loro «＋»: quello che si tocca finisce nella
+     seduta con il nome della coordinata davanti. */
+  function regBtn(label) {
+    if (!has(label)) return "";
+    return `<button class="regbtn" type="button" data-reg="${esc(label)}" title="Registra nella seduta">＋</button>`;
+  }
+  function ctxLabel() {
+    const [c1, c2] = pair;
+    if (!c1 || !c2 || coordView.hidden) return "";
+    const row = posFor(c1, c2);
+    return c1.meridiano + " · " + c1.muscolo + " — pos. " + (row ? row.posizione : "?") + " (" + c2.meridiano + ")";
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest ? e.target.closest("[data-reg]") : null;
+    if (!b) return;
+    e.preventDefault(); e.stopPropagation();   // sulle figure non deve aprire anche la lightbox
+    const P = window.Pazienti;
+    if (!P || !P.registra) return;
+    const ctx = ctxLabel();
+    P.registra({ kind: "punto", ref: location.hash, label: (ctx ? ctx + " · " : "") + b.dataset.reg });
+  });
+  /* Il «＋» compare solo con una seduta aperta: altrove sarebbe un bottone
+     che non fa niente. */
+  function regToggle() {
+    const on = !!(window.Pazienti && window.Pazienti.attiva && window.Pazienti.attiva());
+    document.body.classList.toggle("has-sessione", on);
   }
 
   /* Sezione Fiori: mostra SOLO i fiori relativi alla posizione corrente.
@@ -315,7 +424,6 @@
       : "";
     const L = window.Links;
     return head + '<div class="ess__list">' + rows.map((x) => {
-      const sq = (x.squilibri || []).map((s) => `<li><span class="ess__box">\u2610</span> ${esc(s)}</li>`).join("");
       const ref = Array.isArray(x.posizioni) && x.posizioni.length
         ? `<span class="ess__ref">Pos. ${x.posizioni.join(", ")}</span>` : "";
       /* Lo stesso fiore vale su due posizioni speculari (k e 15-k) e a
@@ -325,12 +433,29 @@
         L.row("Stesso fiore, altra posizione", L.chipsPosFiore(c, x.posizioni)),
         L.row("Stesso fiore, altro muscolo", L.chipsFiore(x.nome, c.id))
       ]) : "";
+      /* La frase dell'atteggiamento: verbo e squilibrio si scelgono qui. */
+      const att = fraseBox({
+        titolo: "Frase dell'atteggiamento",
+        colore: c.colore, imp: false,
+        vociLabel: "Il mio / La mia…",
+        voci: (x.squilibri || []).map((v) => ({ val: v })),
+        tpl: "Mi prendo la responsabilità dei miei atteggiamenti ed ora con gentilezza, " +
+             "cortesia, amore e dandomi sostegno scelgo di {verbo} il mio / la mia {voce} in amore senza limiti."
+      });
+      /* La frase dell'essenza è già scritta nel manuale: qui si sceglie solo
+         se ripetere «mi impegno» o «accetto». */
+      const aff = has(x.frasi)
+        ? fraseBox({
+            titolo: "Frase dell'essenza · " + (x.nome || ""),
+            colore: c.colore, verbi: false,
+            tpl: String(x.frasi).replace(/^\s*Mi impegno\s*\/\s*accetto/i, "{imp}")
+          })
+        : "";
       return `
       <div class="ess">
         <div class="ess__head"><span class="ess__name">${esc(x.nome || "—")}</span><span class="ess__type">${esc(x.tipo || "")}</span>${ref}</div>
-        ${essScelgoBlock()}
-        ${sq ? `<p class="ess__label">Il mio / La mia\u2026</p><ul class="ess__sq">${sq}</ul><p class="ess__label">\u2026 in amore senza limiti.</p>` : ""}
-        ${has(x.frasi) ? `<div class="ess__imp">${esc(x.frasi)}</div>` : ""}
+        ${att}
+        ${aff}
         ${xl}
       </div>`;
     }).join("") + "</div>";
@@ -339,7 +464,7 @@
   /* Immagine singola (posizione) con didascalia, apre lightbox */
   function posImg(src, caption) {
     if (!has(src)) return PH_IMG;
-    const cap = caption ? `<figcaption>${esc(caption)}</figcaption>` : "";
+    const cap = caption ? `<figcaption>${esc(caption)}${regBtn(caption)}</figcaption>` : "";
     return `<div class="pages pages--single"><figure class="pagefig"><img class="pageimg" src="${esc(src)}" loading="lazy" alt="${esc(caption || "Immagine")}" />${cap}</figure></div>`;
   }
 
@@ -348,7 +473,7 @@
     const figs = items.filter((it) => has(it.src));
     if (!figs.length) return "";
     return '<div class="pages">' + figs.map((it) =>
-      `<figure class="pagefig"><img class="pageimg" src="${esc(it.src)}" loading="lazy" alt="${esc(it.cap)}" /><figcaption>${esc(it.cap)}</figcaption></figure>`
+      `<figure class="pagefig"><img class="pageimg" src="${esc(it.src)}" loading="lazy" alt="${esc(it.cap)}" /><figcaption>${esc(it.cap)}${regBtn(it.cap)}</figcaption></figure>`
     ).join("") + "</div>";
   }
 
@@ -447,20 +572,25 @@
     }).join("") + "</ul></div>";
   }
   /* Frase da compilare: il vuoto si riempie con una delle 2 voci IrF / IoF. */
-  function fraseBlock(frase, voci) {
-    const opz = voci.length
-      ? '<ul class="ess__sq">' + voci.map((v) =>
-          `<li><span class="ess__box">☐</span> <span class="frase__lab">${esc(v.lab)}</span> ${esc(v.val)}</li>`).join("") + "</ul>"
-      : '<p><span class="placeholder">Nessuna voce IrF / IoF per questa posizione.</span></p>';
-    return `<div class="ess">${essScelgoBlock()}
-      <p class="ess__label">${esc(frase)}…</p>${opz}
-      <p class="ess__label">… in una responsabile espressione di amore senza limiti.</p>
-      <p class="frase__hint">Alla fine ne resta <strong>una sola</strong> delle due.</p></div>`;
+  /* Forme Pensiero e Sensazioni: la frase NON è quella degli atteggiamenti
+     («mi prendo la responsabilità…»), è «mi impegno / accetto con gentilezza,
+     cortesia, amore e dandomi sostegno a…». */
+  function fraseBlock(m, voci, colore) {
+    if (!voci.length)
+      return '<div class="ess"><p><span class="placeholder">Nessuna voce IrF / IoF per questa posizione.</span></p></div>';
+    return '<div class="ess">' + fraseBox({
+      titolo: "Frase · " + (m.nome || ""),
+      colore: colore,
+      vociLabel: "Voce ottenuta (ne resta una sola)",
+      voci: voci,
+      tpl: "{imp} con gentilezza, cortesia, amore e dandomi sostegno a {verbo} " +
+           m.frase + " {voce} in una responsabile espressione di amore senza limiti."
+    }) + "</div>";
   }
-  function pensieroBlock(row) {
+  function pensieroBlock(row, colore) {
     const voci = stressPair(row && row.stress);
     return (MODI.pensiero || []).map((m) =>
-      `${modiBlock([m], "Modo")}${fraseBlock(m.frase, voci)}`
+      `${modiBlock([m], "Modo")}${fraseBlock(m, voci, colore)}`
     ).join("");
   }
   function tabellaBlock() {
@@ -645,7 +775,7 @@
         html: modiBlock(MODI.neurovascolari, "Modo") + nvScheda + nvList + nvImg },
       { id: "fiore", label: "Fiori / Atteggiamenti",
         html: modiBlock(MODI.fiori, "Modi") + fioreBlock(c1, row ? row.posizione : null) },
-      { id: "pensiero", label: "Forme Pensiero & Sensazioni", html: pensieroBlock(row) },
+      { id: "pensiero", label: "Forme Pensiero & Sensazioni", html: pensieroBlock(row, c1.colore) },
       { id: "reflessologia", label: "Reflessologia (Basket Weaver)",
         html: modiBlock(MODI.reflessologia, "Modi") + reflexHtml },
       { id: "acutouch", label: "Acu Touch & Modo dell'Amore",
@@ -667,7 +797,7 @@
     const imgs = (list || []).filter(has);
     if (!imgs.length) return "";
     return '<div class="pages">' + imgs.map((src, i) => {
-      const cap = captions && captions[i] ? `<figcaption>${esc(captions[i])}</figcaption>` : "";
+      const cap = captions && captions[i] ? `<figcaption>${esc(captions[i])}${regBtn(captions[i])}</figcaption>` : "";
       return `<figure class="pagefig"><img class="pageimg" src="${esc(src)}" loading="lazy" alt="${esc(alt || "Immagine")} ${i + 1}" />${cap}</figure>`;
     }).join("") + "</div>";
   }
@@ -701,6 +831,8 @@
     sections.innerHTML = sectionsFor(c1, c2, row).map((s) =>
       `<section class="section" id="sec-${s.id}">
          <h3>${s.label}</h3>${s.html}</section>`).join("");
+    fraseInit(sections);
+    regToggle();
     updateStick();
   }
 

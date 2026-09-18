@@ -106,8 +106,13 @@
     <h2>8. Sicurezza, e i suoi limiti</h2>
     <p>Misure adottate: cifratura AES-GCM 256 a riposo, derivazione della chiave con PBKDF2
       600.000 iterazioni, chiave non estraibile e mai trasmessa, blocco automatico dopo
-      inattività e blocco automatico dopo inattività. Se hai configurato un server tuo, il
-      trasporto avviene in TLS e ogni spazio è isolato dagli altri.</p>
+      inattività. Se hai configurato un server tuo, il trasporto avviene in TLS e ogni
+      spazio è isolato dagli altri.</p>
+    <p>Se attivi lo <strong>sblocco giornaliero</strong> («chiedi la passphrase una volta al
+      giorno»), la chiave resta memorizzata sul dispositivo fino a mezzanotte: non è
+      estraibile e non lascia mai il dispositivo, ma chi ha in mano il tablet sbloccato in
+      quella giornata vede i dati senza digitare nulla. È una scelta tua, disattivabile in
+      qualunque momento da Impostazioni o con «Blocca adesso».</p>
     <p>Detto onestamente, cosa <strong>non</strong> copre:</p>
     <ul class="pz-ul">
       <li>non protegge da un dispositivo già compromesso (keylogger, estensioni malevole,

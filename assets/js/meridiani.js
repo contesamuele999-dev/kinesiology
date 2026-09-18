@@ -142,8 +142,10 @@
       ctx.fillStyle = "#ffffff";
       ctx.fillText(text, 64, 25);
     }
+    /* depthTest attivo: la sigla di un punto sul retro non deve leggersi
+        attraverso il corpo mentre si guarda il fronte. */
     var sp = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: new THREE.CanvasTexture(cv), transparent: true, depthTest: false
+      map: new THREE.CanvasTexture(cv), transparent: true, depthTest: true
     }));
     sp.scale.set(0.20, 0.075, 1);
     sp.userData.merLabel = true;
@@ -261,7 +263,8 @@
       if (pointsMode === "chiave" && !p.userData.merPunto.chiave) return;
       var sp = labelSprite(p.userData.merPunto.sigla, rec.baseColor);
       if (!sp) return;
-      sp.position.set(0, 0.075, 0);
+      /* spostata verso l'esterno, altrimenti la superficie la mangia. */
+      sp.position.set(0, 0.075, p.position.z < 0 ? -0.05 : 0.05);
       p.add(sp); rec.labels.push(sp);
     });
   }

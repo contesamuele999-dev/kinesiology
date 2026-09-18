@@ -20,6 +20,7 @@
   var cfg = null;        // { salt, iter, check } — in chiaro, non è un segreto
   var dbp = null;
   var lockTimer = null, lockMs = 5 * 60 * 1000, lockCbs = [], unlockCbs = [];
+  var giorno = 0;        // scadenza dello sblocco giornaliero (0 = non attivo)
 
   /* ---------- IndexedDB ---------- */
   function openDB() {
@@ -96,12 +97,54 @@
   function touch() {
     if (!key) return;
     clearTimeout(lockTimer);
-    lockTimer = setTimeout(function () { lock(); }, lockMs);
+    lockTimer = setTimeout(function () { lock(); }, msLock());
+  }
+  /* Con lo sblocco giornaliero attivo il timer di inattivita' non serve: la
+     seduta dura piu' di cinque minuti e l'operatore non tocca il tablet
+     mentre lavora. Il blocco arriva comunque a fine giornata. */
+  function msLock() {
+    return giorno ? Math.max(60000, giorno - Date.now()) : lockMs;
   }
   function lock() {
-    key = null; syncSecret = null;
+    key = null; syncSecret = null; giorno = 0;
     clearTimeout(lockTimer);
+    dimentica();
     lockCbs.forEach(function (f) { try { f(); } catch (e) {} });
+  }
+
+  /* ---------- Sblocco giornaliero ----------
+     La CryptoKey resta non estraibile: IndexedDB la clona cosi' com'e', non
+     se ne puo' leggere il materiale. Chi ha in mano il dispositivo sbloccato
+     entro fine giornata pero' vede i dati: e' il prezzo di non ridigitare la
+     passphrase a ogni paziente, ed e' una scelta esplicita dell'operatore. */
+  function fineGiornata() {
+    var d = new Date(); d.setHours(24, 0, 0, 0);
+    return d.getTime();
+  }
+  function ricorda() {
+    if (!key) return Promise.resolve(false);
+    giorno = fineGiornata();
+    return idb("meta", "readwrite", function (s) {
+      return s.put({ id: "resume", key: key, secret: syncSecret, until: giorno });
+    }).then(function () { touch(); return true; })
+      .catch(function () { giorno = 0; return false; });   // chiave non clonabile: si resta al timer
+  }
+  function dimentica() {
+    return idb("meta", "readwrite", function (s) { return s.delete("resume"); }).catch(function () {});
+  }
+  function riprendi() {
+    return idb("meta", "readonly", function (s) { return s.get("resume"); }).then(function (r) {
+      if (!r) return false;
+      if (!r.until || r.until <= Date.now() || !r.key) return dimentica().then(function () { return false; });
+      key = r.key; syncSecret = r.secret; giorno = r.until;
+      touch(); fireUnlock();
+      return true;
+    }).catch(function () { return false; });
+  }
+  var readyP = null;
+  function ready() {
+    if (!readyP) readyP = (typeof indexedDB === "undefined") ? Promise.resolve(false) : riprendi();
+    return readyP;
   }
   /* Chiamata da setup/unlock/changePass: chi mostra lo stato in interfaccia
      non deve interrogare unlocked() a intervalli. */
@@ -169,6 +212,7 @@
           return seal(nk, CHECK).then(function (chk) {
             var rec = { id: "crypto", salt: salt, iter: ITER, checkIv: chk.iv, checkCt: chk.ct };
             key = nk; syncSecret = d.secret; cfg = rec; fireUnlock();
+            if (giorno > Date.now()) ricorda();   // la chiave e' cambiata: riscrivi quella memorizzata
             var writes = [idb("meta", "readwrite", function (s) { return s.put(rec); })];
             groups.forEach(function (g) {
               g.forEach(function (item) { writes.push(put(item.store, item.obj)); });
@@ -391,6 +435,10 @@
   window.Vault = {
     isSetUp: isSetUp, setup: setup, unlock: unlock, lock: lock, changePass: changePass,
     unlocked: function () { return !!key; },
+    ready: ready,
+    /* Sblocco giornaliero: la passphrase si digita una volta al giorno. */
+    ricorda: ricorda, dimentica: function () { giorno = 0; touch(); return dimentica(); },
+    ricordato: function () { return giorno > Date.now(); },
     onLock: function (f) { lockCbs.push(f); },
     onUnlock: function (f) { unlockCbs.push(f); },
     setLockMinutes: function (m) { lockMs = m * 60 * 1000; touch(); },

@@ -16,6 +16,12 @@ I dati restano **sul dispositivo**, cifrati (AES-GCM 256, chiave da passphrase c
 600k) e protetti da passphrase con blocco automatico. **Non esiste alcun recupero della
 passphrase**: annotala e usa i backup (Impostazioni → Esporta backup).
 
+Chi lavora tutto il giorno sullo stesso tablet può spuntare **«chiedi la passphrase una volta
+al giorno»**: la chiave (non estraibile) resta in IndexedDB fino a mezzanotte, così la seduta
+non si blocca a metà e l'app si riapre già sbloccata. Chi ha in mano il tablet in quella
+giornata però entra senza passphrase: è una scelta esplicita, si disattiva da Impostazioni o
+con «Blocca adesso».
+
 Per usare l'app su più dispositivi il modo previsto è il **backup cifrato** `.kin`: si esporta
 da un dispositivo e si importa nell'altro. Ricreare l'area con la stessa passphrase **non**
 basta (ogni area ha un salt casuale).

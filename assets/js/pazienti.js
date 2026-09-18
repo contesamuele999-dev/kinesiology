@@ -177,6 +177,7 @@
     return '<div class="pz-lock"><h2>Area pazienti protetta</h2>' +
       '<p class="pz-muted">I dati dei pazienti sono cifrati su questo dispositivo. Inserisci la passphrase per aprirli.</p>' +
       '<form><input type="password" id="pzPass" autocomplete="current-password" placeholder="Passphrase" />' +
+      giornoCheck() +
       '<button class="ebtn ebtn--primary" type="submit">Sblocca</button></form>' +
       '<p class="pz-err" id="pzErr" hidden></p></div>';
   }
@@ -188,6 +189,7 @@
       'non c\'è nessun server che possa reimpostarla. Annotala in un posto sicuro ed esporta i backup.</p>' +
       '<form><input type="password" id="pzPass" autocomplete="new-password" placeholder="Passphrase (min. 8 caratteri)" />' +
       '<input type="password" id="pzPass2" autocomplete="new-password" placeholder="Ripeti la passphrase" />' +
+      giornoCheck() +
       '<button class="ebtn ebtn--primary" type="submit">Crea area protetta</button></form>' +
       '<p class="pz-err" id="pzErr" hidden></p>' +
       '<hr class="pz-sep" />' +
@@ -196,6 +198,22 @@
       "Da lì in poi il sync fa il resto.</p>" +
       '<label class="ebtn" for="pzJoin">⬆ Importa backup da un altro dispositivo</label>' +
       '<input id="pzJoin" type="file" accept=".kin,application/json" hidden /></div>';
+  }
+  /* Sblocco giornaliero: la passphrase una volta al giorno invece che a ogni
+     riapertura (e niente auto-lock a meta' seduta, che e' quello che faceva
+     sparire la barra della sessione). */
+  var LS_GIORNO = "kapp-sblocco-giorno";
+  function giornoOn() { return lsGet(LS_GIORNO) === "1"; }
+  function giornoCheck() {
+    return '<label class="pz-day"><input type="checkbox" id="pzGiorno"' + (giornoOn() ? " checked" : "") + " />" +
+      "<span>Chiedi la passphrase <strong>una volta al giorno</strong><em>Resta sbloccata fino a mezzanotte su questo dispositivo. " +
+      "Usala solo su un tablet che tieni tu.</em></span></label>";
+  }
+  function applicaGiorno() {
+    var c = document.getElementById("pzGiorno");
+    var on = c ? c.checked : giornoOn();
+    lsSet(LS_GIORNO, on ? "1" : null);
+    return on ? V.ricorda() : V.dimentica();
   }
   function showErr(msg) {
     var e = document.getElementById("pzErr");
@@ -209,8 +227,9 @@
     e.preventDefault();
     busy(true, "Sblocco…");
     V.unlock(document.getElementById("pzPass").value).then(function () {
-      return refresh();
-    }).then(function () { render(); autoSync(); }).catch(function (err) {
+      return applicaGiorno();
+    }).then(function () { return refresh(); })
+      .then(function () { render(); autoSync(); }).catch(function (err) {
       busy(false); document.querySelector('button[type="submit"]').textContent = "Sblocca";
       showErr(err && err.message === "passphrase-errata" ? "Passphrase errata." : "Errore: " + (err && err.message));
     });
@@ -221,7 +240,7 @@
     if (p.length < 8) return showErr("Servono almeno 8 caratteri.");
     if (p !== p2) return showErr("Le due passphrase non coincidono.");
     busy(true, "Creazione…");
-    V.setup(p).then(refresh).then(function () { render(); autoSync(); })
+    V.setup(p).then(applicaGiorno).then(refresh).then(function () { render(); autoSync(); })
       .catch(function (err) { busy(false); showErr("Errore: " + err.message); });
   }
 
@@ -426,14 +445,23 @@
     return t.length > n ? t.slice(0, n - 1).replace(/\s+$/, "") + "…" : t;
   }
   var ESITO = { forte: ["ok", "forte"], debole: ["ko", "debole"], nt: ["nt", "non testato"] };
+  /* Un solo pallino per due lati: se uno dei due e' debole, la coordinata lo e'. */
+  function peggiore(c) {
+    var d = c.esitoDx || c.esito || "nt", x = c.esitoSx || c.esito || "nt";
+    return (d === "debole" || x === "debole") ? "debole"
+         : (d === "forte" || x === "forte") ? "forte" : "nt";
+  }
+  function esitiTxt(c) {
+    return "dx " + (c.esitoDx || c.esito || "nt") + " / sx " + (c.esitoSx || c.esito || "nt");
+  }
   function sessionPreview(s) {
     var co = s.coordinate || [], voci = s.voci || [];
     var titolo;
     if (co.length) {
       titolo = co.slice(0, 3).map(function (c) {
-        var e = ESITO[c.esito] || ESITO.nt;
+        var e = ESITO[peggiore(c)] || ESITO.nt;
         return '<span class="pz-tl__co"><i class="pz-tl__dot pz-tl__dot--' + e[0] +
-          '" title="' + e[1] + '"></i>' + esc(taglia(c.label, 46)) + "</span>";
+          '" title="' + e[1] + " · " + esc(esitiTxt(c)) + '"></i>' + esc(taglia(c.label, 46)) + "</span>";
       }).join("") + (co.length > 3 ? '<span class="pz-tl__piu">+' + (co.length - 3) + "</span>" : "");
     } else if (voci.length) {
       /* Se ha spuntato qualcosa contano solo quelle: il resto era sfogliare. */
@@ -523,12 +551,9 @@
       catturaBox(s, attiva) +
 
       '<section class="pz-box"><h3>Coordinate testate</h3>' +
-        '<div class="pz-coords">' + (s.coordinate || []).map(coordRow).join("") + "</div>" +
-        '<div class="pz-addrow"><input list="pzCoordList" id="pzCoordIn" placeholder="Aggiungi coordinata (meridiano o muscolo)…" />' +
-        '<button class="ebtn" data-act="add-coord">＋</button></div>' +
-        '<datalist id="pzCoordList">' + DATA.map(function (c) {
-          return '<option value="' + esc(c.meridiano + " · " + c.muscolo) + '"></option>';
-        }).join("") + "</datalist>" +
+        '<div class="pz-coords">' + (s.coordinate || []).map(coordRow).join("") +
+          ((s.coordinate || []).length ? "" : '<p class="pz-muted">Nessuna coordinata. Aggiungila qui sotto, oppure aprila nei manuali con la seduta in corso.</p>') +
+        "</div>" + coordPicker() +
       "</section>" +
 
       '<section class="pz-box"><h3>Cosa ho fatto</h3>' +
@@ -594,14 +619,63 @@
     if (!h) return '<span class="' + esc(cls || "") + '">' + esc(label) + "</span>";
     return '<a class="' + esc(cls || "") + ' xref" href="' + esc(h) + '">' + esc(label) + "</a>";
   }
+  /* Destra e sinistra si testano separatamente e possono dare esiti diversi:
+     una riga sola con un esito solo costringeva a duplicare la coordinata. */
+  var ESITI = [["forte", "Forte"], ["debole", "Debole"], ["nt", "Non testato"]];
+  function esitoLato(c, lato) {
+    var v = c["esito" + lato];
+    /* Sedute registrate prima della separazione dx/sx: l'esito unico vale per entrambi. */
+    return v || c.esito || "nt";
+  }
+  function latoSeg(c, i, lato, etich) {
+    var cur = esitoLato(c, lato);
+    return '<span class="pz-lato"><span class="pz-lato__lb">' + etich + "</span>" +
+      '<span class="pz-seg">' + ESITI.map(function (e) {
+        return '<button class="ebtn ebtn--mini' + (cur === e[0] ? " is-on" : "") +
+          '" data-act="esito" data-i="' + i + '" data-lato="' + lato + '" data-v="' + e[0] + '">' + e[1] + "</button>";
+      }).join("") + "</span></span>";
+  }
   function coordRow(c, i) {
-    var esiti = [["forte", "Forte"], ["debole", "Debole"], ["nt", "Non testato"]];
-    return '<div class="pz-coord">' + refLink("coordinata", c.ref, c.label, "pz-coord__l") +
-      '<span class="pz-seg">' + esiti.map(function (e) {
-        return '<button class="ebtn ebtn--mini' + (c.esito === e[0] ? " is-on" : "") +
-          '" data-act="esito" data-i="' + i + '" data-v="' + e[0] + '">' + e[1] + "</button>";
-      }).join("") + "</span>" +
-      '<button class="ebtn ebtn--mini ebtn--danger" data-act="del-coord" data-i="' + i + '">×</button></div>';
+    return '<div class="pz-coord">' +
+      '<div class="pz-coord__h">' + refLink("coordinata", c.ref, c.label, "pz-coord__l") +
+        '<button class="ebtn ebtn--mini ebtn--danger" data-act="del-coord" data-i="' + i + '">×</button></div>' +
+      '<div class="pz-coord__lati">' + latoSeg(c, i, "Dx", "Destra") + latoSeg(c, i, "Sx", "Sinistra") + "</div>" +
+      "</div>";
+  }
+  /* Etichetta e indirizzo di una coordinata intera (1o meridiano/muscolo +
+     2o meridiano/posizione): la stessa che produce labelForHash, cosi' una
+     coordinata aggiunta a mano e una registrata navigando coincidono. */
+  function coordInfo(id1, id2) {
+    var a = DATA.find(function (x) { return x.id === id1; });
+    var b = DATA.find(function (x) { return x.id === id2; });
+    if (!a || !b) return null;
+    var row = posFor(a, b);
+    return { ref: a.id + "+" + b.id,
+             label: a.meridiano + " · " + a.muscolo + " — pos. " + (row ? row.posizione : "?") + " (" + b.meridiano + ")" };
+  }
+  /* Il 2o meridiano sceglibile per un muscolo e' quello delle sue 14 posizioni. */
+  function secondi(id1) {
+    var a = DATA.find(function (x) { return x.id === id1; });
+    if (!a) return [];
+    return (a.atteggiamenti || []).map(function (r) {
+      var b = DATA.find(function (x) { return (x.meridianoKey || x.meridiano) === r.meridiano; });
+      return b ? { id: b.id, pos: r.posizione, mer: b.meridiano } : null;
+    }).filter(Boolean);
+  }
+  function coordPicker(sel1, sel2) {
+    sel1 = sel1 || (DATA[0] && DATA[0].id);
+    var opt1 = DATA.map(function (c) {
+      return '<option value="' + esc(c.id) + '"' + (c.id === sel1 ? " selected" : "") + ">" +
+        esc(c.meridiano + " · " + c.muscolo) + "</option>";
+    }).join("");
+    var opt2 = secondi(sel1).map(function (o) {
+      return '<option value="' + esc(o.id) + '"' + (o.id === sel2 ? " selected" : "") + ">" +
+        esc("pos. " + o.pos + " — " + o.mer) + "</option>";
+    }).join("");
+    return '<div class="pz-addcoord">' +
+      '<label class="pz-f"><span>1° meridiano → muscolo</span><select id="pzC1">' + opt1 + "</select></label>" +
+      '<label class="pz-f"><span>2° meridiano → posizione</span><select id="pzC2">' + opt2 + "</select></label>" +
+      '<button class="ebtn" data-act="add-coord">＋ Aggiungi</button></div>';
   }
   /* Checklist pre-compilata da ciò che l'operatore ha davvero consultato. */
   function catturaBox(s, attiva) {
@@ -741,8 +815,10 @@
       "</section>" +
 
       '<section class="pz-box"><h3>Sicurezza</h3>' +
+        giornoCheck() +
         '<label class="pz-f"><span>Blocco automatico dopo (minuti)</span>' +
-          '<input type="number" id="pzLockMin" min="1" max="60" value="' + esc(lsGet("kapp-lock-min") || 5) + '" /></label>' +
+          '<input type="number" id="pzLockMin" min="1" max="60" value="' + esc(lsGet("kapp-lock-min") || 5) + '" />' +
+          '<em class="pz-muted">Ignorato finché lo sblocco giornaliero è attivo.</em></label>' +
         '<button class="ebtn" data-act="lock-now">🔒 Blocca adesso</button>' +
         "<h4>Cambia passphrase</h4>" +
         '<div class="pz-grid">' +
@@ -793,6 +869,7 @@
       lsSet(LS_SYNC_AUTO, this.checked ? "1" : "0");
       autoSync();
     });
+    document.getElementById("pzGiorno").addEventListener("change", applicaGiorno);
     document.getElementById("pzLockMin").addEventListener("change", function () {
       var m = Math.max(1, Math.min(60, Number(this.value) || 5));
       lsSet("kapp-lock-min", m); V.setLockMinutes(m);
@@ -811,6 +888,12 @@
   }
 
   /* ================= AZIONI ================= */
+  /* Delegato: il picker si riscrive da solo a ogni cambio di muscolo. */
+  view.addEventListener("change", function (e) {
+    if (!e.target || e.target.id !== "pzC1") return;
+    var box = e.target.closest(".pz-addcoord");
+    if (box) box.outerHTML = coordPicker(e.target.value);
+  });
   view.addEventListener("click", function (e) {
     var b = e.target.closest("[data-act]");
     if (!b) return;
@@ -861,20 +944,26 @@
         }).then(function () { location.hash = "#paz/p/" + sd.patientId; sessionBar(); });
         break;
 
-      case "esito":
-        s.coordinate[i].esito = b.dataset.v;
+      case "esito": {
+        var cc = s.coordinate[i];
+        /* Prima volta su una riga vecchia: l'esito unico diventa il valore di
+           partenza dei due lati, poi ognuno va per conto suo. */
+        if (cc.esitoDx == null) cc.esitoDx = cc.esito || "nt";
+        if (cc.esitoSx == null) cc.esitoSx = cc.esito || "nt";
+        cc["esito" + b.dataset.lato] = b.dataset.v;
+        delete cc.esito;
         save("sessions", s, true).then(function () { renderSession(s.id); });
         break;
+      }
       case "del-coord":
         s.coordinate.splice(i, 1);
         save("sessions", s, true).then(function () { renderSession(s.id); });
         break;
       case "add-coord": {
-        var inp = document.getElementById("pzCoordIn");
-        var val = (inp.value || "").trim();
-        if (!val) return;
-        s.coordinate = (s.coordinate || []).concat([{ label: val, esito: "nt" }]);
-        inp.value = "";
+        var info = coordInfo(document.getElementById("pzC1").value, document.getElementById("pzC2").value);
+        if (!info) return;
+        if ((s.coordinate || []).some(function (c) { return c.ref === info.ref; })) { toast("Coordinata già presente."); return; }
+        s.coordinate = (s.coordinate || []).concat([{ label: info.label, ref: info.ref, esitoDx: "nt", esitoSx: "nt" }]);
         save("sessions", s, true).then(function () { renderSession(s.id); });
         break;
       }
@@ -885,7 +974,7 @@
       case "voce-coord": {
         var v = s.voci[i];
         if (!(s.coordinate || []).some(function (c) { return c.label === v.label; })) {
-          s.coordinate = (s.coordinate || []).concat([{ label: v.label, esito: "nt", ref: v.ref }]);
+          s.coordinate = (s.coordinate || []).concat([{ label: v.label, ref: v.ref, esitoDx: "nt", esitoSx: "nt" }]);
         }
         v.usato = true;
         save("sessions", s, true).then(function () { renderSession(s.id); });
@@ -1018,6 +1107,8 @@
   var bar = null;
   function sessionBar() {
     var s = activeSession();
+    /* La classe accende i «＋» di registrazione sparsi per l'app (app.js). */
+    document.body.classList.toggle("has-sessione", !!(s && V.unlocked()));
     if (!s || !V.unlocked()) { if (bar) { bar.remove(); bar = null; } return; }
     var p = patient(s.patientId);
     if (!bar) {
@@ -1032,23 +1123,66 @@
       });
     }
     var l = labelForHash(location.hash);
+    var n = (s.voci || []).filter(function (v) { return v.usato; }).length;
+    var ultima = (s.voci || []).filter(function (v) { return v.usato; }).slice(-1)[0];
     bar.innerHTML = '<span class="pz-sessionbar__dot"></span>' +
-      '<span class="pz-sessionbar__t">Sessione · <strong>' + esc(p ? p.displayName : "—") + "</strong></span>" +
+      '<span class="pz-sessionbar__t">Sessione · <strong>' + esc(p ? p.displayName : "—") + "</strong>" +
+        '<em class="pz-sessionbar__n">' + n + (n === 1 ? " voce registrata" : " voci registrate") +
+        (ultima ? " · ultima: " + esc(taglia(ultima.label, 34)) : "") + "</em></span>" +
       (l ? '<button class="ebtn ebtn--mini" data-b="add">＋ ' + esc(l.kind === "coordinata" ? "Aggiungi coordinata" : "Segna sezione") + "</button>" : "") +
       '<button class="ebtn ebtn--mini" data-b="apri">Apri</button>' +
       '<button class="ebtn ebtn--mini ebtn--primary" data-b="chiudi">✓ Chiudi</button>';
   }
   function segnaCorrente(btn) {
-    var s = activeSession(), l = labelForHash(location.hash);
-    if (!s || !l) return;
-    var v = (s.voci || []).find(function (x) { return x.ref === l.ref; });
-    if (!v) { v = { ref: l.ref, label: l.label, kind: l.kind, dwell: 0, usato: true, t: new Date().toISOString() }; s.voci.push(v); }
-    v.usato = true;
-    if (l.kind === "coordinata" && !(s.coordinate || []).some(function (c) { return c.label === l.label; })) {
-      s.coordinate = (s.coordinate || []).concat([{ label: l.label, esito: "nt", ref: l.ref }]);
+    var l = labelForHash(location.hash);
+    if (!l) return;
+    if (registra(l)) btn.textContent = "✓ Aggiunto";
+  }
+
+  /* ---------- Registrazione esplicita (usata da tutta l'app) ----------
+     Ogni clic che vale come "l'ho usato davvero" passa di qui: la mappa 3D,
+     i punti dei meridiani, le immagini delle schede, le frasi scelte.
+     Restituisce false quando non c'e' una seduta aperta, e lo dice. */
+  function registra(v) {
+    if (!v || !v.label) return false;
+    var s = activeSession();
+    if (!s || !V.unlocked()) {
+      toast(V.unlocked() ? "Nessuna seduta aperta: apri una sessione per registrare."
+                         : "Area pazienti bloccata: nulla viene registrato.", true);
+      return false;
     }
-    btn.textContent = "✓ Aggiunto";
-    save("sessions", s, true);
+    var ref = v.ref || "";
+    var found = (s.voci || []).find(function (x) { return x.ref === ref && x.label === v.label; });
+    if (found) { found.usato = true; found.t = new Date().toISOString(); }
+    else {
+      found = { ref: ref, label: v.label, kind: v.kind || "punti", dwell: 0, usato: true, t: new Date().toISOString() };
+      (s.voci = s.voci || []).push(found);
+    }
+    if (v.kind === "coordinata" && !(s.coordinate || []).some(function (c) { return c.label === v.label; })) {
+      s.coordinate = (s.coordinate || []).concat([{ label: v.label, ref: ref, esitoDx: "nt", esitoSx: "nt" }]);
+    }
+    save("sessions", s, true).then(function () {
+      if (st.route.name === "sessione" && st.route.id === s.id && !view.hidden) renderSession(s.id);
+    });
+    toast("Registrato: " + v.label);
+    sessionBar();
+    return true;
+  }
+
+  /* Riscontro visibile: senza, non si sa mai se il tocco ha registrato. */
+  var toastEl = null, toastT = null;
+  function toast(msg, warn) {
+    if (!toastEl) {
+      toastEl = document.createElement("div");
+      toastEl.className = "pz-toast";
+      toastEl.setAttribute("role", "status");
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = msg;
+    toastEl.dataset.warn = warn ? "1" : "0";
+    toastEl.dataset.on = "1";
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.dataset.on = "0"; }, 2600);
   }
 
   /* ---------- Sync ---------- */
@@ -1157,7 +1291,7 @@
       (p.costituzione ? "<h2>Costituzione</h2><p>" + esc(p.costituzione) + "</p>" : "") +
       "<h2>Sessioni</h2>" + ses.map(function (s) {
         return "<div class='pr-s'><h3>" + fmtShort(s.date) + "</h3>" +
-          "<p><strong>Coordinate:</strong> " + esc((s.coordinate || []).map(function (c) { return c.label + " (" + c.esito + ")"; }).join(" · ") || "—") + "</p>" +
+          "<p><strong>Coordinate:</strong> " + esc((s.coordinate || []).map(function (c) { return c.label + " (" + esitiTxt(c) + ")"; }).join(" · ") || "—") + "</p>" +
           (s.correzioni ? "<p><strong>Correzioni:</strong> " + esc(s.correzioni) + "</p>" : "") +
           (s.essenze ? "<p><strong>Essenze:</strong> " + esc(s.essenze) + "</p>" : "") +
           (s.note ? "<p>" + esc(s.note) + "</p>" : "") +
@@ -1202,6 +1336,9 @@
     sessionBar();
   }
 
+  V.onUnlock(function () {
+    refresh().then(function () { if (!view.hidden) render(); else sessionBar(); badge(); });
+  });
   V.onLock(function () {
     clearInterval(autoTimer); autoTimer = null;
     st.patients = []; st.sessions = []; st.appts = []; st.loaded = false;
@@ -1226,6 +1363,11 @@
       else render();
     },
     hide: function () { view.hidden = true; sessionBar(); },
+    /* Chiamata da app.js, punti.js e tavole.js quando l'operatore tocca
+       qualcosa che vale la pena registrare. */
+    registra: registra,
+    attiva: function () { return !!(V.unlocked() && activeSession()); },
+    avvisa: toast,
     back: function () {
       var r = st.route;
       if (r.name === "sessione") { var s = session(r.id); location.hash = s ? "#paz/p/" + s.patientId : "#paz"; }
@@ -1234,6 +1376,9 @@
     }
   };
 
-  /* All'avvio: se c'era una sessione aperta, la barra ricompare dopo lo sblocco. */
-  V.isSetUp().then(function (ok) { if (ok && V.unlocked()) refresh().then(sessionBar); });
+  /* All'avvio: V.ready() ripristina la chiave se lo sblocco giornaliero e'
+     ancora valido; da li' onUnlock rimette in piedi barra e dati. */
+  V.ready().then(function () {
+    if (V.unlocked()) return refresh().then(sessionBar);
+  });
 })();

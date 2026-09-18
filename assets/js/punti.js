@@ -159,7 +159,10 @@
     return g;
   }
 
-  function numberSprite(n) {
+  /* Il numero segue il punto anche in profondita': con depthTest attivo il
+     corpo lo nasconde quando il punto sta dall'altra parte, e lo sposto un
+     filo verso l'esterno per non farlo mangiare dalla superficie. */
+  function numberSprite(n, z) {
     const s = 128;
     const cv = document.createElement("canvas"); cv.width = cv.height = s;
     const ctx = cv.getContext("2d");
@@ -172,10 +175,10 @@
       ctx.fillText(String(n), s/2, s/2 + 4);
     }
     const tex = new THREE.CanvasTexture(cv);
-    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: true });
     const sp = new THREE.Sprite(mat);
     sp.scale.set(0.17, 0.17, 0.17);
-    sp.position.set(0, 0.14, 0);      // sopra il pallino
+    sp.position.set(0, 0.14, (z || 0) < 0 ? -0.06 : 0.06);   // sopra il pallino, verso l'esterno
     sp.userData.numberSprite = true;
     return sp;
   }
@@ -199,7 +202,7 @@
     mesh.add(halo);
     if (!isLm && THREE.CanvasTexture && THREE.Sprite) {
       const n = DATA.indexOf(p) + 1;
-      if (n > 0) mesh.add(numberSprite(n));
+      if (n > 0) mesh.add(numberSprite(n, p.pos.z));
     }
     pointsGroup.add(mesh);
     markerMeshes.push(mesh);
@@ -337,6 +340,7 @@
     updateCamera();
   }
 
+  let touchMode = false;      // il dito trema: la soglia del "trascinamento" e' piu' alta
   function bindControls() {
     const dom = renderer.domElement;
     let panning = false;
@@ -360,7 +364,7 @@
       }
       if (!dragging) return;
       const dx = x - lastX, dy = y - lastY;
-      if (Math.abs(dx) + Math.abs(dy) > 3) dragMoved = true;
+      if (Math.abs(dx) + Math.abs(dy) > (touchMode ? 12 : 3)) dragMoved = true;
       yaw -= dx * 0.008; pitch += dy * 0.006;
       lastX = x; lastY = y; updateCamera();
     };
@@ -381,7 +385,7 @@
     });
     window.addEventListener("mousemove", (e) => move(e.clientX, e.clientY));
     window.addEventListener("mouseup", up);
-    dom.addEventListener("touchstart", (e) => { const t = e.touches[0]; down(t.clientX, t.clientY); }, { passive: true });
+    dom.addEventListener("touchstart", (e) => { touchMode = true; const t = e.touches[0]; down(t.clientX, t.clientY); }, { passive: true });
     dom.addEventListener("touchmove", (e) => { const t = e.touches[0]; move(t.clientX, t.clientY); }, { passive: true });
     dom.addEventListener("touchend", up);
     dom.addEventListener("wheel", (e) => {
@@ -417,19 +421,48 @@
     pointer.y = -((cy - r.top) / r.height) * 2 + 1;
   }
 
+  /* Un pallino di 6 mm sullo schermo di un tablet e' piu' piccolo del
+     polpastrello: se il raggio non lo becca, si prende il marker piu' vicino
+     entro TOL pixel invece di ruotare il corpo per sbaglio. */
+  const TOL_PX = 30;
+  function vicino(cx, cy, meshes, tol) {
+    const r = renderer.domElement.getBoundingClientRect();
+    const v = new THREE.Vector3();
+    let best = null, bd = (tol || TOL_PX) * (tol || TOL_PX);
+    meshes.forEach((m) => {
+      m.getWorldPosition(v); v.project(camera);
+      if (v.z > 1) return;                                  // dietro la camera
+      const sx = r.left + (v.x + 1) / 2 * r.width;
+      const sy = r.top + (1 - v.y) / 2 * r.height;
+      const d = (sx - cx) * (sx - cx) + (sy - cy) * (sy - cy);
+      if (d < bd) { bd = d; best = m; }
+    });
+    return best;
+  }
   function pick(cx, cy) {
     ndc(cx, cy);
     raycaster.setFromCamera(pointer, camera);
     // 1) punti indicatori (solo se accesi)
     if (puntiVisibili) {
-      const hit = raycaster.intersectObjects(markerMeshes, false)[0];
-      if (hit) { selectPoint(hit.object.userData.punto); return; }
+      const hit = raycaster.intersectObjects(markerMeshes, true)[0];
+      if (hit) {
+        let o = hit.object;
+        while (o && !o.userData.punto) o = o.parent;        // alone o numero: sale al punto
+        if (o) { selectPoint(o.userData.punto, true); return; }
+      }
     }
     // 2) punti dei meridiani
     const mpts = merVisibleMeshes();
     if (mpts.length) {
       const h2 = raycaster.intersectObjects(mpts, false)[0];
-      if (h2) { selectMerPoint(h2.object.userData.merPunto); return; }
+      if (h2) { selectMerPoint(h2.object.userData.merPunto, true); return; }
+    }
+    // 2b) niente di centrato: il marker piu' vicino al dito, se c'e'
+    const near = vicino(cx, cy, (puntiVisibili ? markerMeshes : []).concat(mpts));
+    if (near) {
+      if (near.userData.punto) selectPoint(near.userData.punto, true);
+      else selectMerPoint(near.userData.merPunto, true);
+      return;
     }
     // 3) tracciato di un meridiano
     const tubes = merVisibleTubes();
@@ -497,12 +530,22 @@
     if (dragging) return;
     ndc(cx, cy);
     raycaster.setFromCamera(pointer, camera);
-    const hit = raycaster.intersectObjects(markerMeshes, false)[0];
+    const hit = raycaster.intersectObjects(markerMeshes, true)[0] || vicino(cx, cy, markerMeshes);
     const dom = renderer.domElement;
     dom.style.cursor = hit ? "pointer" : "grab";
   }
 
-  function selectPoint(p) {
+  /* Con una seduta aperta ogni punto toccato finisce nella seduta, con un
+     riscontro a schermo. Senza seduta non dice niente: il tocco sulla mappa
+     e' anche solo consultazione. In modalita' modifica non registra nulla. */
+  function segnaInSeduta(kind, ref, label) {
+    if (editing) return;
+    const P = window.Pazienti;
+    if (!P || !P.registra || !P.attiva || !P.attiva()) return;
+    P.registra({ kind: kind, ref: ref, label: label });
+  }
+
+  function selectPoint(p, daUtente) {
     if (!puntiVisibili) setPuntiVisible(true);   // riaccende i punti se erano spenti
     // uscendo dai punti Milza/Pancreas il test discriminante riparte da zero
     if (!isMilzaPoint(p)) mpScelta = null;
@@ -520,6 +563,8 @@
       m.scale.setScalar(on ? 1.5 : 1);
     });
     renderInfo(p);
+    if (daUtente) segnaInSeduta("punti", "#punti/p/" + encodeURIComponent(p.id),
+                                "Punto d'allarme · " + (p.organo || p.id));
     tavMark({ kind: "ind", id: p.id });
     // highlight list
     if (listEl) Array.from(listEl.children).forEach((li) => li.classList.toggle("active", li.dataset.id === p.id));
@@ -626,7 +671,7 @@
       '<span class="punti__li-tag">' + (p.vista === "retro" ? "retro" : "fronte") + '</span>' + del;
     li.addEventListener("click", (e) => {
       if (e.target && e.target.dataset && e.target.dataset.del) { removePoint(e.target.dataset.del); return; }
-      selectPoint(p);
+      selectPoint(p, true);
     });
     return li;
   }
@@ -883,7 +928,7 @@
   }
 
   /* ---------- selezione ---------- */
-  function selectMerPoint(ref) {
+  function selectMerPoint(ref, daUtente) {
     const mm = MM(); if (!mm) return;
     const m = mm.get(ref.merId); if (!m) return;
     // ripristina la dimensione del punto MTC selezionato in precedenza
@@ -900,6 +945,8 @@
     mm.highlight(m.id);
     syncChips();
     renderMerPointInfo(m, ref);
+    if (daUtente) segnaInSeduta("punti", "#punti/mer/" + encodeURIComponent(m.id) + "/" + encodeURIComponent(ref.sigla || ""),
+                  "Meridiano " + (m.nome || m.id) + (ref.sigla ? " · " + ref.sigla : ""));
     tavMark({ kind: "mer", merId: ref.merId, idx: ref.idx, ramo: ref.ramo });
   }
 
@@ -1275,7 +1322,7 @@
       b.addEventListener("click", () => {
         const id = b.dataset.mid, idx = parseInt(b.dataset.mpt, 10);
         mm.setVisible(id, true);
-        selectMerPoint({ merId: id, idx: idx, side: 1, ramo: b.dataset.mramo === "1" });
+        selectMerPoint({ merId: id, idx: idx, side: 1, ramo: b.dataset.mramo === "1" }, true);
       });
     });
     infoEl.querySelectorAll("[data-mall]").forEach((b) => {
