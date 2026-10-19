@@ -1062,6 +1062,7 @@
       L.row("Coordinate", L.chipsCoord(id)),
       L.row("Punti d'allarme", L.chipsPunti(id)),
       L.row("Costituzioni", L.chipsCost(id)),
+      L.row("Nei manuali", L.chipsManuali(id)),
       L.row(el ? "Stesso elemento (" + el + ")" : "Stesso elemento", L.chipsElemento(id)),
       L.row("Accoppiato con", [L.chipCoppia(id)]),
       L.row("Orologio cinese", L.chipsOrologio(id))
@@ -1078,6 +1079,7 @@
       L.row("Meridiano", [m ? L.chipMer(id, m.nome) : ""]),
       L.row("Coordinate", L.chipsCoord(id)),
       L.row("Costituzioni", L.chipsCost(id)),
+      L.row("Nei manuali", L.chipsManuali(id)),
       L.row("Altri punti dello stesso meridiano", L.chipsPunti(id, p.id)),
       L.row(el ? "Stesso elemento (" + el + ")" : "Stesso elemento", L.chipsElemento(id)),
       L.row("Accoppiato con", [L.chipCoppia(id)]),

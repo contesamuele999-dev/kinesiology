@@ -178,7 +178,7 @@
      Un "chip" è un <a> normale: il router a hash fa il resto, quindi
      funziona anche col tasto destro / apri in nuova scheda. */
   var ICO = { mer: "●", punto: "◎", coord: "⌗", cost: "◈", pos: "△",
-              elem: "✵", ora: "◔", fiore: "❀", sez: "→" };
+              elem: "✵", ora: "◔", fiore: "❀", man: "▤", sez: "→" };
   function chip(o) {
     var c = o.colore ? ' style="--xc:' + esc(o.colore) + '"' : "";
     return '<a class="xlink xlink--' + esc(o.kind || "sez") + (o.cls ? " " + esc(o.cls) : "") +
@@ -230,6 +230,14 @@
     });
   }
   /* Gli altri meridiani dello stesso elemento (il corrente escluso). */
+  /* Le schede dei manuali dei corsi che trattano questo meridiano
+     (manuali.js si carica dopo: si interroga al momento del rendering). */
+  function chipsManuali(id) {
+    var M = window.Manuali;
+    return (M && id ? M.perMeridiano(id) : []).map(function (x) {
+      return chip({ kind: "man", href: x.href, label: x.label, sub: x.sub, title: x.title });
+    });
+  }
   function chipsElemento(id) {
     var e = elementoOf(id); if (!e) return [];
     return merOfElemento(e).filter(function (x) { return x !== id; }).map(function (x) {
@@ -468,7 +476,7 @@
     hrefMer: hrefMer, hrefPunto: hrefPunto, hrefCoord: hrefCoord, hrefCost: hrefCost,
     hrefBiotipo: hrefBiotipo, hrefTeoria: hrefTeoria, hrefTest: hrefTest, hrefCoppia: hrefCoppia,
     chip: chip, row: row, box: box,
-    chipMer: chipMer, chipsPunti: chipsPunti, chipsCoord: chipsCoord, chipsCost: chipsCost,
+    chipMer: chipMer, chipsPunti: chipsPunti, chipsCoord: chipsCoord, chipsCost: chipsCost, chipsManuali: chipsManuali,
     chipsElemento: chipsElemento, chipCoppia: chipCoppia, chipsOrologio: chipsOrologio,
     chipsPosizioni: chipsPosizioni, chipsPosFiore: chipsPosFiore, chipsFiore: chipsFiore,
     autolink: autolink, autoP: autoP, linkSigleMer: linkSigleMer,

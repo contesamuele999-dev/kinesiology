@@ -15,7 +15,7 @@
   const backBtn = el("backBtn"), themeBtn = el("themeBtn");
   const coordHead = el("coordHead"), coordTabs = el("coordTabs"), sections = el("sections");
   const puntiView = el("puntiView"), macronav = el("macronav");
-  const costView = el("costView");
+  const costView = el("costView"), manView = el("manView");
 
   const esc = (s) => String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -189,6 +189,7 @@
   });
   searchInput.addEventListener("input", () => {
     if (costView && !costView.hidden) { if (window.Cost) window.Cost.filter(searchInput.value); }
+    else if (manView && !manView.hidden) { if (window.Manuali) window.Manuali.filter(searchInput.value); }
     else if (!listView.hidden) renderList(searchInput.value);
     applyHighlight(true);
   });
@@ -252,11 +253,11 @@
     return count;
   }
   function activeView() {
-    return [coordView, costView, puntiView, listView]
+    return [coordView, costView, manView, puntiView, listView]
       .filter((v) => v && !v.hidden)[0] || null;
   }
   function applyHighlight(scroll) {
-    [coordView, costView, puntiView, listView].forEach((v) => { if (v) clearHighlight(v); });
+    [coordView, costView, manView, puntiView, listView].forEach((v) => { if (v) clearHighlight(v); });
     const view = activeView();
     const terms = fold(searchInput.value).split(/\s+/).filter((t) => t.length >= 2);
     let n = 0;
@@ -400,6 +401,7 @@
       const t = (window.Cost && window.Cost.titolo) ? window.Cost.titolo(location.hash) : "";
       return "Costituzioni" + (t ? " · " + t : "");
     }
+    if (manView && !manView.hidden) return window.Manuali ? window.Manuali.titolo(location.hash) : "";
     return "";
   }
   document.addEventListener("click", (e) => {
@@ -649,6 +651,7 @@
       L.row("Sulla mappa 3D", mappa),
       L.row("Punti d'allarme", bothMer(L.chipsPunti, m1, m2)),
       L.row("Costituzioni", bothMer(L.chipsCost, m1, m2)),
+      L.row("Nei manuali", bothMer(L.chipsManuali, m1, m2)),
       L.row("Altre coordinate", uniqChips(
         L.chipsCoord(m1, c1.id).concat(m2 && m2 !== m1 ? L.chipsCoord(m2, c1.id) : [])
       )),
@@ -954,6 +957,7 @@
     setActiveTab("costituzioni");
     listView.hidden = true; coordView.hidden = true; puntiView.hidden = true;
     if (window.PuntiMap) window.PuntiMap.deactivate();
+    if (manView) manView.hidden = true;
     if (!costView) return;
     costView.hidden = false;
     const tipo = window.Cost ? window.Cost.show(hash) : "home";
@@ -963,13 +967,27 @@
     if (home && window.Cost) window.Cost.filter(searchInput.value);
     window.scrollTo(0, 0); updateStick();
   }
-  function leaveCost() { if (costView) costView.hidden = true; }
+  function leaveCost() { if (costView) costView.hidden = true; if (manView) manView.hidden = true; }
+  /* --- Manuali dei corsi (manuali.js) --- */
+  function showMan(hash) {
+    setActiveTab("manuali");
+    listView.hidden = true; coordView.hidden = true; puntiView.hidden = true;
+    if (window.PuntiMap) window.PuntiMap.deactivate();
+    if (costView) costView.hidden = true;
+    if (!manView || !window.Manuali) return;
+    const tipo = window.Manuali.show(hash);
+    searchWrap.hidden = false;
+    backBtn.hidden = tipo === "home";
+    if (tipo === "home") window.Manuali.filter(searchInput.value);
+    window.scrollTo(0, 0); updateStick();
+  }
   if (macronav) {
     macronav.addEventListener("click", (e) => {
       const t = e.target.closest(".macronav__tab"); if (!t) return;
       const sec = t.dataset.sec;
       if (sec === "punti") location.hash = "";                     // Punti = default
       else if (sec === "costituzioni") location.hash = "#costituzioni";
+      else if (sec === "manuali") location.hash = "#man";
       else if (sec === "pazienti") location.hash = "#paz";
       else location.hash = "#coordinate";                          // Coordinate
     });
@@ -1054,6 +1072,7 @@
     if (h === "" || h === "#" || h.indexOf("#punti") === 0) { firstMeridian = null; leaveCost(); showPunti(h); return; }
     // Sezione Costituzioni & Temperamenti
     if (h === "#costituzioni" || h.indexOf("#cost/") === 0) { firstMeridian = null; showCost(h); return; }
+    if (h === "#man" || h.indexOf("#man/") === 0) { firstMeridian = null; showMan(h); return; }
     // Da qui in poi siamo nella sezione Coordinate
     leavePunti(); leaveCost(); setActiveTab("coordinate");
     const mPair = h.match(/^#\/([^+]+)\+(.+)$/);
@@ -1077,6 +1096,11 @@
     }
     if (location.hash.indexOf("#paz") === 0) {
       if (window.Pazienti) window.Pazienti.back();
+      return;
+    }
+    if (manView && !manView.hidden) {
+      const v = window.Manuali ? window.Manuali.parse(location.hash) : { m: "" };
+      location.hash = v.s ? "#man/" + v.m : "#man";
       return;
     }
     if (costView && !costView.hidden) {

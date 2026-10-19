@@ -57,6 +57,8 @@ assets/js/app.js         → logica (elenco, ricerca, dettaglio, router)
 assets/js/links.js       → collegamenti fra sezioni (grafo con perno il meridiano)
 assets/js/store.js       → vault cifrato (IndexedDB + WebCrypto) e sync
 assets/js/pazienti.js    → pazienti, sessioni, agenda
+assets/js/manuali.js     → sezione Manuali (schede dei corsi; formato descritto in testa al file)
+assets/js/manuali/*.js   → un file dati per manuale dei corsi
 sync/                    → server di sync (Cloudflare Workers + D1) + istruzioni
 PROMPT.md                → brief/specifica di prodotto
 PROMPT_SESSIONI.md       → specifica del modulo pazienti/sessioni/agenda
@@ -70,6 +72,7 @@ node tools/test_sync.js         → derivazione del token e regole di conflitto
 node tools/test_worker.js       → server di sync su SQLite (due dispositivi simulati)
 node tools/test_costituzioni.js → contenuti costituzioni
 node tools/test_links.js        → collegamenti fra sezioni (1559 controlli)
+node tools/test_manuali.js      → ogni scheda dei manuali dei corsi si apre
 node tools/dev_sync_server.js   → server di sync in locale, per provare l'app
 ```
 
@@ -110,6 +113,7 @@ Indirizzi profondi disponibili:
 #cost/teoria/<id>        capitolo di teoria
 #cost/test/<id>          procedura di test
 #cost/coppia/<c>/<t>     coppia costituzione + temperamento
+#man/<manuale>/<scheda>  scheda di un manuale dei corsi (es. #man/occhi/retto-superiore)
 ```
 
 Aggiungendo un meridiano, una coordinata, un punto o un capitolo i collegamenti si aggiornano

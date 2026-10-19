@@ -87,7 +87,16 @@
       (conferma scrivendo `CANCELLA`). Da lì si può anche importare un backup `.kin` di un
       altro dispositivo, se se ne ricorda *quella* passphrase.
 
+- [x] Sezione **Manuali** (`#man`, `assets/js/manuali.js`): le dispense dei corsi trascritte
+      in schede (titolo, test d'ingresso, procedura, TC/TL, tabelle, appunti a mano a parte).
+      Testo cliccabile (meridiani, punti → mappa 3D, rimandi fra schede dello stesso manuale);
+      ogni meridiano e coordinata mostra «Nei manuali». Fatto: **Occhi, Stress, Postura e
+      Apprendimento** (85 schede). Test: `node tools/test_manuali.js`.
+
 ## Da fare
+- [ ] Manuali da trascrivere (file già predisposti in `assets/js/manuali/`): Le Sindromi
+      Energetiche, NeuroGastroEnterologia Integrata 3, I 9 Dolori del Cuore, Le Basi della Vita
+      (quest'ultimo è un PDF scansionato senza testo: va letto a vista).
 - [ ] Squilibri mancanti per 3 pagine-essenza: Devil's Claw (Vaso Concezione, pos. 4/11) e
       Star of Bethlehem (Milza e Milza/Pancreas, pos. 3/12). Le affermazioni ci sono tutte
       (112 su 112), mancano solo gli elenchi di squilibri di queste tre.

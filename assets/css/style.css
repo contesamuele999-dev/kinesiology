@@ -846,3 +846,23 @@ body.dark .vbadge[data-state="locked"]{ color:#f0be6b; }
   border:1px solid var(--brand); background:var(--card); color:var(--brand); }
 .regbtn:hover{ background:var(--brand); color:#fff; }
 body.has-sessione .regbtn{ display:inline-block; }
+
+/* ===== Manuali dei corsi (manuali.js) ===== */
+.mancrumb{ font-size:.95rem; }
+.mancrumb a{ color:var(--brand); font-weight:700; text-decoration:none; }
+.manlist li{ margin:7px 0; }
+.manlist .manlist{ margin-top:4px; }
+ol.manlist{ margin-left:24px; }
+ol.manlist > li::marker{ font-weight:800; color:var(--brand); }
+.manpunti{ list-style:none; display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.manpunti li{ border:1px solid var(--line); border-radius:999px; padding:6px 14px; font-weight:700;
+  background:color-mix(in srgb, var(--brand) 8%, var(--card)); }
+.section.mantest{ border-left:5px solid var(--brand); }
+.section.manappunti{ background:color-mix(in srgb, #f2c94c 14%, var(--card)); border-style:dashed; }
+.section.manappunti > h3::before{ background:#d4a017; }
+.section.manappunti p{ font-style:italic; }
+.mantab__t{ font-weight:800; margin-top:12px; }
+.mannav{ display:flex; justify-content:space-between; gap:12px; margin:22px 0 30px; flex-wrap:wrap; }
+.mannav .ebtn{ text-decoration:none; max-width:48%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.manidx{ margin-bottom:20px; }
+.xlink--man .xlink__ic{ color:#2b6cb0; }

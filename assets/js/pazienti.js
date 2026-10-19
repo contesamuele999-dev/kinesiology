@@ -95,6 +95,10 @@
       var tc = (window.Cost && window.Cost.titolo) ? window.Cost.titolo(h) : "";
       return { kind: "costituzioni", ref: h, label: "Costituzioni" + (tc ? " · " + tc : " & Temperamenti") };
     }
+    if (h.indexOf("#man") === 0) {
+      var tm = window.Manuali ? window.Manuali.titolo(h) : "";
+      return { kind: "manuali", ref: h, label: "Manuali" + (tm ? " · " + tm : "") };
+    }
     var mm = /^#punti\/mer\/([^/]+)(?:\/([^/]+))?/.exec(h);
     if (mm) {
       var M = window.Links ? window.Links.mer(decodeURIComponent(mm[1])) : null;
