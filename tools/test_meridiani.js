@@ -1,6 +1,6 @@
 const fs = require("fs"), path = require("path");
 const { JSDOM } = require("jsdom");
-const ROOT = "/sessions/nice-gifted-carson/mnt/Kinesiology App";
+const ROOT = require("path").join(__dirname, "..");
 const rd = (p) => fs.readFileSync(path.join(ROOT, p), "utf8");
 
 let pass = 0, fail = 0;
@@ -36,6 +36,7 @@ function boot(opts) {
   const files = ["assets/js/data.js", "assets/js/punti_data.js", "assets/js/corpo_data.js",
                  "assets/js/manichino.js", "assets/js/meridiani_data.js",
                  "assets/js/meridiani.js", "assets/js/tavole.js",
+                 "assets/js/costituzioni_data.js", "assets/js/links.js",
                  "assets/js/app.js", "assets/js/punti.js"];
   files.forEach((f) => { try { w.eval(rd(f)); } catch (e) { console.log("ERR in " + f + ": " + e.message + "\n" + (e.stack||"").split("\n").slice(0,4).join("\n")); throw e; } });
   return { w, store };
@@ -268,7 +269,7 @@ console.log("\n=== 5. Schede informative ===");
   ok(w.MeridianiMap.list().every((m) => w.MeridianiMap.isVisible(m.id)), "«Mostra tutti» ripristina");
   // 5d. link alla coordinata
   w.PuntiMap.selectMeridiano("stomaco");
-  const link = info.querySelector("a.ebtn--link");
+  const link = info.querySelector("a.xlink--coord");
   ok(link && /#\/stomaco-gran-pettorale-clavicolare/.test(link.getAttribute("href")), "link alla coordinata del muscolo",
      link && link.getAttribute("href"));
 }
@@ -358,6 +359,23 @@ console.log("\n=== 8. Non-regressione punti indicatori ===");
   // import
   ok(w.PuntiMap.importJSON(JSON.stringify(obj)) === true, "importJSON continua a funzionare");
   ok(w.PuntiMap.importJSON("{ nope") === false, "importJSON rifiuta JSON invalido");
+}
+
+console.log("\n=== 9. Emozioni e posizione sul proprio meridiano ===");
+{
+  const { w } = boot({ hash: "#emo/vc-sovraspinato+maestro-cuore-medio-gluteo" });
+  const sec = Array.from(w.document.querySelectorAll("#sections > section")).map((s) => s.id);
+  ok(sec.join(",") === "sec-posizione,sec-fiore,sec-pensiero", "#emo apre solo le sezioni emotive", sec);
+  w.location.hash = "#emo";
+  w.dispatchEvent(new w.HashChangeEvent("hashchange"));
+  const s = w.document.getElementById("search");
+  s.value = "paura";
+  s.dispatchEvent(new w.Event("input"));
+  ok(w.document.querySelectorAll("#emoView .emo__row").length > 10, "la ricerca trova le voci con «paura»");
+  w.location.hash = "#/vc-sovraspinato+vc-sovraspinato";
+  w.dispatchEvent(new w.HashChangeEvent("hashchange"));
+  ok(!w.document.getElementById("coordView").hidden &&
+     /Pos\. 1/.test(w.document.getElementById("sections").textContent), "coordinata sul proprio meridiano (pos. 1)");
 }
 
 console.log("\n---------------------------------------------");

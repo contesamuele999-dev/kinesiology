@@ -137,7 +137,9 @@
     if (!c) return [];
     return (c.atteggiamenti || []).map(function (a) {
       var id = merId(a.meridiano);
-      var alt = coordsOf(id).filter(function (x) { return x.id !== c.id; })[0] || null;
+      /* Un'altra coordinata dello stesso meridiano se c'è (Milza ↔ Milza/Pancreas),
+         altrimenti la stessa: la posizione sul proprio meridiano esiste. */
+      var alt = coordsOf(id).filter(function (x) { return x.id !== c.id; })[0] || coordsOf(id)[0] || null;
       return { n: a.posizione, meridiano: a.meridiano, merId: id, coord: alt, stress: a.stress || "" };
     }).filter(function (r) { return r.merId && r.coord; });
   }
@@ -379,6 +381,11 @@
         if (!isBordo(testo, m.index - 1) || !isBordo(testo, m.index + m[0].length)) continue;
         var voce = MAP_NOMI[m[0].toLowerCase()];
         if (!voce) continue;
+        /* Nei manuali l'organo-meridiano si scrive maiuscolo («il Cuore»); in
+           minuscolo è quasi sempre altro: «freddi nel cuore», «fegato» fra
+           le carni, «vescica iperattiva». Vale per i nomi di una parola sola. */
+        if (voce.href.indexOf("#punti/mer/") === 0 && m[0].indexOf(" ") === -1 &&
+            m[0].charAt(0) !== m[0].charAt(0).toUpperCase()) continue;
         out.push({ a: m.index, b: m.index + m[0].length, href: voce.href, title: voce.title });
       }
     }

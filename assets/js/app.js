@@ -15,7 +15,7 @@
   const backBtn = el("backBtn"), themeBtn = el("themeBtn");
   const coordHead = el("coordHead"), coordTabs = el("coordTabs"), sections = el("sections");
   const puntiView = el("puntiView"), macronav = el("macronav");
-  const costView = el("costView"), manView = el("manView");
+  const costView = el("costView"), manView = el("manView"), emoView = el("emoView");
 
   const esc = (s) => String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -156,7 +156,8 @@
     const q = norm(filter);
     const terms = q.split(/\s+/).filter(Boolean);
     let rows = data.slice();
-    if (firstMeridian) rows = rows.filter((c) => c.id !== firstMeridian.id);
+    /* Il 1° meridiano resta nell'elenco: la posizione sul proprio meridiano
+       (es. Vaso Concezione → pos. 1) è una coordinata come le altre. */
     if (terms.length) rows = rows.filter((c) => terms.every((t) => c._search.includes(t)));
 
     if (firstMeridian) {
@@ -190,6 +191,7 @@
   searchInput.addEventListener("input", () => {
     if (costView && !costView.hidden) { if (window.Cost) window.Cost.filter(searchInput.value); }
     else if (manView && !manView.hidden) { if (window.Manuali) window.Manuali.filter(searchInput.value); }
+    else if (emoView && !emoView.hidden) renderEmo(location.hash);
     else if (!listView.hidden) renderList(searchInput.value);
     applyHighlight(true);
   });
@@ -253,11 +255,11 @@
     return count;
   }
   function activeView() {
-    return [coordView, costView, manView, puntiView, listView]
+    return [coordView, costView, manView, emoView, puntiView, listView]
       .filter((v) => v && !v.hidden)[0] || null;
   }
   function applyHighlight(scroll) {
-    [coordView, costView, manView, puntiView, listView].forEach((v) => { if (v) clearHighlight(v); });
+    [coordView, costView, manView, emoView, puntiView, listView].forEach((v) => { if (v) clearHighlight(v); });
     const view = activeView();
     const terms = fold(searchInput.value).split(/\s+/).filter((t) => t.length >= 2);
     let n = 0;
@@ -836,14 +838,16 @@
         </div>
       </div>
       <button id="changeSecond" class="coord__change" type="button">↺ Cambia 2° meridiano (posizione)</button>
-      ${linksStrip(c1, c2)}`;
-    el("changeSecond").addEventListener("click", () => { location.hash = "#/" + pair[0].id; });
+      ${emoMode ? linksStrip(c1, c2).replace(/<a class="xlinks__more"[^>]*>[^<]*<\/a>/, "") : linksStrip(c1, c2)}`;
+    el("changeSecond").addEventListener("click", () => { location.hash = (emoMode ? "#emo/" : "#/") + pair[0].id; });
+    if (emoMode) coordHead.insertAdjacentHTML("beforeend",
+      `<a class="coord__change" href="#/${esc(c1.id)}+${esc(c2.id)}">Apri la coordinata completa ›</a>`);
   }
 
   function renderSections() {
     const [c1, c2] = pair;
     const row = posFor(c1, c2);
-    sections.innerHTML = sectionsFor(c1, c2, row).map((s) =>
+    sections.innerHTML = sectionsFor(c1, c2, row).filter((s) => !emoMode || EMO_SEC[s.id]).map((s) =>
       `<section class="section" id="sec-${s.id}">
          <h3>${s.label}${regBtn(s.label)}</h3>${s.html}</section>`).join("");
     fraseInit(sections);
@@ -988,6 +992,7 @@
       if (sec === "punti") location.hash = "";                     // Punti = default
       else if (sec === "costituzioni") location.hash = "#costituzioni";
       else if (sec === "manuali") location.hash = "#man";
+      else if (sec === "emozioni") location.hash = "#emo";
       else if (sec === "pazienti") location.hash = "#paz";
       else location.hash = "#coordinate";                          // Coordinate
     });
@@ -1053,10 +1058,84 @@
     }
   })();
 
+  /* ---------- Emozioni (#emo) ----------
+     Dall'emozione alla frase senza passare dalla coordinata intera: si cerca
+     una voce (IrF / IoF della posizione o squilibrio di un fiore) e si apre
+     la coppia muscolo + posizione con le sole sezioni emotive.
+       #emo            meridiani oggetto + ricerca delle voci
+       #emo/<id>       le 14 posizioni del muscolo con le loro voci
+       #emo/<id>+<id2> la coppia, solo Posizione / Fiori / Forme Pensiero */
+  let emoMode = false;
+  const EMO_SEC = { posizione: 1, fiore: 1, pensiero: 1 };
+  const coordOfRow = (row) => data.find((x) => keyOf(x) === row.meridiano) || null;
+  const fioriDi = (c, n) => (c.fiore || []).filter((f) => (f.posizioni || []).indexOf(n) !== -1);
+  const EMO = [];
+  data.forEach((c1) => (c1.atteggiamenti || []).forEach((row) => {
+    const c2 = coordOfRow(row);
+    if (!c2) return;
+    stressPair(row.stress).forEach((p) => EMO.push({ c1, c2, n: row.posizione, tipo: p.lab, voce: p.val }));
+    fioriDi(c1, row.posizione).forEach((f) => (f.squilibri || []).forEach((v) =>
+      EMO.push({ c1, c2, n: row.posizione, tipo: f.nome, voce: v })));
+  }));
+  EMO.forEach((x) => { x.q = norm(x.voce + " " + x.tipo + " " + x.c1.meridiano + " " + x.c2.meridiano); });
+  function emoRiga(x) {
+    return `<a class="emo__row" href="#emo/${esc(x.c1.id)}+${esc(x.c2.id)}">
+      <span class="emo__voce">${esc(x.voce)}</span>
+      <span class="emo__dove"><span class="emo__dot" style="background:${esc(x.c1.colore)}"></span>${esc(x.c1.meridiano)} · pos. ${esc(x.n)} (${esc(x.c2.meridiano)}) · ${esc(x.tipo)}</span></a>`;
+  }
+  function renderEmo(hash) {
+    const id = (/^#emo\/([^+]+)$/.exec(hash) || [])[1];
+    const c = id ? find(id) : null;
+    const terms = norm(searchInput.value).split(/\s+/).filter(Boolean);
+    let h;
+    if (c) {
+      h = `<div class="cohero"><h2>${esc(c.meridiano)} · ${esc(c.muscolo)}</h2>
+           <p>Le 14 posizioni con le voci da testare. Tocca una riga per la frase e i fiori.</p></div>
+           <div class="cotab-wrap"><table class="cotab emo__tab"><thead><tr><th>Pos.</th><th>Riferimento</th><th>IrF</th><th>IoF</th><th>Fiori</th></tr></thead><tbody>` +
+        (c.atteggiamenti || []).slice().sort((a, b) => a.posizione - b.posizione).map((row) => {
+          const c2 = coordOfRow(row), sp = stressPair(row.stress);
+          const href = c2 ? `#emo/${esc(c.id)}+${esc(c2.id)}` : "";
+          const cell = (t) => href ? `<a href="${href}">${esc(t)}</a>` : esc(t);
+          return `<tr><td>${esc(row.posizione)}</td><td>${cell(row.meridiano)}</td>
+            <td>${cell(sp[0] ? sp[0].val : "")}</td><td>${cell(sp[1] ? sp[1].val : "")}</td>
+            <td>${esc(fioriDi(c, row.posizione).map((f) => f.nome).join(", "))}</td></tr>`;
+        }).join("") + "</tbody></table></div>";
+    } else if (terms.length) {
+      const res = EMO.filter((x) => terms.every((t) => x.q.includes(t)));
+      h = `<div class="cohero"><h2>Voci trovate</h2><p>${res.length} per «${esc(searchInput.value)}».</p></div>` +
+        (res.length ? `<div class="emo__list">${res.slice(0, 300).map(emoRiga).join("")}</div>`
+                    : '<p class="noresults">Nessuna emozione, forma pensiero o squilibrio con queste parole.</p>');
+    } else {
+      h = `<div class="cohero"><h2>Emozioni · Forme Pensiero · Atteggiamenti</h2>
+           <p>Scrivi un'emozione nella ricerca in alto (${EMO.length} voci), oppure scegli il meridiano oggetto per vedere le sue 14 posizioni.</p></div>
+           <div class="grid">${data.map((x) => meridianCard(x).replace('<button class="card"', `<button class="card" data-emo="${esc(x.id)}"`)).join("")}</div>`;
+    }
+    emoView.innerHTML = '<div class="cohome">' + h + "</div>";
+  }
+  if (emoView) emoView.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-emo]");
+    if (b) location.hash = "#emo/" + b.dataset.emo;
+  });
+  function showEmo(hash) {
+    setActiveTab("emozioni");
+    leavePunti(); leaveCost();
+    listView.hidden = true; searchWrap.hidden = false;
+    const m = /^#emo\/([^+]+)\+(.+)$/.exec(hash);
+    const a = m && find(m[1]), b = m && find(m[2]);
+    if (a && b) { firstMeridian = a; emoMode = true; showCoordinate(a, b); return; }
+    coordView.hidden = true; emoView.hidden = false;
+    backBtn.hidden = hash === "#emo";
+    renderEmo(hash);
+    window.scrollTo(0, 0); updateStick();
+  }
+
   /* ---------- Router (hash) ---------- */
   function route() { routeTo(); applyHighlight(false); }
   function routeTo() {
     const h = location.hash;
+    emoMode = false;
+    if (emoView) emoView.hidden = true;
+    if (h === "#emo" || h.indexOf("#emo/") === 0) { firstMeridian = null; showEmo(h); return; }
     // Sezione Pazienti (dati cifrati in locale, vedi pazienti.js)
     if (h.indexOf("#paz") === 0) {
       firstMeridian = null; leavePunti(); leaveCost();
@@ -1078,7 +1157,7 @@
     const mPair = h.match(/^#\/([^+]+)\+(.+)$/);
     if (mPair) {
       const a = find(mPair[1]), b = find(mPair[2]);
-      if (a && b && a.id !== b.id) { firstMeridian = a; showCoordinate(a, b); return; }
+      if (a && b) { firstMeridian = a; showCoordinate(a, b); return; }
     }
     const mOne = h.match(/^#\/(.+)$/);
     if (mOne) {
@@ -1109,6 +1188,10 @@
       else if (v.tipo === "coppia" && v.id2) location.hash = "#cost/coppia/" + v.id;
       else if (v.tipo === "coppia" && v.id) location.hash = "#cost/coppia";
       else location.hash = "#costituzioni";
+      return;
+    }
+    if (location.hash.indexOf("#emo/") === 0) {
+      location.hash = location.hash.indexOf("+") !== -1 ? "#emo/" + pair[0].id : "#emo";
       return;
     }
     if (!coordView.hidden) location.hash = "#/" + pair[0].id;

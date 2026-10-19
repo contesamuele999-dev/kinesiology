@@ -866,3 +866,14 @@ ol.manlist > li::marker{ font-weight:800; color:var(--brand); }
 .mannav .ebtn{ text-decoration:none; max-width:48%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .manidx{ margin-bottom:20px; }
 .xlink--man .xlink__ic{ color:#2b6cb0; }
+
+/* ===== Emozioni (#emo) ===== */
+.emo__list{ display:flex; flex-direction:column; gap:8px; }
+.emo__row{ display:flex; flex-direction:column; gap:3px; padding:12px 16px; border:1px solid var(--line);
+  border-radius:12px; background:var(--card); text-decoration:none; color:var(--ink); }
+.emo__row:hover{ border-color:var(--brand); }
+.emo__voce{ font-weight:800; font-size:1.05rem; }
+.emo__dove{ color:var(--muted); font-size:.92rem; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.emo__dot{ width:10px; height:10px; border-radius:50%; flex:0 0 auto; border:1px solid var(--line); }
+.emo__tab a{ color:var(--ink); text-decoration:none; }
+.emo__tab a:hover{ color:var(--brand); text-decoration:underline; }

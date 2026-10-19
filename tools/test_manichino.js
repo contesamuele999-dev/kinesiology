@@ -2,7 +2,7 @@
    (senza renderer WebGL: solo costruzione di curve/geometrie e calcoli). */
 const fs = require("fs"), path = require("path");
 const { JSDOM } = require("jsdom");
-const ROOT = "/sessions/nice-gifted-carson/mnt/Kinesiology App";
+const ROOT = require("path").join(__dirname, "..");
 const rd = (p) => fs.readFileSync(path.join(ROOT, p), "utf8");
 let pass = 0, fail = 0;
 const ok = (c, m, e) => { c ? (pass++, console.log("  ✓ " + m)) : (fail++, console.log("  ✗ " + m + (e !== undefined ? " → " + JSON.stringify(e) : ""))); };

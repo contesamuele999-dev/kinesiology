@@ -1,6 +1,6 @@
 /* sw.js — service worker per PWA offline (app shell + dati).
    Bump CACHE ad ogni release per invalidare la cache. */
-const CACHE = "fisiologia-v43";
+const CACHE = "fisiologia-v44";
 const ASSETS = [
   "./",
   "./index.html",
@@ -69,20 +69,19 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Stale-while-revalidate: risponde dalla cache e aggiorna in background.
+// Network-first: online si vede sempre l'ultima versione pubblicata (prima
+// lo stale-while-revalidate mostrava la vecchia fino al secondo caricamento);
+// offline si risponde dalla cache, aggiornata a ogni risposta buona.
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET") return;
   e.respondWith(
-    caches.match(req).then((cached) => {
-      const network = fetch(req).then((res) => {
-        if (res && res.status === 200 && res.type === "basic") {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy));
-        }
-        return res;
-      }).catch(() => cached);
-      return cached || network;
-    })
+    fetch(req).then((res) => {
+      if (res && res.status === 200 && res.type === "basic") {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(req, copy));
+      }
+      return res;
+    }).catch(() => caches.match(req, { ignoreSearch: true }))
   );
 });

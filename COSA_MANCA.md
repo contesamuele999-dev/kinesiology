@@ -90,18 +90,23 @@
 - [x] Sezione **Manuali** (`#man`, `assets/js/manuali.js`): le dispense dei corsi trascritte
       in schede (titolo, test d'ingresso, procedura, TC/TL, tabelle, appunti a mano a parte).
       Testo cliccabile (meridiani, punti → mappa 3D, rimandi fra schede dello stesso manuale);
-      ogni meridiano e coordinata mostra «Nei manuali». Fatto: **Occhi, Stress, Postura e
-      Apprendimento** (85 schede). Test: `node tools/test_manuali.js`.
+      ogni meridiano e coordinata mostra «Nei manuali». Tutti e 5 i manuali del 19/10/2026:
+      Occhi (85 schede), Sindromi Energetiche (80), NeuroGastro 3 (45), 9 Dolori del Cuore (31),
+      Basi della Vita (21). Test: `node tools/test_manuali.js`.
+- [x] Sezione **Emozioni** (`#emo`, richiesta del 18/09/2026): si cerca un'emozione, una forma
+      pensiero o uno squilibrio di un fiore (1.136 voci) e si apre la coppia muscolo + posizione
+      con le sole sezioni Posizione, Fiori/Atteggiamenti, Forme Pensiero. Da un meridiano si vede
+      la tabella delle 14 posizioni con IrF/IoF e fiori.
+- [x] Squilibri di Devil's Claw e Star of Bethlehem (dal manuale Atteggiamenti, pag. 7 e 39):
+      ora tutte le essenze hanno i loro squilibri.
+- [x] La posizione sul **proprio** meridiano (es. Vaso Concezione → pos. 1) si apre: prima il
+      2° elenco escludeva il 1° meridiano e la coppia uguale era rifiutata.
+- [x] Autolink: un nome di meridiano di una parola in minuscolo («freddi nel cuore», «fegato»
+      fra le carni) non è più un link; in maiuscolo («il Cuore») sì.
+- [x] Dubbio Costituzioni yang-ming / TR5: non è un errore. NeuroGastro 3 (6 punti chiave dei
+      livelli) dà proprio TR 5 = Yang Ming.
 
 ## Da fare
-- [ ] Manuali da trascrivere (file già predisposti in `assets/js/manuali/`): Le Sindromi
-      Energetiche, NeuroGastroEnterologia Integrata 3, I 9 Dolori del Cuore, Le Basi della Vita
-      (quest'ultimo è un PDF scansionato senza testo: va letto a vista).
-- [ ] Squilibri mancanti per 3 pagine-essenza: Devil's Claw (Vaso Concezione, pos. 4/11) e
-      Star of Bethlehem (Milza e Milza/Pancreas, pos. 3/12). Le affermazioni ci sono tutte
-      (112 su 112), mancano solo gli elenchi di squilibri di queste tre.
-- [ ] Sezione a sé per **Emozioni / Forme Pensiero / Atteggiamento**, con i suoi modi e senza
-      passare dalle coordinate (richiesta del 18/09/2026).
 - [ ] Immagini Basket Weaver **per posizione** (corpo, mani, piedi, ruota) per le 7 coordinate
       mancanti (Maestro del Cuore, TR/Tiroide, TR/Surrenali, Vescica Biliare, Fegato, Polmone,
       Intestino Crasso) → serve il 2° volume del manuale.
@@ -120,5 +125,5 @@ Tutti i contenuti stanno in tools/*.json (atteggiamenti, essenze_dettaglio, stor
 generate_data.py. Rigenerare: `python tools/generate_data.py`.
 Costituzioni: `tools/costituzioni.json` (prodotto da `tools/extract_costituzioni.py`, che rilegge il
 PDF) → `python tools/generate_costituzioni.py` → `assets/js/costituzioni_data.js`.
-Test: `node tools/test_costituzioni.js` (jsdom installato fuori dal mount) — 104 test, coprono anche
+Test: `node tools/test_costituzioni.js` (serve jsdom: `npm install --no-save jsdom`) — 104 test, coprono anche
 il percorso coppia e il test discriminante Milza/Pancreas.

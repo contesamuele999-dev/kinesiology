@@ -81,7 +81,7 @@
     return (c1.atteggiamenti || []).find(function (a) { return a.meridiano === k; }) || null;
   }
   function labelForHash(h) {
-    var m = h.match(/^#\/([^+]+)\+(.+)$/);
+    var m = h.match(/^#(?:emo)?\/([^+]+)\+(.+)$/);
     if (m) {
       var a = DATA.find(function (x) { return x.id === m[1]; });
       var b = DATA.find(function (x) { return x.id === m[2]; });

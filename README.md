@@ -66,6 +66,9 @@ push.bat                 → push rapido su GitHub (Windows)
 ```
 
 ## Test
+I test DOM (costituzioni, modi, meridiani, manichino) usano jsdom. Se dicono
+`Cannot find module 'jsdom'`, una volta sola: `npm install --no-save jsdom`
+(resta in `node_modules/`, che non va su GitHub).
 ```
 node tools/test_vault.js        → cifratura del vault
 node tools/test_sync.js         → derivazione del token e regole di conflitto
@@ -73,6 +76,9 @@ node tools/test_worker.js       → server di sync su SQLite (due dispositivi si
 node tools/test_costituzioni.js → contenuti costituzioni
 node tools/test_links.js        → collegamenti fra sezioni (1559 controlli)
 node tools/test_manuali.js      → ogni scheda dei manuali dei corsi si apre
+node tools/test_meridiani.js    → mappa, schede meridiano, Emozioni (jsdom)
+node tools/test_manichino.js    → geometria del manichino 3D (jsdom)
+node tools/test_modi_ricerca.js → modi e ricerca (jsdom)
 node tools/dev_sync_server.js   → server di sync in locale, per provare l'app
 ```
 
@@ -114,6 +120,9 @@ Indirizzi profondi disponibili:
 #cost/test/<id>          procedura di test
 #cost/coppia/<c>/<t>     coppia costituzione + temperamento
 #man/<manuale>/<scheda>  scheda di un manuale dei corsi (es. #man/occhi/retto-superiore)
+#emo                     Emozioni: cerca una voce IrF/IoF o uno squilibrio di un fiore
+#emo/<coord>             le 14 posizioni di un muscolo con le loro voci
+#emo/<coord>+<coord>     la coppia con le sole sezioni emotive (posizione, fiori, forme pensiero)
 ```
 
 Aggiungendo un meridiano, una coordinata, un punto o un capitolo i collegamenti si aggiornano

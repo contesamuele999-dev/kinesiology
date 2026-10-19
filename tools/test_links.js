@@ -167,7 +167,10 @@ COORD.forEach((c) => {
   pos.forEach((r) => {
     t("posizione " + r.n + " di " + c.id + " -> meridiano", merIds.indexOf(r.merId) !== -1);
     t("posizione " + r.n + " di " + c.id + " -> coordinata", coordIds.indexOf(r.coord.id) !== -1);
-    t("la posizione non rimanda a se stessa", r.coord.id !== c.id);
+    /* Su se stessa solo per la posizione del proprio meridiano, e solo se il
+       meridiano non ha un'altra coordinata (Milza → Milza/Pancreas). */
+    t("posizione su se stessa solo quando non c'è alternativa", r.coord.id !== c.id ||
+      (r.merId === L.merOfCoord(c) && L.coordsOf(r.merId).length === 1));
     t("indirizzo della posizione " + r.n,
       L.hrefCoord(c.id, r.coord.id) === "#/" + c.id + "+" + r.coord.id);
   });
@@ -215,6 +218,9 @@ t("nessuna parola dentro un'altra parola", a4.indexOf("<a ") === -1, a4);
 t("opzione salta",
   L.autolink("Il meridiano Polmone.", { salta: L.hrefMer("polmone") }).indexOf("<a ") === -1);
 t("opzione max", conta(L.autolink("Polmone, Cuore, Fegato, Milza.", { max: 2 }), "<a ") === 2);
+t("organo minuscolo in prosa non è il meridiano", L.autolink("freddi nel cuore e nello spirito").indexOf("<a ") === -1 &&
+  L.autolink("lo Shen alberga nel Cuore").indexOf(L.hrefMer("cuore")) !== -1 &&
+  L.autolink("il meridiano vescica biliare").indexOf("<a ") !== -1);
 const a5 = L.autolink("Vescica Biliare, Fegato, VC8, TAI YANG");
 t("i link non si annidano mai", /<a[^>]*>(?:(?!<\/a>)[\s\S])*<a\s/.test(a5) === false, a5);
 const a6 = L.autolink("Un capitolo su Ippocrate",
